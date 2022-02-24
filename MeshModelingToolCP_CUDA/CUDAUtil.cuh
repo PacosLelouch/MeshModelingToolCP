@@ -7,6 +7,11 @@
 #define STRINGIFY(x) TOSTRING(x)
 #define TOSTRING(x) #x
 
+#define CUDA_ERROR(err) (handleError(err, __FILE__, __LINE__))
+#define CUDA_EXECUTE_IF_ENABLED(...) if(cudaEnabled()) { __VA_ARGS__ }
+#define CUDA_EXECUTE_IF_ENABLED_OTHERWISE(...) if(cudaEnabled()) { __VA_ARGS__ } else
+
+
 namespace CUDAUtil 
 {
 inline int convert_SMV_to_cores(int major, int minor)
@@ -53,7 +58,7 @@ inline int convert_SMV_to_cores(int major, int minor)
 }
 
 // CUDA_ERROR
-inline void HandleError(cudaError_t err, const char* file, int line)
+inline void handleError(cudaError_t err, const char* file, int line)
 {
     // Error handling micro, wrap it around function whenever possible
     if (err != cudaSuccess) {
@@ -66,6 +71,11 @@ inline void HandleError(cudaError_t err, const char* file, int line)
 #endif
     }
 }
-}
 
-#define CUDA_ERROR(err) (HandleError(err, __FILE__, __LINE__))
+inline bool cudaEnabled()
+{
+    int deviceCount;
+    CUDA_ERROR(cudaGetDeviceCount(&deviceCount));
+    return deviceCount > 0;
+}
+}

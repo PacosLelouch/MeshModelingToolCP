@@ -54,6 +54,7 @@ static WCHAR* getFrac(WCHAR* dst, double f, int precision)
 
 cudaDeviceProp cuda_query(const int dev, bool quiet = false, std::string* outStr = nullptr)
 {
+    cudaDeviceProp devProp;
     WCHAR message[16384]{ 0 };
     //memset(message, 0, sizeof(message));
     LPWSTR cursor = message;
@@ -62,49 +63,51 @@ cudaDeviceProp cuda_query(const int dev, bool quiet = false, std::string* outStr
     int deviceCount;
     cudaGetDeviceCount(&deviceCount);
 
-    if (deviceCount == 0) {
+    if (deviceCount == 0) 
+    {
         cursor += wsprintf(cursor, 
             TEXT("cuda_query() device count = 0 i.e., there is not") 
             TEXT(" a CUDA-supported GPU!!!\n"));
     }
+    else
+    {
+        cudaSetDevice(dev);
 
-    cudaSetDevice(dev);
-    cudaDeviceProp devProp;
+        CUDA_ERROR(cudaGetDeviceProperties(&devProp, dev));
 
-    CUDA_ERROR(cudaGetDeviceProperties(&devProp, dev));
+        cursor += wsprintf(cursor, TEXT("Total number of device: %d\n"), deviceCount);
+        cursor += wsprintf(cursor, TEXT("Using device Number: %d\n"), dev);
+        WCHAR devName[256]{ 0 };
+        mbstowcs(devName, devProp.name, strlen(devProp.name));
+        cursor += wsprintf(cursor, TEXT("Device name: %s\n"), devName);
+        cursor += wsprintf(cursor, TEXT("Compute Capability: %d.%d\n"), (int)devProp.major,
+            (int)devProp.minor);
+        float gmem = (float)devProp.totalGlobalMem / 1048576.0f;
+        WCHAR frac0[16]{ 0 };
+        WCHAR frac1[16]{ 0 };
+        cursor += wsprintf(cursor, TEXT("Total amount of global memory (MB): %d.%s\n"), 
+            (int)gmem, getFrac(frac0, gmem, 1));
+        cursor += wsprintf(cursor, TEXT("%d Multiprocessors, %d CUDA Cores/MP: %d CUDA Cores\n"), 
+            devProp.multiProcessorCount,
+            convert_SMV_to_cores(devProp.major, devProp.minor),
+            convert_SMV_to_cores(devProp.major, devProp.minor) *
+            devProp.multiProcessorCount);
+        float GPUMaxClockRateMHz = devProp.clockRate * 1e-3f;
+        float GPUMaxClockRateGHz = devProp.clockRate * 1e-6f;
+        cursor += wsprintf(cursor, TEXT("GPU Max Clock rate: %d.%s MHz (%d.%s GHz)\n"), 
+            (int)GPUMaxClockRateMHz, getFrac(frac0, GPUMaxClockRateMHz, 2),
+            (int)GPUMaxClockRateGHz, getFrac(frac1, GPUMaxClockRateGHz, 2));
+        float memMaxClockRateMHz = devProp.memoryClockRate * 1e-3f;
+        cursor += wsprintf(cursor, TEXT("Memory Clock rate: %d.%s Mhz\n"), 
+            (int)memMaxClockRateMHz, getFrac(frac0, memMaxClockRateMHz, 2));
+        cursor += wsprintf(cursor, TEXT("Memory Bus Width:  %d-bit\n"), devProp.memoryBusWidth);
+        const double maxBW = 2.0 * devProp.memoryClockRate *
+            (devProp.memoryBusWidth / 8.0) / 1.0E6;
 
-    cursor += wsprintf(cursor, TEXT("Total number of device: %d\n"), deviceCount);
-    cursor += wsprintf(cursor, TEXT("Using device Number: %d\n"), dev);
-    WCHAR devName[256]{ 0 };
-    mbstowcs(devName, devProp.name, strlen(devProp.name));
-    cursor += wsprintf(cursor, TEXT("Device name: %s\n"), devName);
-    cursor += wsprintf(cursor, TEXT("Compute Capability: %d.%d\n"), (int)devProp.major,
-        (int)devProp.minor);
-    float gmem = (float)devProp.totalGlobalMem / 1048576.0f;
-    WCHAR frac0[16]{ 0 };
-    WCHAR frac1[16]{ 0 };
-    cursor += wsprintf(cursor, TEXT("Total amount of global memory (MB): %d.%s\n"), 
-        (int)gmem, getFrac(frac0, gmem, 1));
-    cursor += wsprintf(cursor, TEXT("%d Multiprocessors, %d CUDA Cores/MP: %d CUDA Cores\n"), 
-        devProp.multiProcessorCount,
-        convert_SMV_to_cores(devProp.major, devProp.minor),
-        convert_SMV_to_cores(devProp.major, devProp.minor) *
-        devProp.multiProcessorCount);
-    float GPUMaxClockRateMHz = devProp.clockRate * 1e-3f;
-    float GPUMaxClockRateGHz = devProp.clockRate * 1e-6f;
-    cursor += wsprintf(cursor, TEXT("GPU Max Clock rate: %d.%s MHz (%d.%s GHz)\n"), 
-        (int)GPUMaxClockRateMHz, getFrac(frac0, GPUMaxClockRateMHz, 2),
-        (int)GPUMaxClockRateGHz, getFrac(frac1, GPUMaxClockRateGHz, 2));
-    float memMaxClockRateMHz = devProp.memoryClockRate * 1e-3f;
-    cursor += wsprintf(cursor, TEXT("Memory Clock rate: %d.%s Mhz\n"), 
-        (int)memMaxClockRateMHz, getFrac(frac0, memMaxClockRateMHz, 2));
-    cursor += wsprintf(cursor, TEXT("Memory Bus Width:  %d-bit\n"), devProp.memoryBusWidth);
-    const double maxBW = 2.0 * devProp.memoryClockRate *
-        (devProp.memoryBusWidth / 8.0) / 1.0E6;
-
-    cursor += wsprintf(cursor, TEXT("Peak Memory Bandwidth: %d.%s(GB/s)\n"), (int)maxBW, getFrac(frac0, maxBW, 2));
-    cursor += wsprintf(cursor, TEXT("Kernels compiled for compute capability: %d"), 
-        cuda_arch());
+        cursor += wsprintf(cursor, TEXT("Peak Memory Bandwidth: %d.%s(GB/s)\n"), (int)maxBW, getFrac(frac0, maxBW, 2));
+        cursor += wsprintf(cursor, TEXT("Kernels compiled for compute capability: %d"), 
+            cuda_arch());
+    }
 
     if (!quiet) {
 #if defined _WIN32 || defined _WIN64
