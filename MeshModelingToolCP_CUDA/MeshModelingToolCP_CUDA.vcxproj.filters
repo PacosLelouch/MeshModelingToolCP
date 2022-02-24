@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="CUDABufferUtil.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CUDAExport.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CUDATest.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportCommon.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="CUDAUtil.cuh">
+      <Filter>Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="HelloMayaCUDA.h">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="CUDAExport.cu">
+      <Filter>SourcesCUDA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="CUDATest.cu">
+      <Filter>SourcesCUDA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="CUDAUpdatePositionSimple.cu">
+      <Filter>SourcesCUDA</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Headers">
+      <UniqueIdentifier>{e3df150e-a4e1-4e87-8c9e-b83b9dcaa6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Sources">
+      <UniqueIdentifier>{8eb171ca-0f6b-4ef5-808b-14408b3bfc8f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SourcesCUDA">
+      <UniqueIdentifier>{0501e854-c41b-4502-92c5-1070aa16ac11}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="HelloMayaCUDA.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
