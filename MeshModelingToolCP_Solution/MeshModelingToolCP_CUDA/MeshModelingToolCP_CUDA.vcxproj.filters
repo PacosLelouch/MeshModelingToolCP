@@ -1,33 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="CUDABufferUtil.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CUDAExport.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CUDATest.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="ExportCommon.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="CUDAUtil.cuh">
-      <Filter>Headers</Filter>
-    </ClInclude>
-    <ClInclude Include="HelloMayaCUDA.h">
-      <Filter>Headers</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CudaCompile Include="CUDAExport.cu">
+    <CudaCompile Include="..\CUDACore\CUDAExport.cu">
       <Filter>SourcesCUDA</Filter>
     </CudaCompile>
-    <CudaCompile Include="CUDATest.cu">
+    <CudaCompile Include="..\CUDACore\CUDATest.cu">
       <Filter>SourcesCUDA</Filter>
     </CudaCompile>
-    <CudaCompile Include="CUDAUpdatePositionSimple.cu">
+    <CudaCompile Include="..\CUDACore\CUDAUpdatePositionSimple.cu">
       <Filter>SourcesCUDA</Filter>
     </CudaCompile>
   </ItemGroup>
@@ -43,8 +23,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="HelloMayaCUDA.cpp">
-      <Filter>Sources</Filter>
+    <ClInclude Include="..\CUDAUtil.cuh">
+      <Filter>Headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\HelloMayaCUDA.cpp">
+      <Filter>SourcesCUDA</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

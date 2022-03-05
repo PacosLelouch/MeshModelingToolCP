@@ -21,6 +21,10 @@
 #include <maya/MFnPlugin.h>
 #include <string>
 
+#if _COMPUTE_USING_CUDA
+
+#endif // _COMPUTE_USING_CUDA
+
 // Maya Plugin creator function
 void *helloMaya::creator()
 {

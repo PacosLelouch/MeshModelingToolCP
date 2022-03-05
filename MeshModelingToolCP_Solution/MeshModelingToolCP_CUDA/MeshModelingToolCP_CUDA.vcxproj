@@ -72,24 +72,39 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(IncludePath)</IncludePath>
     <TargetExt>.mll</TargetExt>
+    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(SourcePath)</SourcePath>
+    <ExcludePath>$(SolutionDir)CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x86);$(VC_LibraryPath_x86)</ExcludePath>
+    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(IncludePath)</IncludePath>
     <TargetExt>.mll</TargetExt>
+    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(SourcePath)</SourcePath>
+    <ExcludePath>$(SolutionDir)CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x64);$(VC_LibraryPath_x64)</ExcludePath>
+    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(IncludePath)</IncludePath>
     <TargetExt>.mll</TargetExt>
+    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(SourcePath)</SourcePath>
+    <ExcludePath>$(SolutionDir)CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x86);$(VC_LibraryPath_x86)</ExcludePath>
+    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)include;$(IncludePath)</IncludePath>
+    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(IncludePath)</IncludePath>
     <TargetExt>.mll</TargetExt>
+    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(SourcePath)</SourcePath>
+    <ExcludePath>$(SolutionDir)CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x64);$(VC_LibraryPath_x64)</ExcludePath>
+    <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -98,7 +113,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <!-- <Optimization>Disabled</Optimization> -->
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <CudaCompile>
@@ -129,8 +144,8 @@
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Message>Copying "$(TargetPath)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
-      <Command>copy "$(TargetPath)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
+      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -140,7 +155,7 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <!-- <Optimization>Disabled</Optimization> -->
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <CudaCompile>
@@ -171,8 +186,8 @@
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Message>Copying "$(TargetPath)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
-      <Command>copy "$(TargetPath)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
+      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -184,7 +199,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <CudaCompile>
@@ -218,8 +233,8 @@
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Message>Copying "$(TargetPath)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
-      <Command>copy "$(TargetPath)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
+      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -231,7 +246,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
     </ClCompile>
     <CudaCompile>
@@ -265,25 +280,20 @@
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
     </Link>
     <PostBuildEvent>
-      <Message>Copying "$(TargetPath)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
-      <Command>copy "$(TargetPath)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
+      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="HelloMayaCUDA.cpp" />
+    <CudaCompile Include="..\CUDACore\CUDAExport.cu" />
+    <CudaCompile Include="..\CUDACore\CUDATest.cu" />
+    <CudaCompile Include="..\CUDACore\CUDAUpdatePositionSimple.cu" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CUDABufferUtil.h" />
-    <ClInclude Include="CUDAExport.h" />
-    <ClInclude Include="HelloMayaCUDA.h" />
-    <ClInclude Include="ExportCommon.h" />
+    <ClInclude Include="..\CUDAUtil.cuh" />
   </ItemGroup>
   <ItemGroup>
-    <CudaCompile Include="CUDAExport.cu" />
-    <CudaCompile Include="CUDATest.cu" />
-    <ClInclude Include="CUDATest.h" />
-    <ClInclude Include="CUDAUtil.cuh" />
-    <CudaCompile Include="CUDAUpdatePositionSimple.cu" />
+    <ClCompile Include="..\HelloMayaCUDA.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA $(CUDA_PATH.Substring($(CUDA_PATH.LastIndexOf('v'))).Substring(1)).targets" />
