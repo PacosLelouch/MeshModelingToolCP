@@ -4,7 +4,7 @@ A Maya mesh modeling tool with constraint projection. (CIS-660 Authoring Tool Pr
 
 
 
-## How To Build
+## How to Build
 
 ### Requirement
 
@@ -18,3 +18,11 @@ A Maya mesh modeling tool with constraint projection. (CIS-660 Authoring Tool Pr
 ### Build
 
 1. Build project. `_CPP` for CPU-only version. `_CUDA` for CUDA enabled version.
+
+
+
+## For Developers
+
+### How to Add Source Files
+
+You can just add your non-CUDA source file to `_CPP` project, and only add your CUDA source file to `_CUDA` project. For some functions that need to define a non-CUDA version, you need to place them in source files in `CPPOnly` directory. 

@@ -33,6 +33,12 @@
     <ClInclude Include="..\HelloMayaCUDA.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Constraints\Constraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\TypesCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\HelloMayaCUDA.cpp">
@@ -41,5 +47,19 @@
     <ClCompile Include="..\CPPOnly\CUDATest_Disable.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CPPOnly\CUDAExport_Disable.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CPPCore\Dummy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CPPCore\LGSolver\Constraints\Constraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\CPPCore\LGSolver\Constraints\Constraint.inl">
+      <Filter>Header Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

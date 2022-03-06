@@ -19,3 +19,7 @@
 #ifndef MAYA_EXPORT
 #define MAYA_EXPORT
 #endif
+
+#ifndef CUDA_DISABLE_ERROR
+#define CUDA_DISABLE_ERROR() std::cerr << __FILE__ << ":line " << __LINE__ << ". Cannot call CUDA function!" << std::endl
+#endif // CUDA_DISABLE_ERROR
