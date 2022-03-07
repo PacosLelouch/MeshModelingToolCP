@@ -136,6 +136,8 @@
       <UseHostInclude>false</UseHostInclude>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalDeps>$(SolutionDir);$(SolutionDir)CPPCore</AdditionalDeps>
+      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
     </CudaCompile>
     <Link>
       <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -179,6 +181,8 @@
       <UseHostInclude>false</UseHostInclude>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalDeps>$(SolutionDir);$(SolutionDir)CPPCore</AdditionalDeps>
+      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
     </CudaCompile>
     <Link>
       <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -225,6 +229,8 @@
       <UseHostInclude>false</UseHostInclude>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalDeps>$(SolutionDir);$(SolutionDir)CPPCore</AdditionalDeps>
+      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
     </CudaCompile>
     <Link>
       <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -273,6 +279,8 @@
       <UseHostInclude>false</UseHostInclude>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalDeps>$(SolutionDir);$(SolutionDir)CPPCore</AdditionalDeps>
+      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
     </CudaCompile>
     <Link>
       <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -297,6 +305,7 @@
     <ClInclude Include="..\CUDAUtil.cuh" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\CPPCore\Dummy.cpp" />
     <ClCompile Include="..\HelloMayaCUDA.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

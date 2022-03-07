@@ -29,7 +29,10 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\HelloMayaCUDA.cpp">
-      <Filter>Source Files CUDA</Filter>
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CPPCore\Dummy.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
