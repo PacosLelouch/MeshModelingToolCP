@@ -39,6 +39,21 @@
     <ClInclude Include="..\TypesCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Constraints\ConstraintCollection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Solvers\Solver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\Regularization.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\HelloMayaCUDA.cpp">
@@ -59,6 +74,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CPPCore\LGSolver\Constraints\Constraint.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\CPPCore\LGSolver\Solvers\Solver.inl">
+      <Filter>Header Files</Filter>
+    </None>
+    <None Include="..\CPPCore\LGSolver\Regularizations\Regularization.inl">
       <Filter>Header Files</Filter>
     </None>
   </ItemGroup>

@@ -207,6 +207,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CPPCore\LGSolver\Constraints\Constraint.h" />
+    <ClInclude Include="..\CPPCore\LGSolver\Constraints\ConstraintCollection.h" />
+    <ClInclude Include="..\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h" />
+    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\Regularization.h" />
+    <ClInclude Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
+    <ClInclude Include="..\CPPCore\LGSolver\Solvers\Solver.h" />
     <ClInclude Include="..\CUDABufferUtil.h" />
     <ClInclude Include="..\CUDAExport.h" />
     <ClInclude Include="..\CUDATest.h" />
@@ -217,6 +222,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CPPCore\LGSolver\Constraints\Constraint.inl" />
+    <None Include="..\CPPCore\LGSolver\Regularizations\Regularization.inl" />
+    <None Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.inl" />
+    <None Include="..\CPPCore\LGSolver\Solvers\Solver.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,38 +20,45 @@ BEGIN_NAMESPACE(AAShapeUp)
 //}
 
 // The abstract class of constraint.
-template<i32 N>
+template<i32 Dim>
 class ConstraintAbstract
 {
 public:
 
-    using VectorN = MatrixT<N, 1>;
-    using MatrixNX = MatrixT<N, Eigen::Dynamic>;
+    using VectorN = MatrixT<Dim, 1>;
+    using MatrixNX = MatrixT<Dim, Eigen::Dynamic>;
 
-    static constexpr i32 getDim() { return N; }
+    static constexpr i32 getDim() { return Dim; }
 
     ConstraintAbstract(const std::vector<i32>& idIncidentPoints, scalar weight);
 
     virtual ~ConstraintAbstract();
 
-    // Is there any usage?
+    // Set constraint ID. Start constraint ID?
     void setIdConstraint(i32 idConstraint);
+
+    // Get constraint ID. Start constraint ID?
+    i32 getIdConstraint() const;
+
+    const VectorXi& getIdIncidentPoints() const;
+
+    scalar getWeight() const;
 
     // Number of IDs of incident points.
     i32 numIndices() const;
 
     // Number of the transformed points.
-    i32 numTransformedPoints() const;
+    virtual i32 numTransformedPoints() const = 0;
 
     // Project, and return the weighted squared distance from the transformed points to the projections.
     virtual scalar project(const MatrixNX& points, MatrixNX& projections) = 0;
 
-    // Extract constraint into triplets of sparse matrix, and return the constraint ID.
-    virtual i32 extractConstraint(std::vector<SMatrixTriplet>& triplets) = 0;
+    // Extract constraint into triplets of sparse matrix. At the same time, count the constraint ID.
+    virtual void extractConstraint(std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) = 0;
 
 protected:
 
-    // Generate transform points based on original points.
+    // Generate transform points based on original points. Useless?
     virtual void generateTransformPoints(const MatrixNX& points) = 0;
 
 protected:
@@ -62,104 +69,169 @@ protected:
     // The weigth of the constraint.
     scalar m_weight;
 
+protected: // Temporal variables
+
     // ID of the constraint.
     i32 m_idConstraint;
 
-protected: // Temporal variables
-
-    // Temporal transformed points.
-    MatrixNX m_transformedPoints;
 };
 
+
+
+
 // Interface of constraint component.
-template<i32 N, typename TConstraintAbstract = ConstraintAbstract<N> >
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
 class IConstraintComponent
 {
 public:
     constexpr IConstraintComponent();
 
     template<typename TConstraint>
-    constexpr void staticCheckBase() const;
+    constexpr void staticTypeCheckBase() const;
+
+    template<typename TConstraint>
+    constexpr void staticConvertibleCheckBase() const;
+
+    template<typename TConstraint>
+    constexpr TConstraint& staticCast(TConstraintAbstract& constraint) const;
+
+    template<typename TConstraint>
+    constexpr TConstraint* staticCast(TConstraintAbstract* constraint) const;
 };
 
-// Interface of invariant transformer.
-template<i32 N, typename TConstraintAbstract = ConstraintAbstract<N> >
-class IInvariantTransformer : public IConstraintComponent<N, TConstraintAbstract> {};
-
-// Interface of constraint triplet generator.
-template<i32 N, typename TConstraintAbstract = ConstraintAbstract<N> >
-class IConstraintTripletGenerator : public IConstraintComponent<N, TConstraintAbstract> {};
-
-// Interface of constraint projection operator.
-template<i32 N, typename TConstraintAbstract = ConstraintAbstract<N> >
-class IConstraintProjectionOperator : public IConstraintComponent<N, TConstraintAbstract> {};
-
-// The base class of constraint, with some implementations.
-template<i32 N,
-    typename TInvariantTransformer = IInvariantTransformer<N, ConstraintAbstract<N> >, 
-    typename TConstraintTripletGenerator = IConstraintTripletGenerator<N, ConstraintAbstract<N> >, 
-    typename TConstraintProjectionOperator = IConstraintProjectionOperator<N, ConstraintAbstract<N> > >
-class ConstraintBase : public ConstraintAbstract<N>
+// Abstract class of invariant transformer.
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class InvariantTransformerAbstract : public IConstraintComponent<Dim, TConstraintAbstract> 
 {
 public:
 
-    using typename ConstraintAbstract<N>::VectorN;
-    using typename ConstraintAbstract<N>::MatrixNX;
+    // Temporal transformed points.
+    typename TConstraintAbstract::MatrixNX m_transformedPoints;
+};
 
-    friend typename TInvariantTransformer;
+// Abstract class of constraint triplet generator.
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class ConstraintTripletGeneratorAbstract : public IConstraintComponent<Dim, TConstraintAbstract> {};
+
+// Abstract class of constraint projection operator.
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class ConstraintProjectionOperatorAbstract : public IConstraintComponent<Dim, TConstraintAbstract> {};
+
+
+
+
+// The base class of constraint, with some implementations.
+template<i32 Dim, 
+    typename TConstraintProjectionOperator = ConstraintProjectionOperatorAbstract<Dim, ConstraintAbstract<Dim> >,
+    typename TConstraintTripletGenerator = ConstraintTripletGeneratorAbstract<Dim, ConstraintAbstract<Dim> >, 
+    typename TInvariantTransformer = InvariantTransformerAbstract<Dim, ConstraintAbstract<Dim> > >
+class ConstraintBase : public ConstraintAbstract<Dim>
+{
+public:
+
+    using typename ConstraintAbstract<Dim>::VectorN;
+    using typename ConstraintAbstract<Dim>::MatrixNX;
+
     friend typename TConstraintTripletGenerator;
     friend typename TConstraintProjectionOperator;
+    friend typename TInvariantTransformer;
 
     ConstraintBase(const std::vector<i32>& idIncidentPoints, scalar weight);
 
     virtual ~ConstraintBase();
 
-    virtual scalar project(const MatrixNX& points, MatrixNX& projections) override;
+    virtual i32 numTransformedPoints() const override;
 
-    virtual i32 extractConstraint(std::vector<SMatrixTriplet>& triplets) override;
+    virtual scalar project(const MatrixNX& points, MatrixNX& projections) override final;
+
+    virtual void extractConstraint(std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) override final;
+
+    virtual void generateTransformPoints(const MatrixNX& points) override final;
 
 protected:
-
-    virtual void generateTransformPoints(const MatrixNX& points) override;
-
-protected:
-    TInvariantTransformer invariantTransformer;
-    TConstraintTripletGenerator tripletGenerator;
-    TConstraintProjectionOperator projectionOperator;
+    TConstraintProjectionOperator m_projectionOperator;
+    TConstraintTripletGenerator m_tripletGenerator;
+    TInvariantTransformer m_invariantTransformer;
 };
 
+
+//// Begin some basic constraint components.
+
 // X0, X1, X2 -> X0, X1, X2
-template<i32 N, typename TConstraintAbstract = ConstraintAbstract<N> >
-class IdentityTransformer : public IInvariantTransformer<N, TConstraintAbstract>
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class IdentityTransformer : public InvariantTransformerAbstract<Dim, TConstraintAbstract>
 {
 public:
     inline constexpr i32 numTransformedPointsToCreate(const i32 numIndices) const;
 
-    template<typename TConstraint>
-    void generateTransformPoints(TConstraint& constraint, const typename TConstraintAbstract::MatrixNX& points) const;
+    void generateTransformPoints(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& points);
 };
 
 // X0, X1, X2 -> X0 - Xc, X1 - Xc, X2 - Xc
-template<i32 N, typename TConstraintAbstract = ConstraintAbstract<N> >
-class MeanCenteringTransformer : public IInvariantTransformer<N, TConstraintAbstract>
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class MeanCenteringTransformer : public InvariantTransformerAbstract<Dim, TConstraintAbstract>
 {
 public:
     inline constexpr i32 numTransformedPointsToCreate(const i32 numIndices) const;
 
-    template<typename TConstraint>
-    void generateTransformPoints(TConstraint& constraint, const typename TConstraintAbstract::MatrixNX& points) const;
+    void generateTransformPoints(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& points);
 };
 
 // X0, X1, X2 -> 0, X1 - X0, X2 - X0
-template<i32 N, typename TConstraintAbstract = ConstraintAbstract<N> >
-class SubtractFirstTransformer : public IInvariantTransformer<N, TConstraintAbstract>
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class SubtractFirstTransformer : public InvariantTransformerAbstract<Dim, TConstraintAbstract>
 {
 public:
     inline constexpr i32 numTransformedPointsToCreate(const i32 numIndices) const;
 
-    template<typename TConstraint>
-    void generateTransformPoints(TConstraint& constraint, const typename TConstraintAbstract::MatrixNX& points) const;
+    void generateTransformPoints(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& points);
 };
+
+
+
+
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class IdentityWeightTripleGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
+{
+public:
+    void generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const;
+};
+
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class MeanCenteringWeightTripleGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
+{
+public:
+    void generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const;
+};
+
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class SubtractFirstWeightTripleGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
+{
+public:
+    void generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const;
+};
+
+
+
+
+template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
+class IdentityProjectionOperator : public ConstraintProjectionOperatorAbstract<Dim, TConstraintAbstract>
+{
+public:
+    scalar project(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& transformedPoints, typename TConstraintAbstract::MatrixNX& projections) const;
+};
+
+//// End some basic constraint components.
+
+//// Start some examples of constraints.
+
+template<i32 Dim>
+using IdentityConstraint = ConstraintBase<Dim, IdentityProjectionOperator<Dim>, IdentityWeightTripleGenerator<Dim>, IdentityTransformer<Dim> >;
+using IdentityConstraint2D = IdentityConstraint<2>;
+using IdentityConstraint3D = IdentityConstraint<3>;
+
+
+//// End some examples of constraints.
 
 END_NAMESPACE()
 
