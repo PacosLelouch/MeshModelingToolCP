@@ -2,34 +2,34 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <CudaCompile Include="..\CUDACore\CUDAExport.cu">
-      <Filter>SourcesCUDA</Filter>
+      <Filter>Source Files CUDA</Filter>
     </CudaCompile>
     <CudaCompile Include="..\CUDACore\CUDATest.cu">
-      <Filter>SourcesCUDA</Filter>
+      <Filter>Source Files CUDA</Filter>
     </CudaCompile>
     <CudaCompile Include="..\CUDACore\CUDAUpdatePositionSimple.cu">
-      <Filter>SourcesCUDA</Filter>
+      <Filter>Source Files CUDA</Filter>
     </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Headers">
+    <Filter Include="Header Files">
       <UniqueIdentifier>{e3df150e-a4e1-4e87-8c9e-b83b9dcaa6b1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Sources">
+    <Filter Include="Source Files">
       <UniqueIdentifier>{8eb171ca-0f6b-4ef5-808b-14408b3bfc8f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="SourcesCUDA">
+    <Filter Include="Source Files CUDA">
       <UniqueIdentifier>{0501e854-c41b-4502-92c5-1070aa16ac11}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CUDAUtil.cuh">
-      <Filter>Headers</Filter>
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\HelloMayaCUDA.cpp">
-      <Filter>SourcesCUDA</Filter>
+      <Filter>Source Files CUDA</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

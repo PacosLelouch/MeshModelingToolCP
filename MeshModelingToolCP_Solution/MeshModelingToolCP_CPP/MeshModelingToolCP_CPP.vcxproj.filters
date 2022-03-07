@@ -13,6 +13,21 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Constraints">
+      <UniqueIdentifier>{b45de91f-f120-4d2d-8cbc-66f5361f64db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Solvers">
+      <UniqueIdentifier>{08211271-7402-4e0f-a5b4-f8dcc9185672}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Regularizations">
+      <UniqueIdentifier>{49dfbe19-6343-4caa-ac90-b58f29d11515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Optimizers">
+      <UniqueIdentifier>{a897a498-6500-4c20-b27b-f15217b1e11d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\LinearSolvers">
+      <UniqueIdentifier>{d97253b5-2373-45ef-9cec-72979198a4ca}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CUDABufferUtil.h">
@@ -27,32 +42,47 @@
     <ClInclude Include="..\ExportCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\MayaInterface\GeometryOptimizerNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\HelloMayaCUDA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CPPCore\LGSolver\Constraints\Constraint.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\TypesCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\CPPCore\LGSolver\Constraints\Constraint.h">
+      <Filter>Header Files\Constraints</Filter>
     </ClInclude>
     <ClInclude Include="..\CPPCore\LGSolver\Constraints\ConstraintCollection.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Constraints</Filter>
     </ClInclude>
-    <ClInclude Include="..\CPPCore\LGSolver\Solvers\Solver.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\MayaInterface\GeometryOptimizerNode.h">
+      <Filter>Header Files\Solvers</Filter>
     </ClInclude>
     <ClInclude Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Solvers</Filter>
     </ClInclude>
-    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\Regularization.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="..\CPPCore\LGSolver\Solvers\Solver.h">
+      <Filter>Header Files\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\Regularizer.h">
+      <Filter>Header Files\Regularizations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\RegularizationTerm.h">
+      <Filter>Header Files\Regularizations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Optimizers\Optimizer.h">
+      <Filter>Header Files\Optimizers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.h">
+      <Filter>Header Files\LinearSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\LaplacianRegTerm.h">
+      <Filter>Header Files\Regularizations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\ClosenessRegTerm.h">
+      <Filter>Header Files\Regularizations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,16 +104,25 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\CPPCore\LGSolver\Constraints\Constraint.inl">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Constraints</Filter>
     </None>
     <None Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.inl">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Solvers</Filter>
     </None>
     <None Include="..\CPPCore\LGSolver\Solvers\Solver.inl">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Solvers</Filter>
     </None>
-    <None Include="..\CPPCore\LGSolver\Regularizations\Regularization.inl">
-      <Filter>Header Files</Filter>
+    <None Include="..\CPPCore\LGSolver\Regularizations\Regularizer.inl">
+      <Filter>Header Files\Regularizations</Filter>
+    </None>
+    <None Include="..\CPPCore\LGSolver\Optimizers\Optimizer.inl">
+      <Filter>Header Files\Optimizers</Filter>
+    </None>
+    <None Include="..\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.inl">
+      <Filter>Header Files\LinearSolvers</Filter>
+    </None>
+    <None Include="..\CPPCore\LGSolver\Regularizations\LaplacianRegTerm.inl">
+      <Filter>Header Files\Regularizations</Filter>
     </None>
   </ItemGroup>
 </Project>

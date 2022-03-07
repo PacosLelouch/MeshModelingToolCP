@@ -1,7 +1,5 @@
 #pragma once
 
-#include "glm/glm.hpp"
-#include "igl/AABB.h"
 #include "TypesCommon.h"
 #include <vector>
 
@@ -191,21 +189,21 @@ public:
 
 
 template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
-class IdentityWeightTripleGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
+class IdentityWeightTripletGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
 {
 public:
     void generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const;
 };
 
 template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
-class MeanCenteringWeightTripleGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
+class MeanCenteringWeightTripletGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
 {
 public:
     void generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const;
 };
 
 template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
-class SubtractFirstWeightTripleGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
+class SubtractFirstWeightTripletGenerator : public ConstraintTripletGeneratorAbstract<Dim, TConstraintAbstract>
 {
 public:
     void generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const;
@@ -226,9 +224,30 @@ public:
 //// Start some examples of constraints.
 
 template<i32 Dim>
-using IdentityConstraint = ConstraintBase<Dim, IdentityProjectionOperator<Dim>, IdentityWeightTripleGenerator<Dim>, IdentityTransformer<Dim> >;
+using IdentityConstraint = ConstraintBase<Dim, IdentityProjectionOperator<Dim>, IdentityWeightTripletGenerator<Dim>, IdentityTransformer<Dim> >;
 using IdentityConstraint2D = IdentityConstraint<2>;
 using IdentityConstraint3D = IdentityConstraint<3>;
+
+// For extension, put the constraints in an extra class.
+template<i32 Dim>
+class ConstraintSetAbstract
+{
+public:
+    i32 addConstraint(const std::shared_ptr<ConstraintAbstract<Dim> >& constraintShPtr);
+
+    const std::vector<std::shared_ptr<ConstraintAbstract<Dim> > >& getConstraints() const;
+
+    void clearConstraints();
+
+protected:
+    std::vector<std::shared_ptr<ConstraintAbstract<Dim> > > m_constraintShPtrs;
+};
+
+template<i32 Dim>
+class ConstraintSet : public ConstraintSetAbstract<Dim>
+{
+
+};
 
 
 //// End some examples of constraints.

@@ -120,6 +120,7 @@ template<typename TConstraint>
 inline constexpr void IConstraintComponent<Dim, TConstraintAbstract>::staticTypeCheckBase() const
 {
     static_assert(std::is_base_of_v<ConstraintAbstract<TConstraint::getDim()>, TConstraint>);
+    static_assert(!std::is_same_v<ConstraintAbstract<TConstraint::getDim()>, TConstraint>);
 }
 
 template<i32 Dim, typename TConstraintAbstract>
@@ -207,10 +208,10 @@ inline void SubtractFirstTransformer<Dim, TConstraintAbstract>::generateTransfor
 
 //// End MeanCenteringTransformer
 
-//// Begin IdentityWeightTripleGenerator
+//// Begin IdentityWeightTripletGenerator
 
 template<i32 Dim, typename TConstraintAbstract>
-inline void IdentityWeightTripleGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
+inline void IdentityWeightTripletGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
 {
     i64 nIdx = constraint.getIdIncidentPoints().size();
     for (i64 i = 0; i < nIdx; ++i)
@@ -220,12 +221,12 @@ inline void IdentityWeightTripleGenerator<Dim, TConstraintAbstract>::generateTri
     }
 }
 
-//// End IdentityWeightTripleGenerator
+//// End IdentityWeightTripletGenerator
 
-//// Begin MeanCenteringWeightTripleGenerator
+//// Begin MeanCenteringWeightTripletGenerator
 
 template<i32 Dim, typename TConstraintAbstract>
-inline void MeanCenteringWeightTripleGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
+inline void MeanCenteringWeightTripletGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
 {
     i64 nIdx = constraint.getIdIncidentPoints().size();
     scalar coefDiff = -constraint.getWeight() / nIdx;
@@ -240,12 +241,12 @@ inline void MeanCenteringWeightTripleGenerator<Dim, TConstraintAbstract>::genera
     }
 }
 
-//// End MeanCenteringWeightTripleGenerator
+//// End MeanCenteringWeightTripletGenerator
 
-//// Begin SubtractFirstWeightTripleGenerator
+//// Begin SubtractFirstWeightTripletGenerator
 
 template<i32 Dim, typename TConstraintAbstract>
-inline void SubtractFirstWeightTripleGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
+inline void SubtractFirstWeightTripletGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
 {
     i64 nIdx = constraint.getIdIncidentPoints().size();
     for (i64 i = 1; i < nIdx; ++i)
@@ -256,7 +257,7 @@ inline void SubtractFirstWeightTripleGenerator<Dim, TConstraintAbstract>::genera
     }
 }
 
-//// End SubtractFirstWeightTripleGenerator
+//// End SubtractFirstWeightTripletGenerator
 
 //// Begin IdentityProjectionOperator
 
@@ -277,5 +278,28 @@ inline scalar IdentityProjectionOperator<Dim, TConstraintAbstract>::project(TCon
 }
 
 //// End IdentityProjectionOperator
+
+//// Begin ConstraintSet
+
+template<i32 Dim>
+inline i32 ConstraintSetAbstract<Dim>::addConstraint(const std::shared_ptr<ConstraintAbstract<Dim>>& constraintShPtr)
+{
+    m_constraintShPtrs.push_back(constraintShPtr);
+    return static_cast<i32>(m_constraintShPtrs.size());
+}
+
+template<i32 Dim>
+inline const std::vector<std::shared_ptr<ConstraintAbstract<Dim>>>& ConstraintSetAbstract<Dim>::getConstraints() const
+{
+    return m_constraintShPtrs;
+}
+
+template<i32 Dim>
+inline void ConstraintSetAbstract<Dim>::clearConstraints()
+{
+    m_constraintShPtrs.clear();
+}
+
+//// End ConstraintSet
 
 END_NAMESPACE()

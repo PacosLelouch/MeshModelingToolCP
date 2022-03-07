@@ -16,13 +16,13 @@ public:
 template<i32 Dim>
 class EdgeLengthConstraint : public ConstraintBase<Dim,
     EdgeLengthProjectionOperator<Dim>,
-    SubtractFirstWeightTripleGenerator<Dim>,
+    SubtractFirstWeightTripletGenerator<Dim>,
     SubtractFirstTransformer<Dim> >
 {
 public:
     using Super = ConstraintBase<Dim,
         EdgeLengthProjectionOperator<Dim>,
-        SubtractFirstWeightTripleGenerator<Dim>,
+        SubtractFirstWeightTripletGenerator<Dim>,
         SubtractFirstTransformer<Dim> >;
 
     EdgeLengthConstraint(i32 idx1, i32 idx2, scalar weight, scalar targetLength)
