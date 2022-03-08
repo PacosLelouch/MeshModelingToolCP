@@ -19,12 +19,4 @@
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\Codes\ExportCommon.h" />
-    <ClInclude Include="..\..\Codes\HelloMayaCUDA.h" />
-    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
-    <ClInclude Include="..\..\Codes\MayaExport.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-  </ItemGroup>
 </Project>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -32,17 +32,17 @@
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
@@ -54,145 +54,76 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA $(CUDA_PATH.Substring($(CUDA_PATH.LastIndexOf('v'))).Substring(1)).props" />
-    <!--Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA $(CUDA_VERSION).props" /-->
+  </ImportGroup>
+  <ImportGroup Label="Shared">
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <TargetExt>.mll</TargetExt>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
-    <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x86);$(VC_LibraryPath_x86)</ExcludePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <TargetExt>.mll</TargetExt>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
-    <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x64);$(VC_LibraryPath_x64)</ExcludePath>
-    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <TargetExt>.mll</TargetExt>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
-    <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x86);$(VC_LibraryPath_x86)</ExcludePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetExt>.mll</TargetExt>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
-    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <TargetExt>.mll</TargetExt>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
     <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
-    <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(CommonExcludePath);$(VC_ExecutablePath_x64);$(VC_LibraryPath_x64)</ExcludePath>
+    <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <!-- <Optimization>Disabled</Optimization> -->
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <CudaCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(CUDA_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <!-- <Optimization>Disabled</Optimization> -->
-      <AdditionalOptions>%(AdditionalOptions) -Xcudafe "--display_error_number --diag_suppress=177" -lineinfo --expt-extended-lambda --expt-relaxed-constexpr -std=c++17 -Xcompiler="/EHsc -Zi -Ob0"</AdditionalOptions>
-      <CodeGeneration>compute_75,sm_75</CodeGeneration>
-      <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
-      <CudaRuntime>Static</CudaRuntime>
-      <FastMath>true</FastMath>
-      <GPUDebugInfo>false</GPUDebugInfo>
-      <Runtime>MDd</Runtime>
-      <RuntimeChecks>RTC1</RuntimeChecks>
-      <TargetMachinePlatform>32</TargetMachinePlatform>
-      <TypeInfo>true</TypeInfo>
-      <UseHostInclude>false</UseHostInclude>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalDeps>$(SolutionDir)*.cpp;$(SolutionDir)CPPCore\*.cpp</AdditionalDeps>
-      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
-    </CudaCompile>
     <Link>
-      <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-    </Link>
-    <PostBuildEvent>
-      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
-    </PostBuildEvent>
-    <ProjectReference>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-    </ProjectReference>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <!-- <Optimization>Disabled</Optimization> -->
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <CudaCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(CUDA_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <WarningLevel>Level3</WarningLevel>
-      <!-- <Optimization>Disabled</Optimization> -->
-      <AdditionalOptions>%(AdditionalOptions) -Xcudafe "--display_error_number --diag_suppress=177" -lineinfo --expt-extended-lambda --expt-relaxed-constexpr -std=c++17 -Xcompiler="/EHsc -Zi -Ob0"</AdditionalOptions>
-      <CodeGeneration>compute_75,sm_75</CodeGeneration>
-      <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
-      <CudaRuntime>Static</CudaRuntime>
-      <FastMath>true</FastMath>
-      <GPUDebugInfo>false</GPUDebugInfo>
-      <Runtime>MDd</Runtime>
-      <RuntimeChecks>RTC1</RuntimeChecks>
-      <TargetMachinePlatform>64</TargetMachinePlatform>
-      <TypeInfo>true</TypeInfo>
-      <UseHostInclude>false</UseHostInclude>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalDeps>$(SolutionDir)*.cpp;$(SolutionDir)CPPCore\*.cpp</AdditionalDeps>
-      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
-    </CudaCompile>
-    <Link>
-      <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalDependencies>$(CUDA_LIB_PATH)\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
@@ -204,48 +135,53 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <CudaCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(CUDA_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <Optimization>O2</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalOptions>%(AdditionalOptions) -Xcudafe "--display_error_number --diag_suppress=177" -lineinfo --expt-extended-lambda --expt-relaxed-constexpr -std=c++17 -Xcompiler="/EHsc -Ob2"</AdditionalOptions>
-      <CodeGeneration>compute_75,sm_75</CodeGeneration>
-      <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
-      <CudaRuntime>Static</CudaRuntime>
-      <FastMath>true</FastMath>
-      <GPUDebugInfo>false</GPUDebugInfo>
-      <Runtime>MD</Runtime>
-      <TargetMachinePlatform>32</TargetMachinePlatform>
-      <TypeInfo>true</TypeInfo>
-      <UseHostInclude>false</UseHostInclude>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalDeps>$(SolutionDir)*.cpp;$(SolutionDir)CPPCore\*.cpp</AdditionalDeps>
-      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
-    </CudaCompile>
     <Link>
-      <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CUDA_LIB_PATH)\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CUDA_LIB_PATH)\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
@@ -257,48 +193,26 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>$(CUDA_PATH)\include;$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
-    <CudaCompile>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(CUDA_PATH)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
-      <Optimization>O2</Optimization>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalOptions>%(AdditionalOptions) -Xcudafe "--display_error_number --diag_suppress=177" -lineinfo --expt-extended-lambda --expt-relaxed-constexpr -std=c++17 -Xcompiler="/EHsc -Ob2"</AdditionalOptions>
-      <CodeGeneration>compute_75,sm_75</CodeGeneration>
-      <CompileOut>$(IntDir)%(Filename).obj</CompileOut>
-      <CudaRuntime>Static</CudaRuntime>
-      <FastMath>true</FastMath>
-      <GPUDebugInfo>false</GPUDebugInfo>
-      <Runtime>MD</Runtime>
-      <TargetMachinePlatform>64</TargetMachinePlatform>
-      <TypeInfo>true</TypeInfo>
-      <UseHostInclude>false</UseHostInclude>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;CUDA_COMPUTE_75;_USRDLL;MESHDEFORMATION_3RD_EXPORT;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <SDLCheck>true</SDLCheck>
-      <AdditionalDeps>$(SolutionDir)*.cpp;$(SolutionDir)CPPCore\*.cpp</AdditionalDeps>
-      <Include>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore</Include>
-    </CudaCompile>
     <Link>
-      <AdditionalDependencies>$(CUDA_PATH)\lib\x64\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <SubSystem>Windows</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
       <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>$(CUDA_LIB_PATH)\cudart_static.lib;Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
@@ -314,21 +228,32 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\AAShapeUp_Core_CPP\AAShapeUp_Core_CPP.vcxproj">
-      <Project>{f7e51b52-44e7-4cdc-a246-c93aa116c70d}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
-    </ProjectReference>
+    <ClInclude Include="..\..\Codes\ExportCommon.h" />
+    <ClInclude Include="..\..\Codes\HelloMayaCUDA.h" />
+    <ClInclude Include="..\..\Codes\MayaExport.h" />
+    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\AAShapeUp_Extension_CUDA\AAShapeUp_Extension_CUDA.vcxproj">
       <Project>{5816f8a0-3726-4112-8103-5ac2d1a7846a}</Project>
-      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA $(CUDA_PATH.Substring($(CUDA_PATH.LastIndexOf('v'))).Substring(1)).targets" />
-  <!--Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA $(CUDA_VERSION).targets" /-->
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
 </Project>

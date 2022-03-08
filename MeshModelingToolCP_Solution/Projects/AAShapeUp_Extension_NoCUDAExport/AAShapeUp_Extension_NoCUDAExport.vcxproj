@@ -199,6 +199,13 @@
     <ClInclude Include="..\..\Codes\CUDATest.h" />
     <ClInclude Include="..\..\Codes\ExportCommon.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AAShapeUp_Core_CPP\AAShapeUp_Core_CPP.vcxproj">
+      <Project>{f7e51b52-44e7-4cdc-a246-c93aa116c70d}</Project>
+      <LinkLibraryDependencies>true</LinkLibraryDependencies>
+      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

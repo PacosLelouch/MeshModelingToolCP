@@ -16,8 +16,7 @@ void CUDATest::CUDATestFunction(bool quiet, std::string* outStr)
     //memset(message, 0, sizeof(message));
     LPWSTR cursor = message;
     cursor += wsprintf(cursor, 
-        TEXT("cuda_query() device count = 0 i.e., there is not") 
-        TEXT(" a CUDA-supported GPU!!!\n"));
+        TEXT("This is not a CUDA-supported plugin!!!\n"));
     
     if (!quiet) {
 #if defined _WIN32 || defined _WIN64

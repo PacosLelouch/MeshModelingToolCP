@@ -55,9 +55,9 @@ static WCHAR* getFrac(WCHAR* dst, double f, int precision)
 cudaDeviceProp cuda_query(const int dev, bool quiet = false, std::string* outStr = nullptr)
 {
     cudaDeviceProp devProp;
-    CHAR message[16384]{ 0 };
+    WCHAR message[16384]{ 0 };
     //memset(message, 0, sizeof(message));
-    LPSTR cursor = message;
+    LPWSTR cursor = message;
     //cursor += wsprintf(cursor, TEXT("----------------CUDATestFunction------------------\n"));
     // Various query about the device we are using
     int deviceCount;

@@ -15,13 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Codes\ExportCommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Codes\HelloMayaCUDA.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CUDAExportCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

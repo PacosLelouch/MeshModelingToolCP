@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ExportCommon.h"
+#include "CUDAExportCommon.h"
 
 //MAYA_IMPORT void ExampleFunction();
 

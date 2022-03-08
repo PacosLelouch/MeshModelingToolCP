@@ -1,4 +1,4 @@
-#include "ExportCommon.h"
+#include "MayaExport.h"
 
 #if defined _WIN32 || defined _WIN64
     #include <Windows.h>
@@ -7,6 +7,7 @@
 #endif
 
 #include "CUDATest.h"
+#include "CUDAExport.h"
 
 //MAYA_EXPORT void ExampleFunction()
 //{
@@ -54,7 +55,7 @@ MStatus helloMaya::doIt(const MArgList& argList)
     return status;
 }
 // Initialize Maya Plugin upon loading
-DLL_EXPORT MStatus initializePlugin(MObject obj)
+MLL_EXPORT MStatus initializePlugin(MObject obj)
 {
     MStatus status;
     MFnPlugin plugin( obj, "PacosLelouch", "1.0", "Any");
@@ -64,7 +65,7 @@ DLL_EXPORT MStatus initializePlugin(MObject obj)
     return status;
 }
 // Cleanup Plugin upon unloading
-DLL_EXPORT MStatus uninitializePlugin(MObject obj)
+MLL_EXPORT MStatus uninitializePlugin(MObject obj)
 {
     MStatus status;
     MFnPlugin plugin(obj);
@@ -78,5 +79,8 @@ DLL_EXPORT MStatus uninitializePlugin(MObject obj)
 
 void DummyTestLink()
 {
+    int* test = nullptr;
+    CUDAExport::hostMalloc(reinterpret_cast<void**>(&test), 1);
+    CUDAExport::hostFree(test);
     AAShapeUp::DummyTestCompilation();
 }
