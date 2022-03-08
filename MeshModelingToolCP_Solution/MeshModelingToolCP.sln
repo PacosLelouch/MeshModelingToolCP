@@ -3,9 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30517.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MeshModelingToolCP_CUDA", "MeshModelingToolCP_CUDA\MeshModelingToolCP_CUDA.vcxproj", "{9B6AA39C-FDEE-4EE9-B7F8-D5B9C68C087A}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Maya_CUDA", "Projects\AAShapeUp_Maya_CUDA\AAShapeUp_Maya_CUDA.vcxproj", "{9B6AA39C-FDEE-4EE9-B7F8-D5B9C68C087A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D} = {F7E51B52-44E7-4CDC-A246-C93AA116C70D}
+	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MeshModelingToolCP_CPP", "MeshModelingToolCP_CPP\MeshModelingToolCP_CPP.vcxproj", "{D6C040F0-8B55-4D32-9379-BE59CACBAA89}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Maya_CPP", "Projects\AAShapeUp_Maya_CPP\AAShapeUp_Maya_CPP.vcxproj", "{D6C040F0-8B55-4D32-9379-BE59CACBAA89}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D} = {F7E51B52-44E7-4CDC-A246-C93AA116C70D}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Core_CPP", "Projects\AAShapeUp_Core_CPP\AAShapeUp_Core_CPP.vcxproj", "{F7E51B52-44E7-4CDC-A246-C93AA116C70D}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Extension_CUDA", "Projects\AAShapeUp_Extension_CUDA\AAShapeUp_Extension_CUDA.vcxproj", "{5816F8A0-3726-4112-8103-5AC2D1A7846A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MayaInterfaceProjects", "MayaInterfaceProjects", "{149F4705-214A-4F5C-875F-AE4967CA4011}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "CoreProjects", "CoreProjects", "{4406B536-8334-4077-8A41-03925D5A14DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExecutableProjects", "ExecutableProjects", "{7939911F-EF50-4ACD-BEE1-E48E5024357D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExtensionProjects", "ExtensionProjects", "{B123E963-64E7-4668-8A76-BF86D884A990}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Extension_NoCUDAExport", "Projects\AAShapeUp_Extension_NoCUDAExport\AAShapeUp_Extension_NoCUDAExport.vcxproj", "{16470A6C-46F6-438B-96D2-C9C444E0B7AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,9 +51,38 @@ Global
 		{D6C040F0-8B55-4D32-9379-BE59CACBAA89}.Release|x64.Build.0 = Release|x64
 		{D6C040F0-8B55-4D32-9379-BE59CACBAA89}.Release|x86.ActiveCfg = Release|Win32
 		{D6C040F0-8B55-4D32-9379-BE59CACBAA89}.Release|x86.Build.0 = Release|Win32
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Debug|x64.ActiveCfg = Debug|x64
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Debug|x64.Build.0 = Debug|x64
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Debug|x86.ActiveCfg = Debug|Win32
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Debug|x86.Build.0 = Debug|Win32
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Release|x64.ActiveCfg = Release|x64
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Release|x64.Build.0 = Release|x64
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Release|x86.ActiveCfg = Release|Win32
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D}.Release|x86.Build.0 = Release|Win32
+		{5816F8A0-3726-4112-8103-5AC2D1A7846A}.Debug|x64.ActiveCfg = Debug|x64
+		{5816F8A0-3726-4112-8103-5AC2D1A7846A}.Debug|x64.Build.0 = Debug|x64
+		{5816F8A0-3726-4112-8103-5AC2D1A7846A}.Debug|x86.ActiveCfg = Debug|x64
+		{5816F8A0-3726-4112-8103-5AC2D1A7846A}.Release|x64.ActiveCfg = Release|x64
+		{5816F8A0-3726-4112-8103-5AC2D1A7846A}.Release|x64.Build.0 = Release|x64
+		{5816F8A0-3726-4112-8103-5AC2D1A7846A}.Release|x86.ActiveCfg = Release|x64
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Debug|x64.ActiveCfg = Debug|x64
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Debug|x64.Build.0 = Debug|x64
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Debug|x86.ActiveCfg = Debug|Win32
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Debug|x86.Build.0 = Debug|Win32
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Release|x64.ActiveCfg = Release|x64
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Release|x64.Build.0 = Release|x64
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Release|x86.ActiveCfg = Release|Win32
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9B6AA39C-FDEE-4EE9-B7F8-D5B9C68C087A} = {149F4705-214A-4F5C-875F-AE4967CA4011}
+		{D6C040F0-8B55-4D32-9379-BE59CACBAA89} = {149F4705-214A-4F5C-875F-AE4967CA4011}
+		{F7E51B52-44E7-4CDC-A246-C93AA116C70D} = {4406B536-8334-4077-8A41-03925D5A14DF}
+		{5816F8A0-3726-4112-8103-5AC2D1A7846A} = {B123E963-64E7-4668-8A76-BF86D884A990}
+		{16470A6C-46F6-438B-96D2-C9C444E0B7AF} = {B123E963-64E7-4668-8A76-BF86D884A990}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64F22C38-24E4-429C-928B-29F55C7E8309}

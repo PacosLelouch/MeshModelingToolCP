@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\Constraints">
+      <UniqueIdentifier>{0913d0f1-6a37-4fa7-a4ab-b37d2c41d70f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\LinearSolvers">
+      <UniqueIdentifier>{2c419477-dc52-4db6-888e-f82f662a9be8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Optimizers">
+      <UniqueIdentifier>{587d7fcd-bbe2-469e-805b-79cdcca7b0bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Regularizations">
+      <UniqueIdentifier>{4ea70d36-fe50-4a1c-b2b9-983906b5a581}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Solvers">
+      <UniqueIdentifier>{c7707c77-c880-429e-8b43-90a75889b9aa}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\ConstraintCollection.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.h">
+      <Filter>Header Files\LinearSolvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Optimizers\Optimizer.h">
+      <Filter>Header Files\Optimizers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\ClosenessRegTerm.h">
+      <Filter>Header Files\Regularizations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\LaplacianRegTerm.h">
+      <Filter>Header Files\Regularizations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\Regularizer.h">
+      <Filter>Header Files\Regularizations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\RegularizationTerm.h">
+      <Filter>Header Files\Regularizations</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.h">
+      <Filter>Header Files\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.h">
+      <Filter>Header Files\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h">
+      <Filter>Header Files\Solvers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\TypesCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\pch.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\TypesCommonMinimal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\Dummy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Dummy.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.inl">
+      <Filter>Header Files\Constraints</Filter>
+    </None>
+    <None Include="..\..\Codes\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.inl">
+      <Filter>Header Files\LinearSolvers</Filter>
+    </None>
+    <None Include="..\..\Codes\CPPCore\LGSolver\Optimizers\Optimizer.inl">
+      <Filter>Header Files\Optimizers</Filter>
+    </None>
+    <None Include="..\..\Codes\CPPCore\LGSolver\Regularizations\LaplacianRegTerm.inl">
+      <Filter>Header Files\Regularizations</Filter>
+    </None>
+    <None Include="..\..\Codes\CPPCore\LGSolver\Regularizations\Regularizer.inl">
+      <Filter>Header Files\Regularizations</Filter>
+    </None>
+    <None Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.inl">
+      <Filter>Header Files\Solvers</Filter>
+    </None>
+    <None Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.inl">
+      <Filter>Header Files\Solvers</Filter>
+    </None>
+  </ItemGroup>
+</Project>

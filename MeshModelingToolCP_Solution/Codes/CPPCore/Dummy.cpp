@@ -1,3 +1,5 @@
+
+#include "pch.h"
 //#include "LGSolver/Constraints/Constraint.h"
 //#include "LGSolver/Constraints/EdgeLengthConstraint.h"
 #include "LGSolver/Constraints/ConstraintCollection.h"

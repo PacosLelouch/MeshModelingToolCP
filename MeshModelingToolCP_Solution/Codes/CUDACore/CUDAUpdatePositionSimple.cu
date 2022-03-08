@@ -21,7 +21,7 @@ namespace CUDAExport
         devPositions[index] = devRestPositions[index] + devNormals[index] * (sin(time * speedRate) * varyRate);
     }
 
-    MAYA_EXPORT void deviceUpdatePositionByNormalPeriod(
+    DLL_EXPORT void deviceUpdatePositionByNormalPeriod(
         Buffer<glm::vec3> devPositions, const Buffer<glm::vec3> devRestPositions, const Buffer<glm::vec3> devNormals, 
         float time, float speedRate, float varyRate,
         int blockSizeX)
@@ -43,7 +43,7 @@ namespace CUDAExport
         devPositions[index] = devRestPos + glm::normalize(devRestPos) * (sin(time * speedRate) * varyRate);
     }
 
-    MAYA_EXPORT void deviceUpdatePositionFromOriginPeriod(
+    DLL_EXPORT void deviceUpdatePositionFromOriginPeriod(
         Buffer<glm::vec3> devPositions, const Buffer<glm::vec3> devRestPositions, 
         float time, float speedRate, float varyRate, 
         int blockSizeX)

@@ -5,28 +5,13 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/constants.hpp"
 
-#define BEGIN_NAMESPACE(Namespace) namespace Namespace {
-#define END_NAMESPACE() }
+#include "TypesCommonMinimal.h"
 
 BEGIN_NAMESPACE(AAShapeUp)
 
-using i8 = char;
-using ui8 = unsigned char;
-using i16 = short;
-using ui16 = unsigned short;
-using i32 = int;
-using ui32 = unsigned int;
-using i64 = long long;
-using ui64 = unsigned long long;
-using f32 = float;
-using f64 = double;
-
-using scalar = f32;
 using ColMSMatrix = Eigen::SparseMatrix<scalar, Eigen::ColMajor>;
 using RowMSMatrix = Eigen::SparseMatrix<scalar, Eigen::RowMajor>;
 using SMatrixTriplet = Eigen::Triplet<scalar>;
-
-constexpr i32 INVALID_INT = -1;
 
 #ifdef EIGEN_DONT_ALIGN
 #define EIGEN_ALIGNMENT Eigen::DontAlign
@@ -92,9 +77,5 @@ inline TVec fromEigenVec3(const Vector3& vec)
     v[2] = vec(2);
     return v;
 }
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
 
 END_NAMESPACE()

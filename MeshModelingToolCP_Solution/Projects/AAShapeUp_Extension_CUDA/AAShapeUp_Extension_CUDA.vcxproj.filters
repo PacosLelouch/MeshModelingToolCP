@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{7c1307e0-b157-4e88-84c2-35b6e6c2bd8a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files CUDA">
+      <UniqueIdentifier>{fdbe987d-d36d-4c30-9db2-8dbfd30a0a70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{77ac7ef6-c09a-40cc-9def-bb339a132c05}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <CudaCompile Include="..\..\Codes\CUDACore\CUDAExport.cu">
+      <Filter>Source Files CUDA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\Codes\CUDACore\CUDATest.cu">
+      <Filter>Source Files CUDA</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\Codes\CUDACore\CUDAUpdatePositionSimple.cu">
+      <Filter>Source Files CUDA</Filter>
+    </CudaCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Codes\CUDACore\CUDAUtil.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\ExportCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\Codes\pch.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

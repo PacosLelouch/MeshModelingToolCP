@@ -41,12 +41,12 @@ static WCHAR* getFrac(WCHAR* dst, double f, int precision)
 {
     //int result = 0;
     double f1 = f;
-    int i1 = f;
+    int i1 = static_cast<int>(f);
     size_t cursor = 0;
     for (int _ = 0; _ < precision; ++_) {
         f1 = (f1 - (double)i1) * 10.;
         dst[cursor++] = '0' + (int)f1;
-        i1 = f1;
+        i1 = static_cast<int>(f1);
     }
     dst[cursor] = '\0';
     return dst;
@@ -55,9 +55,9 @@ static WCHAR* getFrac(WCHAR* dst, double f, int precision)
 cudaDeviceProp cuda_query(const int dev, bool quiet = false, std::string* outStr = nullptr)
 {
     cudaDeviceProp devProp;
-    WCHAR message[16384]{ 0 };
+    CHAR message[16384]{ 0 };
     //memset(message, 0, sizeof(message));
-    LPWSTR cursor = message;
+    LPSTR cursor = message;
     //cursor += wsprintf(cursor, TEXT("----------------CUDATestFunction------------------\n"));
     // Various query about the device we are using
     int deviceCount;
@@ -120,7 +120,7 @@ cudaDeviceProp cuda_query(const int dev, bool quiet = false, std::string* outStr
     if (outStr)
     {
         CHAR messageANSI[16384]{ 0 };
-        if (CharToOemW(message, messageANSI))
+        if (CharToOem(message, messageANSI))
         {
             outStr->assign(messageANSI);
         }

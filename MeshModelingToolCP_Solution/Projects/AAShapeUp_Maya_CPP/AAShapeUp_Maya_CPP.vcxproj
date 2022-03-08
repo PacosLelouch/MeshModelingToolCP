@@ -22,8 +22,9 @@
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
     <ProjectGuid>{d6c040f0-8b55-4d32-9379-be59cacbaa89}</ProjectGuid>
-    <RootNamespace>MeshModelingToolCP_CPP</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <RootNamespace>AAShapeUp_Maya_CPP</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>AAShapeUp_Maya_CPP</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -73,47 +74,50 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.mll</TargetExt>
-    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(VC_SourcePath);</SourcePath>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <ExcludePath>$(SolutionDir)CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.mll</TargetExt>
-    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(VC_SourcePath);</SourcePath>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <ExcludePath>$(SolutionDir)CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.mll</TargetExt>
-    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(VC_SourcePath);</SourcePath>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <ExcludePath>$(SolutionDir)CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.mll</TargetExt>
-    <IncludePath>$(SolutionDir)include;$(SolutionDir);$(SolutionDir)CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
-    <SourcePath>$(SolutionDir);$(SolutionDir)CPPCore;$(VC_SourcePath);</SourcePath>
+    <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
+    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
-    <ExcludePath>$(SolutionDir)CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>
+    <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,8 +130,69 @@
       <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
       <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
     </PostBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
+      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
+    </PostBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -137,6 +202,9 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,88 +219,41 @@
       <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
       <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
     </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <PostBuildEvent>
-      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
-    </PostBuildEvent>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
-      <FunctionLevelLinking>true</FunctionLevelLinking>
-      <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
-      <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <LanguageStandard>stdcpp17</LanguageStandard>
-    </ClCompile>
-    <Link>
-      <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
-      <OutputFile>$(OutDir)$(ProjectName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(MAYA_LOCATION)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>Foundation.lib;OpenMaya.lib;OpenMayaUI.lib;OpenMayaAnim.lib;OpenMayaFX.lib;OpenMayaRender.lib;Image.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-    </Link>
-    <PostBuildEvent>
-      <Message>Copying "$(OutDir)$(TargetName)$(TargetExt)" to "$(DEVKIT_LOCATION)\plug-ins\plug-ins\".</Message>
-      <Command>copy "$(OutDir)$(TargetName)$(TargetExt)" "$(DEVKIT_LOCATION)\plug-ins\plug-ins\"</Command>
-    </PostBuildEvent>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\CPPCore\Dummy.cpp" />
-    <ClCompile Include="..\CPPCore\LGSolver\Constraints\Constraint.cpp" />
-    <ClCompile Include="..\CPPOnly\CUDAExport_Disable.cpp" />
-    <ClCompile Include="..\CPPOnly\CUDATest_Disable.cpp" />
-    <ClCompile Include="..\HelloMayaCUDA.cpp" />
+    <ClCompile Include="..\..\Codes\HelloMayaCUDA.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\CPPCore\LGSolver\Constraints\Constraint.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Constraints\ConstraintCollection.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Optimizers\Optimizer.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\ClosenessRegTerm.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\LaplacianRegTerm.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\Regularizer.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Regularizations\RegularizationTerm.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
-    <ClInclude Include="..\CPPCore\LGSolver\Solvers\Solver.h" />
-    <ClInclude Include="..\CUDABufferUtil.h" />
-    <ClInclude Include="..\CUDAExport.h" />
-    <ClInclude Include="..\CUDATest.h" />
-    <ClInclude Include="..\ExportCommon.h" />
-    <ClInclude Include="..\HelloMayaCUDA.h" />
-    <ClInclude Include="..\MayaInterface\GeometryOptimizerNode.h" />
-    <ClInclude Include="..\TypesCommon.h" />
+    <ClInclude Include="..\..\Codes\ExportCommon.h" />
+    <ClInclude Include="..\..\Codes\HelloMayaCUDA.h" />
+    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\CPPCore\LGSolver\Constraints\Constraint.inl" />
-    <None Include="..\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.inl" />
-    <None Include="..\CPPCore\LGSolver\Optimizers\Optimizer.inl" />
-    <None Include="..\CPPCore\LGSolver\Regularizations\LaplacianRegTerm.inl" />
-    <None Include="..\CPPCore\LGSolver\Regularizations\Regularizer.inl" />
-    <None Include="..\CPPCore\LGSolver\Solvers\GeometrySolver.inl" />
-    <None Include="..\CPPCore\LGSolver\Solvers\Solver.inl" />
+    <ProjectReference Include="..\AAShapeUp_Core_CPP\AAShapeUp_Core_CPP.vcxproj">
+      <Project>{f7e51b52-44e7-4cdc-a246-c93aa116c70d}</Project>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
+    <ProjectReference Include="..\AAShapeUp_Extension_NoCUDAExport\AAShapeUp_Extension_NoCUDAExport.vcxproj">
+      <Project>{16470a6c-46f6-438b-96d2-c9c444e0b7af}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

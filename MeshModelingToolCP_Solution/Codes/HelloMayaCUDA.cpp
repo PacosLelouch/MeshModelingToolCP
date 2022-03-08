@@ -54,7 +54,7 @@ MStatus helloMaya::doIt(const MArgList& argList)
     return status;
 }
 // Initialize Maya Plugin upon loading
-MAYA_EXPORT MStatus initializePlugin(MObject obj)
+DLL_EXPORT MStatus initializePlugin(MObject obj)
 {
     MStatus status;
     MFnPlugin plugin( obj, "PacosLelouch", "1.0", "Any");
@@ -64,7 +64,7 @@ MAYA_EXPORT MStatus initializePlugin(MObject obj)
     return status;
 }
 // Cleanup Plugin upon unloading
-MAYA_EXPORT MStatus uninitializePlugin(MObject obj)
+DLL_EXPORT MStatus uninitializePlugin(MObject obj)
 {
     MStatus status;
     MFnPlugin plugin(obj);
@@ -72,4 +72,11 @@ MAYA_EXPORT MStatus uninitializePlugin(MObject obj)
     if(!status)
         status.perror( "deregisterCommand failed" );
     return status;
+}
+
+#include "Dummy.h"
+
+void DummyTestLink()
+{
+    AAShapeUp::DummyTestCompilation();
 }
