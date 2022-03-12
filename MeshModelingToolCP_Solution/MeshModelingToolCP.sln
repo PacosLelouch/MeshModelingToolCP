@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30517.126
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32228.430
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Maya_CUDA", "Projects\AAShapeUp_Maya_CUDA\AAShapeUp_Maya_CUDA.vcxproj", "{9B6AA39C-FDEE-4EE9-B7F8-D5B9C68C087A}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -27,6 +27,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ExtensionProjects", "ExtensionProjects", "{B123E963-64E7-4668-8A76-BF86D884A990}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Extension_NoCUDAExport", "Projects\AAShapeUp_Extension_NoCUDAExport\AAShapeUp_Extension_NoCUDAExport.vcxproj", "{16470A6C-46F6-438B-96D2-C9C444E0B7AF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AAShapeUp_Viewer_CPP", "Projects\AAShapeUp_Viewer_CPP\AAShapeUp_Viewer_CPP.vcxproj", "{E6301BDC-FD49-4A62-8A37-B910B92F42BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -74,6 +76,14 @@ Global
 		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Release|x64.Build.0 = Release|x64
 		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Release|x86.ActiveCfg = Release|Win32
 		{16470A6C-46F6-438B-96D2-C9C444E0B7AF}.Release|x86.Build.0 = Release|Win32
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Debug|x64.ActiveCfg = Debug|x64
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Debug|x64.Build.0 = Debug|x64
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Debug|x86.ActiveCfg = Debug|Win32
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Debug|x86.Build.0 = Debug|Win32
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Release|x64.ActiveCfg = Release|x64
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Release|x64.Build.0 = Release|x64
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Release|x86.ActiveCfg = Release|Win32
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +94,7 @@ Global
 		{F7E51B52-44E7-4CDC-A246-C93AA116C70D} = {4406B536-8334-4077-8A41-03925D5A14DF}
 		{5816F8A0-3726-4112-8103-5AC2D1A7846A} = {B123E963-64E7-4668-8A76-BF86D884A990}
 		{16470A6C-46F6-438B-96D2-C9C444E0B7AF} = {B123E963-64E7-4668-8A76-BF86D884A990}
+		{E6301BDC-FD49-4A62-8A37-B910B92F42BD} = {7939911F-EF50-4ACD-BEE1-E48E5024357D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {64F22C38-24E4-429C-928B-29F55C7E8309}
