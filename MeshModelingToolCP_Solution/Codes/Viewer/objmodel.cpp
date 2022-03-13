@@ -37,6 +37,34 @@ bool ObjModel::loadObj(const std::string & filename)
 	std::cout << "[LoadOBJ] # of shapes in .obj : " << shapes.size() << std::endl;
 	std::cout << "[LoadOBJ] # of materials in .obj : " << materials.size() << std::endl;
 
+	generateDrawables();
+
+	return true;
+}
+
+bool ObjModel::copyObj(const ObjModel& model)
+{
+	attrib = model.attrib;
+	materials = model.materials;
+	shapes = model.shapes;
+	generateDrawables();
+	return false;
+}
+
+void ObjModel::drawObj()
+{
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	glEnable(GL_CULL_FACE);
+	for (const auto& drawable : mDrawables)
+	{
+		glBindVertexArray(drawable->VAO);
+		glDrawArrays(GL_TRIANGLES, 0, drawable->elementCount);
+	}
+	glDisable(GL_CULL_FACE);
+}
+
+void ObjModel::generateDrawables()
+{
 	bool hasColor = !attrib.colors.empty();
 	bool hasNormal = !attrib.normals.empty();
 
@@ -47,8 +75,8 @@ bool ObjModel::loadObj(const std::string & filename)
 		drawable->elementCount = shapes[s].mesh.indices.size();
 		std::vector<glm::vec3> vertexBuffer; // pos, color, normal
 
-		// Construct buffer
-		// Iterate all faces
+											 // Construct buffer
+											 // Iterate all faces
 		for (size_t f = 0; f < drawable->elementCount / 3; ++f)
 		{
 			int idx0 = shapes[s].mesh.indices[3 * f + 0].vertex_index;
@@ -76,7 +104,7 @@ bool ObjModel::loadObj(const std::string & filename)
 			}
 
 			//glm::vec3 col = glm::vec3(0, 0, 1);
-			
+
 			vertexBuffer.push_back(pos0);
 			vertexBuffer.push_back(nor0);
 			vertexBuffer.push_back(pos1);
@@ -84,7 +112,7 @@ bool ObjModel::loadObj(const std::string & filename)
 			vertexBuffer.push_back(pos2);
 			vertexBuffer.push_back(nor2);
 		}
-		
+
 		glBindVertexArray(drawable->VAO);
 
 		// Allocate space and upload the data from CPU to GPU
@@ -97,17 +125,4 @@ bool ObjModel::loadObj(const std::string & filename)
 
 		mDrawables.push_back(std::move(drawable));
 	}
-	return true;
-}
-
-void ObjModel::drawObj()
-{
-	//glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	glEnable(GL_CULL_FACE);
-	for (const auto& drawable : mDrawables)
-	{
-		glBindVertexArray(drawable->VAO);
-		glDrawArrays(GL_TRIANGLES, 0, drawable->elementCount);
-	}
-	glDisable(GL_CULL_FACE);
 }

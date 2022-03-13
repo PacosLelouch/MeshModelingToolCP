@@ -1,4 +1,6 @@
 #include "viewer.h"
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#include <filesystem>
 
 
 static void glfw_error_callback(int error, const char* description)
@@ -107,11 +109,21 @@ Viewer::Viewer(const std::string& name) :
 	/* Our initializaton */
 	setCallbacks();
 
-	mPointShader = std::make_unique<Shader>("../../Codes/shader/point.vert.glsl", "../../Codes/shader/point.frag.glsl");
-	mCurveShader = std::make_unique<Shader>("../../Codes/shader/curve.vert.glsl", "../../Codes/shader/curve.frag.glsl",
-		"../../Codes/shader/curve.geom.glsl");
-	mModelShader = std::make_unique<Shader>("../../Codes/shader/model.vert.glsl", "../../Codes/shader/model.frag.glsl");
-	mGridShader = std::make_unique<Shader>("../../Codes/shader/grid.vert.glsl", "../../Codes/shader/grid.frag.glsl");
+	std::string path = std::filesystem::current_path().parent_path().parent_path().string();
+	for (char& c : path)
+	{
+		if (c == '\\')
+		{
+			c = '/';
+		}
+	}
+	path += '/';
+
+	mPointShader = std::make_unique<Shader>(path + "Codes/shader/point.vert.glsl", path + "Codes/shader/point.frag.glsl");
+	mCurveShader = std::make_unique<Shader>(path + "Codes/shader/curve.vert.glsl", path + "Codes/shader/curve.frag.glsl",
+		path + "Codes/shader/curve.geom.glsl");
+	mModelShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/model.frag.glsl");
+	mGridShader = std::make_unique<Shader>(path + "Codes/shader/grid.vert.glsl", path + "Codes/shader/grid.frag.glsl");
 	createGridGround();
 
 }
@@ -270,8 +282,8 @@ void Viewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 		}
 		else if (mHoldRightButton)
 		{
-			if (moveLeftRight) mCamera.PolarPanX(-deltaX * 0.5);
-			else if (moveUpDown) mCamera.PolarPanY(-deltaY * 0.5);
+			if (moveLeftRight) mCamera.PolarPanX(-deltaX * 0.01);
+			else if (moveUpDown) mCamera.PolarPanY(-deltaY * 0.01);
 		}
 
 		mLastX = xpos;
@@ -281,6 +293,7 @@ void Viewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 void Viewer::scrollCallBack(GLFWwindow* window, double xoffset, double yoffset)
 {
+	mCamera.PolarZoom(yoffset * 0.25);
 }
 
 void Viewer::createGridGround()

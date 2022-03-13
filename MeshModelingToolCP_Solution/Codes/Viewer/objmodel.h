@@ -16,7 +16,12 @@ public:
 	// This function should be called after the initialization of OpenGL
 	bool loadObj(const std::string& filename);
 
+	bool copyObj(const ObjModel& model);
+
 	void drawObj();
+
+protected:
+	void generateDrawables();
 
 private:
 	std::vector<tinyobj::shape_t> shapes; 

@@ -21,12 +21,14 @@ private:
 	float mLastTime = 0;	// last gflw time
 
 	bool mLoaded = false;
+	std::unique_ptr<ObjModel> mModelOrigin;
 	std::unique_ptr<ObjModel> mModel;
 
 	float mWeightPlanar, mWeightRef, mWeightFair, mWeight2nd;
 
 	void loadOBJFile();
 	void reset();
+	void resetModelToOrigin();
 
 	float mPickedRayT;	// Store the t of the casted ray when the target is picked
 };
