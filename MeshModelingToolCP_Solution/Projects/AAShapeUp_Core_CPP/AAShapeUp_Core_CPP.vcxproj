@@ -191,8 +191,10 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\Regularizer.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.h" />
+    <ClInclude Include="..\..\Codes\OpenMPHelper.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
     <ClInclude Include="..\..\Codes\pch.h" />
+    <ClInclude Include="..\..\Codes\SparseMatrixStorage.h" />
     <ClInclude Include="..\..\Codes\TypesCommon.h" />
     <ClInclude Include="..\..\Codes\TypesCommonMinimal.h" />
   </ItemGroup>

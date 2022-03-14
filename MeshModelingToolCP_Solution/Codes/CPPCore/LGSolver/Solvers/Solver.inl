@@ -22,9 +22,11 @@ inline i32 SolverAbstract<Dim, TRegularizer, TConstraintSet>::addRegularizationT
     return m_regularizer.addRegularizationTerm(regularizationTermShPtr);
 }
 
-template<i32 Dim, typename TOptimizer, typename TSPDLinearSolver, typename TRegularizer, typename TConstraintSet>
-SolverBase<Dim, TOptimizer, TSPDLinearSolver, TRegularizer, TConstraintSet>::SolverBase()
+template<i32 Dim, typename TTimer, typename TOptimizer, typename TSPDLinearSolver, typename TRegularizer, typename TConstraintSet>
+SolverBase<Dim, TTimer, TOptimizer, TSPDLinearSolver, TRegularizer, TConstraintSet>::SolverBase()
 {
+    static_assert(std::is_base_of_v<NullTimer, TTimer>);
+
     static_assert(std::is_base_of_v<OptimizerAbstract<Dim>, TOptimizer>);
     static_assert(!std::is_same_v<OptimizerAbstract<Dim>, TOptimizer>);
 

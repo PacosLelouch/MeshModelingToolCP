@@ -96,6 +96,8 @@ public:
 			glDeleteShader(geometry);
 
 	}
+	Shader(std::string&& vertexPath, std::string&& fragmentPath) : Shader(vertexPath.c_str(), fragmentPath.c_str(), nullptr) {}
+	Shader(std::string&& vertexPath, std::string&& fragmentPath, std::string&& geometryPath) : Shader(vertexPath.c_str(), fragmentPath.c_str(), geometryPath.c_str()) {}
 	// activate the shader
 	// ------------------------------------------------------------------------
 	void use()

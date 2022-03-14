@@ -71,7 +71,8 @@ void Camera::PolarRotateAboutY(float deg)
 
 void Camera::PolarZoom(float amt)
 {
-	if ((zoom + amt) > (glm::length(eye - ref) - 200.0f))
+	//if ((zoom + amt) > (glm::length(eye - ref) - 200.0f))
+	if ((zoom + amt) > (glm::length(eye - ref) + 5.0f))
 	{
 		return;
 	}

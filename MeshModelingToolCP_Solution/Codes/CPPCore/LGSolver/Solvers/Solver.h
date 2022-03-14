@@ -24,12 +24,19 @@ public:
 
     void clearConstraints();
 
+    TConstraintSet& getConstraintSet() { return m_constraintSet; }
+    const TConstraintSet& getConstraintSet() const { return m_constraintSet; }
+
+    TRegularizer& getRegularizer() { return m_regularizer; }
+    const TRegularizer& getRegularizer() const { return m_regularizer; }
+
     i32 addConstraint(const std::shared_ptr<ConstraintAbstract<Dim> >& constraintShPtr);
 
     i32 addRegularizationTerm(const std::shared_ptr<RegularizationTermAbstract<Dim> >& regularizationTermShPtr);
 
-    virtual bool initialize(i32 nPoints, const std::vector<i32>& fixIndices = std::vector<i32>()) = 0;
+    virtual bool initialize(i32 nPoints, const std::vector<i32>& handleIndices = std::vector<i32>()) = 0;
 
+    virtual bool solve(i32 nIter, const MatrixNX* initPointsPtr = nullptr) = 0;
 
 protected:
     TConstraintSet m_constraintSet;
@@ -38,7 +45,8 @@ protected:
 };
 
 // The base class of solver, with some implementations.
-template<i32 Dim,
+template<i32 Dim, 
+    typename TTimer = NullTimer,
     typename TOptimizer = OptimizerAbstract<Dim>, // e.g. LocalGlobalOptimizer, AndersonAccelerationOptimizer
     typename TSPDLinearSolver = SPDLinearSolverAbstract<Dim>,  // e.g. Simplicial_LLT_LinearSolver, Simplicial_LDLT_LinearSolver, ConjugateGradientLinearSolver
     typename TRegularizer = RegularizerAbstract<Dim>, // e.g. LinearRegularizer
@@ -56,9 +64,19 @@ public:
 
     virtual ~SolverBase() {}
 
+    TOptimizer& getOptimizer() { return m_optimizer; }
+    const TOptimizer& getOptimizer() const { return m_optimizer; }
+
+    TSPDLinearSolver& getLinearSolver() { return m_linearSolver; }
+    const TSPDLinearSolver& getLinearSolver() const { return m_linearSolver; }
+
+    TTimer& getTimer() { return m_timer; }
+    const TTimer& getTimer() const { return m_timer; }
+
 protected:
     TOptimizer m_optimizer;
     TSPDLinearSolver m_linearSolver;
+    TTimer m_timer;
 };
 
 END_NAMESPACE()

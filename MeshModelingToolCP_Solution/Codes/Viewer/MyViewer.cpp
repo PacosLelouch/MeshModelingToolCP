@@ -6,6 +6,7 @@
 MyViewer::MyViewer(const std::string& name) :
 	Viewer(name)
 {
+	mModelOrigin = std::make_unique<ObjModel>();
 	mModel = std::make_unique<ObjModel>();
 	//mFBXModel.loadFBX("../fbx/BetaCharacter.fbx");
 	//mFBXModel.loadShaders();
@@ -36,14 +37,22 @@ void MyViewer::createGUIWindow()
 	//Viewer::createGUIWindow();
 	if (ImGui::RadioButton("Planarization", &mOperationType, 0)) { reset(); }
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Wire mesh design", &mOperationType, 1)) { reset(); }
+	if (ImGui::RadioButton("Wire Mesh Design", &mOperationType, 1)) { reset(); }
 	ImGui::SameLine();
-	if (ImGui::RadioButton("ARAP deformation", &mOperationType, 2)) { reset(); }
-	if (ImGui::Button("Load model")) { loadOBJFile(); }
+	if (ImGui::RadioButton("ARAP Deformation", &mOperationType, 2)) { reset(); }
+	if (ImGui::Button("Load Model")) { loadOBJFile(); }
 	ImGui::SliderFloat("Planar Weight", &mWeightPlanar, 0, 1);
 	ImGui::SliderFloat("Ref Weight", &mWeightRef, 0, 1);
 	ImGui::SliderFloat("Fair Weight", &mWeightFair, 0, 1);
 	ImGui::SliderFloat("2nd Fair Weight", &mWeight2nd, 0, 1);
+	if (ImGui::Button("Apply Processing")) 
+	{
+		std::cout << "Apply processing " << mOperationType << "(TODO)..." << std::endl;
+	}
+	if (ImGui::Button("Reset Model"))
+	{
+		resetModelToOrigin();
+	}
 	//if (mFKIKMode == 0)	// FK
 	//{
 	//	ImGui::SliderFloat("Time Scale", &mTimeScale, 0, 2);
@@ -187,7 +196,8 @@ void MyViewer::loadOBJFile()
 	nfdresult_t result = NFD_OpenDialog("obj", path.c_str(), &outPath);
 
 	if (result == NFD_OKAY) {
-		mModel->loadObj(std::string(outPath));
+		mModelOrigin->loadObj(std::string(outPath));
+		resetModelToOrigin();
 		mLoaded = true;
 	}
 	//mLoaded = mFBXModel.loadBVHMotion(mBVHFilePaths[index], false);
@@ -197,5 +207,10 @@ void MyViewer::reset()
 {
 	/*mFBXModel.mActor.resetGuide();
 	mFBXModel.loadBVHMotion("../motions/Beta/Beta.bvh");*/
+}
+
+void MyViewer::resetModelToOrigin()
+{
+	mModel->copyObj(*mModelOrigin);
 }
 
