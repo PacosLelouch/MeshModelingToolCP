@@ -7,6 +7,8 @@
 
 #include "TypesCommonMinimal.h"
 
+#include <iostream>
+
 BEGIN_NAMESPACE(AAShapeUp)
 
 using ColMSMatrix = Eigen::SparseMatrix<scalar, Eigen::ColMajor>;

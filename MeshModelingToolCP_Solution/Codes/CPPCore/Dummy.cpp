@@ -18,7 +18,7 @@ void DummyTestCompilation()
     Matrix3X points, projections;
     ec.project(points, projections);
 
-    GeometrySolver<3> geometrySolver;
+    GeometrySolver<3, OpenMPTimer, AndersonAccelerationOptimizer<3> > geometrySolver;
 
     std::unique_ptr<ConstraintAbstract<2> > consUPtr = std::make_unique<EdgeLengthConstraint2D>(0, 1, 1.0f, 1.0f);
     Matrix2X points2, projections2;

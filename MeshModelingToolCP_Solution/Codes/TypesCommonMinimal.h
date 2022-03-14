@@ -24,4 +24,36 @@ constexpr i32 INVALID_INT = -1;
 #define M_PI 3.14159265358979323846
 #endif
 
+namespace TimerUtil
+{
+    using EventID = i32;
+}
+
+class NullTimer
+{
+public:
+    using EventID = TimerUtil::EventID;
+
+    virtual EventID recordTime(const char* eventName = nullptr)
+    {
+        return EventID(-1);
+    }
+
+    virtual EventID getTimerEvent(const char* eventName) const
+    {
+        return EventID(-1);
+    }
+
+    virtual double getElapsedTime(EventID startEvent, EventID endEvent) const
+    {
+        return -1.0;
+    }
+
+    virtual void reset()
+    {
+    }
+
+protected:
+};
+
 END_NAMESPACE()
