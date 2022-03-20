@@ -80,4 +80,14 @@ inline TVec fromEigenVec3(const Vector3& vec)
     return v;
 }
 
+#define USING_MATRIX_VECTOR_SHORTNAME(Dim) \
+    using VectorN = MatrixT<Dim, 1>; \
+    using MatrixNX = MatrixT<Dim, Eigen::Dynamic>; \
+    using MatrixXN = MatrixT<Eigen::Dynamic, Dim>;
+
+#define USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(SuperClass) \
+    using typename SuperClass::VectorN; \
+    using typename SuperClass::MatrixNX; \
+    using typename SuperClass::MatrixXN;
+
 END_NAMESPACE()
