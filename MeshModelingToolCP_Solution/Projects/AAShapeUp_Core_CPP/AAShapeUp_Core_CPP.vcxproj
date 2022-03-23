@@ -191,6 +191,7 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\Regularizer.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.h" />
     <ClInclude Include="..\..\Codes\OpenMPHelper.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
     <ClInclude Include="..\..\Codes\pch.h" />
@@ -211,6 +212,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.cpp" />
     <ClCompile Include="..\..\Codes\pch.cpp" />
   </ItemGroup>
   <ItemGroup>

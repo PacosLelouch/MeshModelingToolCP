@@ -70,6 +70,8 @@ public:
     using Super = OptimizerAbstract<Dim>;
     USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
 
+    virtual ~LocalGlobalOptimizer() override {}
+
     virtual bool initialize(i32 nPoints, ConstraintSetAbstract<Dim>& constraintSet, RegularizerAbstract<Dim>& regularizer, 
         ErrorEvaluatorAbstract<Dim>* errorEvaluatorPtr = nullptr, SPDLinearSolverAbstract<Dim>* linearSolverPtr = nullptr, const std::vector<i32>& handleIndices = std::vector<i32>()) override;
 
@@ -132,6 +134,8 @@ class AndersonAccelerationOptimizer : public LocalGlobalOptimizer<Dim>
 public:
     using Super = LocalGlobalOptimizer<Dim>;
     USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+
+    virtual ~AndersonAccelerationOptimizer() override {}
 
     virtual bool initialize(i32 nPoints, ConstraintSetAbstract<Dim>& constraintSet, RegularizerAbstract<Dim>& regularizer,
         ErrorEvaluatorAbstract<Dim>* errorEvaluatorPtr = nullptr, SPDLinearSolverAbstract<Dim>* linearSolverPtr = nullptr, const std::vector<i32>& handleIndices = std::vector<i32>()) override;

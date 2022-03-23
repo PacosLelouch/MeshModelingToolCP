@@ -41,6 +41,8 @@ class OpenMPTimer : public NullTimer
 public:
     using NullTimer::EventID;
 
+    virtual ~OpenMPTimer() override {}
+
     virtual EventID recordTime(const char* eventName = nullptr) override
     {
         if (eventName != nullptr)

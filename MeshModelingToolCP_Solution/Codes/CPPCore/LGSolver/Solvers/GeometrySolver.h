@@ -13,6 +13,8 @@ public:
     using Super = ErrorEvaluatorAbstract<Dim>;
     USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
 
+    virtual ~GeometrySolverErrorEvaluator() override {}
+
     virtual scalar evaluate(const MatrixNX& fullQ, ConstraintSetAbstract<Dim>& constraintSet, MatrixNX* outProjectionPtr = nullptr) override;
 
     VectorX m_consError;
