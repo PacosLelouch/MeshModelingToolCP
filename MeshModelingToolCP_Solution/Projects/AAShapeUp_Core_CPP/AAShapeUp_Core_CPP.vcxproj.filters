@@ -84,6 +84,12 @@
     <ClInclude Include="..\..\Codes\OpenMPHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PointToRefSurfaceConstraint.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MeshAABB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">
