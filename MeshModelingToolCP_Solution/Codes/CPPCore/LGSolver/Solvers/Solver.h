@@ -20,6 +20,7 @@ public:
     virtual ~SolverAbstract() {}
 
     void clearConstraints();
+    void clearRegularizations();
 
     TConstraintSet& getConstraintSet() { return m_constraintSet; }
     const TConstraintSet& getConstraintSet() const { return m_constraintSet; }

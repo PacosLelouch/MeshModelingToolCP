@@ -96,6 +96,8 @@ public:
     virtual void reset() override
     {
         m_timeValues.clear();
+        m_names.clear();
+        m_nameToIdxMap.clear();
     }
 
 protected:

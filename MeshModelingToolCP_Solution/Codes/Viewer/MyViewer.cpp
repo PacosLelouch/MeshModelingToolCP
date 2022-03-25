@@ -4,11 +4,15 @@
 #include <nfd.h>
 #include "ObjToEigenConverter.h"
 
-MyViewer::MyViewer(const std::string& name) :
-	Viewer(name)
+MyViewer::MyViewer(const std::string& name)
+	: Viewer(name)
+	, mModelOrigin(std::make_unique<ObjModel>())
+	, mModel(std::make_unique<ObjModel>())
+	, mMeshConverter(mModel.get())
+	, mGeometrySolverShPtr(std::make_shared<MyGeometrySolver>())
 {
-	mModelOrigin = std::make_unique<ObjModel>();
-	mModel = std::make_unique<ObjModel>();
+	//mModelOrigin = std::make_unique<ObjModel>();
+	//mModel = std::make_unique<ObjModel>();
 	//mFBXModel.loadFBX("../fbx/BetaCharacter.fbx");
 	//mFBXModel.loadShaders();
 	////mFBXModel.createShader("../shader/betaCharacter.vert.glsl", "../shader/betaCharacter.frag.glsl");
@@ -27,7 +31,8 @@ MyViewer::MyViewer(const std::string& name) :
 	//}
 	//mPickedTarget = nullptr;
 
-	mMeshConverterShPtr = std::make_shared<AAShapeUp::ObjToEigenConverter>(mModel.get());
+	//mMeshConverter = AAShapeUp::ObjToEigenConverter(mModel.get());
+	//mMeshConverterShPtr = std::make_shared<AAShapeUp::ObjToEigenConverter>(mModel.get());
 }
 
 MyViewer::~MyViewer()
@@ -231,7 +236,23 @@ void MyViewer::executeARAP2D()
 
 void MyViewer::executeTestBoundingSphere()
 {
-	std::cout << "Apply processing " << "(TODO)" << std::endl;
+
+	auto& mesh = mMeshConverter.getEigenMesh();
+	std::cout << "Apply processing " << "\"executeTestBoundingSphere\"" << "..." << std::endl;
+	if (!mTestBoudingSphereOperation->initialize(mesh.m_section.m_positionIndices, mesh.m_section.m_numFaceVertices, mesh.m_positions, {}))
+	{
+		std::cout << "Fail to initialize!" << std::endl;
+	}
+
+	if (!mTestBoudingSphereOperation->solve(mesh.m_positions, mNumIter))
+	{
+		std::cout << "Fail to solve!" << std::endl;
+	}
+
+	if (!mMeshConverter.updateSourceMesh(mTestBoudingSphereOperation->getMeshDirtyFlag(), true))
+	{
+		std::cout << "Fail to update source mesh!" << std::endl;
+	}
 }
 
 void MyViewer::loadOBJFile()
@@ -257,6 +278,8 @@ void MyViewer::reset()
 void MyViewer::resetModelToOrigin()
 {
 	mModel->copyObj(*mModelOrigin);
-	mMeshConverterShPtr->generateEigenMatrices();
+	mMeshConverter.generateEigenMatrices();
+
+	mTestBoudingSphereOperation.reset(new AAShapeUp::TestBoundingSphereOperation(mGeometrySolverShPtr, 1.0f));
 }
 

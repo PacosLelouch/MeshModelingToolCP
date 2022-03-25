@@ -1,6 +1,9 @@
 #pragma once
 #include "viewer.h"
 #include "objmodel.h"
+#include "Operations/TestBoundingSphereOperation.h"
+
+using MyGeometrySolver = AAShapeUp::GeometrySolver<3, AAShapeUp::OpenMPTimer, AAShapeUp::AndersonAccelerationOptimizer<3>>;
 
 class MyViewer : public Viewer
 {
@@ -38,5 +41,9 @@ private:
 
 	float mPickedRayT;	// Store the t of the casted ray when the target is picked
 
-	std::shared_ptr<class AAShapeUp::ObjToEigenConverter> mMeshConverterShPtr;
+	AAShapeUp::ObjToEigenConverter mMeshConverter;
+
+	std::shared_ptr<MyGeometrySolver> mGeometrySolverShPtr;
+
+	std::unique_ptr<AAShapeUp::TestBoundingSphereOperation> mTestBoudingSphereOperation;
 };

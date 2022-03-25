@@ -10,6 +10,9 @@ bool OperationBase::initialize(const std::vector<i32>& vertexIndices, const std:
     m_initialPositions = positions;
     m_handleIndices = handleIndices;
 
+	m_solverShPtr->clearConstraints();
+	m_solverShPtr->clearRegularizations();
+
     if (!initializeConstraintsAndRegularizations())
     {
         return false;
@@ -29,10 +32,10 @@ bool OperationBase::solve(Matrix3X& newPositions, i32 nIter)
     return true;
 }
 
-MeshDirtyFlag OperationBase::visualizePlanarityError(Matrix3X& outColors, scalar maxError) const
+MeshDirtyFlag OperationBase::visualizeOutputErrors(Matrix3X& outColors, scalar maxError) const
 {
 	std::vector<scalar> errors;
-	MeshDirtyFlag dirtyFlag_IsItUseful = getPlanarityErrors(errors, maxError);
+	MeshDirtyFlag dirtyFlag_IsItUseful = getOutputErrors(errors, maxError);
 
 	outColors.resize(Eigen::NoChange, static_cast<i64>(errors.size()));
 

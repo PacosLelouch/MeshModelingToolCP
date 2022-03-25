@@ -19,9 +19,9 @@ public:
 
     virtual bool solve(Matrix3X& newPositions, i32 nIter = 5);
 
-    MeshDirtyFlag visualizePlanarityError(Matrix3X& outColors, scalar maxError = 1) const;
+    MeshDirtyFlag visualizeOutputErrors(Matrix3X& outColors, scalar maxError = 1) const;
 
-    virtual MeshDirtyFlag getPlanarityErrors(std::vector<scalar>& outErrors, scalar maxError = 1) const = 0;
+    virtual MeshDirtyFlag getOutputErrors(std::vector<scalar>& outErrors, scalar maxError = 1) const = 0;
 
     virtual MeshDirtyFlag getMeshDirtyFlag() const = 0;
 

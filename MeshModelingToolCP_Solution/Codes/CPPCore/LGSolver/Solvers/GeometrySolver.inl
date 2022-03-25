@@ -78,6 +78,10 @@ inline bool GeometrySolver<Dim, TTimer, TOptimizer, TSPDLinearSolver, TRegulariz
     {
         return false;
     }
+
+    this->m_elapsedTimes.clear();
+    this->m_funcValues.clear();
+
     //i32 mAnderson = 5; // TODO, refactor.
 
     //const MatrixNX& initPoints = *initPointsPtr;
@@ -135,15 +139,21 @@ inline bool GeometrySolver<Dim, TTimer, TOptimizer, TSPDLinearSolver, TRegulariz
         if (!this->m_optimizer.optimize(this->m_errorEvaluator, &this->m_constraintSet, &this->m_linearSolver))
         {
             TimerUtil::EventID tError = this->m_timer.recordTime("GeometrySolver_Solve_Error");
+            // For debugging.
+            std::cout << "Iteration [" << it << "] error time = " << this->m_timer.getElapsedTime(tBegin, tError) << std::endl;
             return false;
         }
 
         TimerUtil::EventID tIter = this->m_timer.recordTime(("GeometrySolver_Solve_Iter" + std::to_string(it)).c_str());
         this->m_elapsedTimes.push_back(this->m_timer.getElapsedTime(tBegin, tIter));
         this->m_funcValues.push_back(this->m_optimizer.getCurrentError());
+        // For debugging.
+        std::cout << "Iteration [" << it << "] time = " << this->m_timer.getElapsedTime(tBegin, tIter) << ", error = " << this->m_funcValues.back() << std::endl;
     }
 
     TimerUtil::EventID tEnd = this->m_timer.recordTime("GeometrySolver_Solve_End");
+    // For debugging.
+    std::cout << "Iteration end time = " << this->m_timer.getElapsedTime(tBegin, tEnd) << ", error = " << this->m_funcValues.back() << std::endl;
 
     return true;
 }

@@ -10,13 +10,15 @@ BEGIN_NAMESPACE(AAShapeUp)
 class ObjToEigenConverter
 {
 public:
-    ObjToEigenConverter(ObjModel* objModelPtr);
+    ObjToEigenConverter(ObjModel* objModelPtr = nullptr);
 
     bool generateEigenMatrices(bool mergeSections = false);
 
     bool updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateBufferNow = false);
 
     void updateBuffer();
+
+    EigenMesh<3>& getEigenMesh() { return m_outMesh; }
 
 protected:
     ObjModel* m_inObjModelPtr = nullptr;
