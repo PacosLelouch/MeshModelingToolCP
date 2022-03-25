@@ -11,6 +11,8 @@ public:
     OperationBase(const std::shared_ptr<SolverAbstract<3, LinearRegularizer<3>, ConstraintSet<3>>>& solverShPtr)
         : m_solverShPtr(solverShPtr) {}
 
+    virtual ~OperationBase() {}
+
     bool initialize(const std::vector<i32>& vertexIndices, const std::vector<i32>& numFaceVertices, const Matrix3X& positions, const std::vector<i32>& handleIndices);
 
     virtual bool initializeConstraintsAndRegularizations() = 0;

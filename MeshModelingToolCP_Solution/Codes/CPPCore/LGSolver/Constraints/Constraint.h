@@ -82,6 +82,8 @@ template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
 class IConstraintComponent
 {
 public:
+    USING_MATRIX_VECTOR_SHORTNAME(Dim)
+public:
     constexpr IConstraintComponent();
 
     template<typename TConstraint>

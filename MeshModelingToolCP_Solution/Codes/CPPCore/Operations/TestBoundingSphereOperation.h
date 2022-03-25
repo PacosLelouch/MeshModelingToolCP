@@ -4,15 +4,16 @@
 
 BEGIN_NAMESPACE(AAShapeUp)
 
-class PlanarizationOperation : public OperationBase
+class TestBoundingSphereOperation : public OperationBase
 {
 public:
     using Super = OperationBase;
 
-    PlanarizationOperation(const std::shared_ptr<SolverAbstract<3, LinearRegularizer<3>, ConstraintSet<3>>>& solverShPtr)
-        : Super(solverShPtr) {}
+    TestBoundingSphereOperation(const std::shared_ptr<SolverAbstract<3, LinearRegularizer<3>, ConstraintSet<3>>>& solverShPtr, scalar weight = scalar(1))
+        : Super(solverShPtr)
+        , m_weight(weight) {}
 
-    virtual ~PlanarizationOperation() {}
+    virtual ~TestBoundingSphereOperation() {}
 
     virtual bool initializeConstraintsAndRegularizations() override;
 
@@ -21,6 +22,7 @@ public:
     virtual MeshDirtyFlag getMeshDirtyFlag() const override;
 
 protected:
+    scalar m_weight;
 };
 
 END_NAMESPACE()

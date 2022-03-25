@@ -43,8 +43,8 @@ void MyViewer::createGUIWindow()
 	if (ImGui::RadioButton("Wire Mesh Design", &mOperationType, 1)) { reset(); }
 	ImGui::SameLine();
 	if (ImGui::RadioButton("ARAP Deformation", &mOperationType, 2)) { reset(); }
-	ImGui::SameLine();
-	if (ImGui::RadioButton("Test Bounding Box", &mOperationType, 3)) { reset(); }
+	//ImGui::SameLine();
+	if (ImGui::RadioButton("Test Bounding Sphere", &mOperationType, 3)) { reset(); }
 	if (ImGui::Button("Load Model")) { loadOBJFile(); }
 	ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
 	ImGui::SliderFloat("Planar Weight", &mWeightPlanar, 0, 1);
@@ -66,7 +66,7 @@ void MyViewer::createGUIWindow()
 			executeARAP2D();
 			break;
 		case 3:
-			executeTestBoundingBox();
+			executeTestBoundingSphere();
 			break;
 		default:
 			std::cout << "Nothing happened. Not implemented?" << std::endl;
@@ -229,7 +229,7 @@ void MyViewer::executeARAP2D()
 	std::cout << "Apply processing " << "(TODO)" << std::endl;
 }
 
-void MyViewer::executeTestBoundingBox()
+void MyViewer::executeTestBoundingSphere()
 {
 	std::cout << "Apply processing " << "(TODO)" << std::endl;
 }

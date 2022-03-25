@@ -99,6 +99,12 @@
     <ClInclude Include="..\..\Codes\CPPCore\Operations\OperationBase.h">
       <Filter>Header Files\Operations</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\TestBoundingSphereConstraint.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.h">
+      <Filter>Header Files\Operations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">
@@ -114,6 +120,9 @@
       <Filter>Source Files\Operations</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Codes\CPPCore\Operations\OperationBase.cpp">
+      <Filter>Source Files\Operations</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.cpp">
       <Filter>Source Files\Operations</Filter>
     </ClCompile>
   </ItemGroup>

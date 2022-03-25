@@ -16,7 +16,7 @@ public:
 	void executePlanarization();
 	void executeWireMeshDesign();
 	void executeARAP2D();
-	void executeTestBoundingBox();
+	void executeTestBoundingSphere();
 
 private:
 	int mOperationType = 0;
