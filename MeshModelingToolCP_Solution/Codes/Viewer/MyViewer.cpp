@@ -4,6 +4,14 @@
 #include <nfd.h>
 #include "ObjToEigenConverter.h"
 
+namespace MyViewerOp
+{
+	constexpr int Planarization = 0;
+	constexpr int WireMeshDesign = Planarization + 1;
+	constexpr int ARAP2D = WireMeshDesign + 1;
+	constexpr int TestBoundingSphere = ARAP2D + 1;
+}
+
 MyViewer::MyViewer(const std::string& name)
 	: Viewer(name)
 	, mModelOrigin(std::make_unique<ObjModel>())
@@ -43,13 +51,13 @@ void MyViewer::createGUIWindow()
 {
 	ImGui::Begin("Editor");
 	//Viewer::createGUIWindow();
-	if (ImGui::RadioButton("Planarization", &mOperationType, 0)) { reset(); }
+	if (ImGui::RadioButton("Planarization", &mOperationType, MyViewerOp::Planarization)) { resetOperation(); }
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Wire Mesh Design", &mOperationType, 1)) { reset(); }
+	if (ImGui::RadioButton("Wire Mesh Design", &mOperationType, MyViewerOp::WireMeshDesign)) { resetOperation(); }
 	ImGui::SameLine();
-	if (ImGui::RadioButton("ARAP Deformation", &mOperationType, 2)) { reset(); }
+	if (ImGui::RadioButton("ARAP Deformation", &mOperationType, MyViewerOp::ARAP2D)) { resetOperation(); }
 	//ImGui::SameLine();
-	if (ImGui::RadioButton("Test Bounding Sphere", &mOperationType, 3)) { reset(); }
+	if (ImGui::RadioButton("Test Bounding Sphere", &mOperationType, MyViewerOp::TestBoundingSphere)) { resetOperation(); }
 	if (ImGui::Button("Load Model")) { loadOBJFile(); }
 	ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
 	ImGui::SliderFloat("Planar Weight", &mWeightPlanar, 0, 1);
@@ -61,16 +69,16 @@ void MyViewer::createGUIWindow()
 		std::cout << "Apply processing " << mOperationType << "..." << std::endl;
 		switch (mOperationType)
 		{
-		case 0:
+		case MyViewerOp::Planarization:
 			executePlanarization();
 			break;
-		case 1:
+		case MyViewerOp::WireMeshDesign:
 			executeWireMeshDesign();
 			break;
-		case 2:
+		case MyViewerOp::ARAP2D:
 			executeARAP2D();
 			break;
-		case 3:
+		case MyViewerOp::TestBoundingSphere:
 			executeTestBoundingSphere();
 			break;
 		default:
@@ -236,6 +244,10 @@ void MyViewer::executeARAP2D()
 
 void MyViewer::executeTestBoundingSphere()
 {
+	if (!mLoaded)
+	{
+		return;
+	}
 
 	auto& mesh = mMeshConverter.getEigenMesh();
 	std::cout << "Apply processing " << "\"executeTestBoundingSphere\"" << "..." << std::endl;
@@ -265,21 +277,39 @@ void MyViewer::loadOBJFile()
 		mModelOrigin->loadObj(std::string(outPath));
 		resetModelToOrigin();
 		mLoaded = true;
+		resetOperation();
 	}
-	//mLoaded = mFBXModel.loadBVHMotion(mBVHFilePaths[index], false);
+	else
+	{
+		mLoaded = false;
+	}
 }
 
-void MyViewer::reset()
+void MyViewer::resetOperation()
 {
-	/*mFBXModel.mActor.resetGuide();
-	mFBXModel.loadBVHMotion("../motions/Beta/Beta.bvh");*/
+	switch (mOperationType)
+	{
+	case MyViewerOp::Planarization:
+
+		break;
+	case MyViewerOp::WireMeshDesign:
+
+		break;
+	case MyViewerOp::ARAP2D:
+
+		break;
+	case MyViewerOp::TestBoundingSphere:
+		mTestBoudingSphereOperation.reset(new AAShapeUp::TestBoundingSphereOperation(mGeometrySolverShPtr, 1.0f));
+		break;
+	default:
+		std::cout << "Nothing happened. Not implemented?" << std::endl;
+		break;
+	}
 }
 
 void MyViewer::resetModelToOrigin()
 {
 	mModel->copyObj(*mModelOrigin);
 	mMeshConverter.generateEigenMatrices();
-
-	mTestBoudingSphereOperation.reset(new AAShapeUp::TestBoundingSphereOperation(mGeometrySolverShPtr, 1.0f));
 }
 

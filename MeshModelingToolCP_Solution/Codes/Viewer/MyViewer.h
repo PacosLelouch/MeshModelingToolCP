@@ -33,13 +33,14 @@ private:
 	std::unique_ptr<ObjModel> mModelOrigin;
 	std::unique_ptr<ObjModel> mModel;
 
-	float mWeightPlanar, mWeightRef, mWeightFair, mWeight2nd;
+	// For planarization.
+	float mWeightPlanar = 1.0f, mWeightRef = 1.0f, mWeightFair = 1.0f, mWeight2nd = 1.0f;
 
 	void loadOBJFile();
-	void reset();
+	void resetOperation();
 	void resetModelToOrigin();
 
-	float mPickedRayT;	// Store the t of the casted ray when the target is picked
+	//float mPickedRayT;	// Store the t of the casted ray when the target is picked
 
 	AAShapeUp::ObjToEigenConverter mMeshConverter;
 
