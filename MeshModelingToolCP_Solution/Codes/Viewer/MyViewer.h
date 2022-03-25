@@ -13,6 +13,10 @@ public:
 	virtual void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override;
 	virtual void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)override;
 
+	void executePlanarization();
+	void executeWireMeshDesign();
+	void executeARAP2D();
+
 private:
 	int mOperationType = 0;
 

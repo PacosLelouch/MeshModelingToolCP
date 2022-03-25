@@ -50,7 +50,22 @@ void MyViewer::createGUIWindow()
 	ImGui::SliderFloat("2nd Fair Weight", &mWeight2nd, 0, 1);
 	if (ImGui::Button("Apply Processing")) 
 	{
-		std::cout << "Apply processing " << mOperationType << "(TODO)..." << std::endl;
+		std::cout << "Apply processing " << mOperationType << "..." << std::endl;
+		switch (mOperationType)
+		{
+		case 0:
+			executePlanarization();
+			break;
+		case 1:
+			executeWireMeshDesign();
+			break;
+		case 2:
+			executeARAP2D();
+			break;
+		default:
+			std::cout << "Nothing happened. Not implemented?" << std::endl;
+			break;
+		}
 	}
 	if (ImGui::Button("Reset Model"))
 	{
@@ -190,6 +205,21 @@ void MyViewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 	//	mFBXModel.computeIK(mIKType, *mPickedTarget);
 	//}
 
+}
+
+void MyViewer::executePlanarization()
+{
+	std::cout << "Apply processing " << "(TODO)" << std::endl;
+}
+
+void MyViewer::executeWireMeshDesign()
+{
+	std::cout << "Apply processing " << "(TODO)" << std::endl;
+}
+
+void MyViewer::executeARAP2D()
+{
+	std::cout << "Apply processing " << "(TODO)" << std::endl;
 }
 
 void MyViewer::loadOBJFile()

@@ -10,16 +10,14 @@ enum class MeshDirtyFlag : ui64
     None = 0ll,
     PositionDirty = 1ll,
     NormalDirty = 1ll << 1,
-    TexCoordsDirty = 1ll << 2,
+    ColorDirty = 1ll << 2,
+
+    TexCoordsDirty = 1ll << 3,
 
     // Combination.
-    PosNormDirty = PositionDirty | NormalDirty,
-    PosTexDirty = PositionDirty | TexCoordsDirty,
-    NormTexDirty = PositionDirty | TexCoordsDirty,
-    PosNormTexDirty = PositionDirty | NormalDirty | TexCoordsDirty,
+    AllDirty = PositionDirty | NormalDirty | ColorDirty | TexCoordsDirty,
 
     // End bit.
-    AllDirty = PositionDirty | NormalDirty | TexCoordsDirty,
     EndFlag = AllDirty + 1ll,
 };
 
@@ -32,6 +30,8 @@ public:
 public:
     std::vector<i32> m_positionIndices;
     std::vector<i32> m_normalIndices;
+    std::vector<i32> m_colorIndices;
+
     std::vector<i32> m_texCoordsIndices;
 
     std::vector<i32> m_numFaceVertices;
@@ -48,6 +48,7 @@ public:
 
     MatrixNX m_positions;
     MatrixNX m_normals;
+    MatrixNX m_colors;
 
     Matrix2X m_texCoords;
 };
