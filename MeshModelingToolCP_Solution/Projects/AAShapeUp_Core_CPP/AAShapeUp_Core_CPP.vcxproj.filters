@@ -87,6 +87,9 @@
     <ClInclude Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\EigenMesh.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">

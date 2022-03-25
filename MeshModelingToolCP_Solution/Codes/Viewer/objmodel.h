@@ -2,13 +2,16 @@
 #include <tiny_obj_loader.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "drawable.h"
 #include <memory>
+#include "drawable.h"
+#include "ObjToEigenConverter.h"
 
 // Only support triangle mesh now
 class ObjModel
 {
 public:
+	friend class AAShapeUp::ObjToEigenConverter;
+
 	ObjModel();
 
 	~ObjModel();
@@ -23,7 +26,7 @@ public:
 protected:
 	void generateDrawables();
 
-private:
+protected:
 	std::vector<tinyobj::shape_t> shapes; 
 	std::vector<tinyobj::material_t> materials;
 	tinyobj::attrib_t attrib;

@@ -1,8 +1,9 @@
+#include "pch.h"
 #include "PlanarizationOperation.h"
 
 BEGIN_NAMESPACE(AAShapeUp)
 
-bool PlanarizationOperation::initialize(const std::vector<i32>& vertexIndices, const std::vector<ui8>& numFaceVertices, const Matrix3X& positions, const std::vector<i32>& handleIndices)
+bool PlanarizationOperation::initialize(const std::vector<i32>& vertexIndices, const std::vector<i32>& numFaceVertices, const Matrix3X& positions, const std::vector<i32>& handleIndices)
 {
     m_vertexIndices = vertexIndices;
     m_numFaceVertices = numFaceVertices;
@@ -10,7 +11,7 @@ bool PlanarizationOperation::initialize(const std::vector<i32>& vertexIndices, c
     m_handleIndices = handleIndices;
     //TODO: init constraints and regularizations.
 
-    return m_solverShPtr && m_solverShPtr->initialize(positions.cols(), m_handleIndices);
+    return m_solverShPtr && m_solverShPtr->initialize(static_cast<i32>(positions.cols()), m_handleIndices);
 }
 
 bool PlanarizationOperation::solve(Matrix3X& newPositions, i32 nIter)

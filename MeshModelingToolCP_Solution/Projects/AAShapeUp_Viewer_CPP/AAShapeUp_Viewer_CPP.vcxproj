@@ -166,6 +166,7 @@
     <ClCompile Include="..\..\Codes\Viewer\main.cpp" />
     <ClCompile Include="..\..\Codes\Viewer\MyViewer.cpp" />
     <ClCompile Include="..\..\Codes\Viewer\objmodel.cpp" />
+    <ClCompile Include="..\..\Codes\Viewer\ObjToEigenConverter.cpp" />
     <ClCompile Include="..\..\Codes\Viewer\utils.cpp" />
     <ClCompile Include="..\..\Codes\Viewer\viewer.cpp" />
   </ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="..\..\Codes\Viewer\drawable.h" />
     <ClInclude Include="..\..\Codes\Viewer\MyViewer.h" />
     <ClInclude Include="..\..\Codes\Viewer\objmodel.h" />
+    <ClInclude Include="..\..\Codes\Viewer\ObjToEigenConverter.h" />
     <ClInclude Include="..\..\Codes\Viewer\shader.h" />
     <ClInclude Include="..\..\Codes\Viewer\timer.h" />
     <ClInclude Include="..\..\Codes\Viewer\utils.h" />

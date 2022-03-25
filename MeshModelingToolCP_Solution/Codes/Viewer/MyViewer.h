@@ -31,4 +31,6 @@ private:
 	void resetModelToOrigin();
 
 	float mPickedRayT;	// Store the t of the casted ray when the target is picked
+
+	std::shared_ptr<class AAShapeUp::ObjToEigenConverter> mMeshConverterShPtr;
 };

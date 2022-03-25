@@ -2,6 +2,7 @@
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <filesystem>
 #include <nfd.h>
+#include "ObjToEigenConverter.h"
 
 MyViewer::MyViewer(const std::string& name) :
 	Viewer(name)
@@ -25,6 +26,8 @@ MyViewer::MyViewer(const std::string& name) :
 	//	}
 	//}
 	//mPickedTarget = nullptr;
+
+	mMeshConverterShPtr = std::make_shared<AAShapeUp::ObjToEigenConverter>(mModel.get());
 }
 
 MyViewer::~MyViewer()
@@ -212,5 +215,6 @@ void MyViewer::reset()
 void MyViewer::resetModelToOrigin()
 {
 	mModel->copyObj(*mModelOrigin);
+	mMeshConverterShPtr->generateEigenMatrices();
 }
 
