@@ -2,6 +2,7 @@
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 #include <filesystem>
 #include <nfd.h>
+#include "ObjToEigenConverter.h"
 
 MyViewer::MyViewer(const std::string& name) :
 	Viewer(name)
@@ -25,6 +26,8 @@ MyViewer::MyViewer(const std::string& name) :
 	//	}
 	//}
 	//mPickedTarget = nullptr;
+
+	mMeshConverterShPtr = std::make_shared<AAShapeUp::ObjToEigenConverter>(mModel.get());
 }
 
 MyViewer::~MyViewer()
@@ -40,15 +43,37 @@ void MyViewer::createGUIWindow()
 	if (ImGui::RadioButton("Wire Mesh Design", &mOperationType, 1)) { reset(); }
 	ImGui::SameLine();
 	if (ImGui::RadioButton("ARAP Deformation", &mOperationType, 2)) { reset(); }
+	//ImGui::SameLine();
+	if (ImGui::RadioButton("Test Bounding Sphere", &mOperationType, 3)) { reset(); }
 	if (ImGui::Button("Load Model")) { loadOBJFile(); }
+	ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
 	ImGui::SliderFloat("Planar Weight", &mWeightPlanar, 0, 1);
 	ImGui::SliderFloat("Ref Weight", &mWeightRef, 0, 1);
 	ImGui::SliderFloat("Fair Weight", &mWeightFair, 0, 1);
 	ImGui::SliderFloat("2nd Fair Weight", &mWeight2nd, 0, 1);
 	if (ImGui::Button("Apply Processing")) 
 	{
-		std::cout << "Apply processing " << mOperationType << "(TODO)..." << std::endl;
+		std::cout << "Apply processing " << mOperationType << "..." << std::endl;
+		switch (mOperationType)
+		{
+		case 0:
+			executePlanarization();
+			break;
+		case 1:
+			executeWireMeshDesign();
+			break;
+		case 2:
+			executeARAP2D();
+			break;
+		case 3:
+			executeTestBoundingSphere();
+			break;
+		default:
+			std::cout << "Nothing happened. Not implemented?" << std::endl;
+			break;
+		}
 	}
+	ImGui::SameLine();
 	if (ImGui::Button("Reset Model"))
 	{
 		resetModelToOrigin();
@@ -189,6 +214,26 @@ void MyViewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 }
 
+void MyViewer::executePlanarization()
+{
+	std::cout << "Apply processing " << "(TODO)" << std::endl;
+}
+
+void MyViewer::executeWireMeshDesign()
+{
+	std::cout << "Apply processing " << "(TODO)" << std::endl;
+}
+
+void MyViewer::executeARAP2D()
+{
+	std::cout << "Apply processing " << "(TODO)" << std::endl;
+}
+
+void MyViewer::executeTestBoundingSphere()
+{
+	std::cout << "Apply processing " << "(TODO)" << std::endl;
+}
+
 void MyViewer::loadOBJFile()
 {
 	std::string path = std::filesystem::current_path().parent_path().parent_path().string();
@@ -212,5 +257,6 @@ void MyViewer::reset()
 void MyViewer::resetModelToOrigin()
 {
 	mModel->copyObj(*mModelOrigin);
+	mMeshConverterShPtr->generateEigenMatrices();
 }
 

@@ -13,8 +13,14 @@ public:
 	virtual void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override;
 	virtual void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)override;
 
+	void executePlanarization();
+	void executeWireMeshDesign();
+	void executeARAP2D();
+	void executeTestBoundingSphere();
+
 private:
 	int mOperationType = 0;
+	int mNumIter = 5;
 
 	float mTimeScale = 1.0f;
 	float mTime = 0;
@@ -31,4 +37,6 @@ private:
 	void resetModelToOrigin();
 
 	float mPickedRayT;	// Store the t of the casted ray when the target is picked
+
+	std::shared_ptr<class AAShapeUp::ObjToEigenConverter> mMeshConverterShPtr;
 };

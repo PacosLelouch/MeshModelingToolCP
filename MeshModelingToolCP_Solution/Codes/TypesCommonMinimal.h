@@ -34,6 +34,8 @@ class NullTimer
 public:
     using EventID = TimerUtil::EventID;
 
+    virtual ~NullTimer() {}
+
     virtual EventID recordTime(const char* eventName = nullptr)
     {
         return EventID(-1);

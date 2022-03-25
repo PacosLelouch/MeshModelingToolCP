@@ -15,10 +15,7 @@ template<i32 Dim, typename TRegularizer = RegularizerAbstract<Dim>, typename TCo
 class SolverAbstract
 {
 public:
-
-    using VectorN = MatrixT<Dim, 1>;
-    using MatrixNX = MatrixT<Dim, Eigen::Dynamic>;
-    using MatrixXN = MatrixT<Eigen::Dynamic, Dim>;
+    USING_MATRIX_VECTOR_SHORTNAME(Dim)
 
     virtual ~SolverAbstract() {}
 
@@ -38,6 +35,8 @@ public:
 
     virtual bool solve(i32 nIter, const MatrixNX* initPointsPtr = nullptr) = 0;
 
+    virtual void getOutput(MatrixNX& output) const = 0;
+
 protected:
     TConstraintSet m_constraintSet;
     TRegularizer m_regularizer;
@@ -54,11 +53,8 @@ template<i32 Dim,
     class SolverBase : public SolverAbstract<Dim, TRegularizer, TConstraintSet>
 {
 public:
-
     using Super = SolverAbstract<Dim, TRegularizer, TConstraintSet>;
-    using typename Super::VectorN;
-    using typename Super::MatrixNX;
-    using typename Super::MatrixXN;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
 
     SolverBase();
 

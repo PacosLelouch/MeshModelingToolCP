@@ -1,12 +1,25 @@
 #pragma once
 
+#include "OpenMPHelper.h"
 #include "Solver.h"
 #include "SparseMatrixStorage.h"
-#include "OpenMPHelper.h"
-#include <deque>
-#include <unordered_set>
 
 BEGIN_NAMESPACE(AAShapeUp)
+
+template<i32 Dim>
+class GeometrySolverErrorEvaluator : public ErrorEvaluatorAbstract<Dim>
+{
+public:
+    using Super = ErrorEvaluatorAbstract<Dim>;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+
+    virtual ~GeometrySolverErrorEvaluator() override {}
+
+    virtual scalar evaluate(const MatrixNX& fullQ, ConstraintSetAbstract<Dim>& constraintSet, MatrixNX* outProjectionPtr = nullptr) override;
+
+    VectorX m_consError;
+    VectorX m_regError;
+};
 
 template<i32 Dim,
     typename TTimer = NullTimer,
@@ -22,6 +35,7 @@ class GeometrySolver : public SolverBase<Dim,
     TConstraintSet>
 {
 public:
+    friend class GeometrySolverErrorEvaluator<Dim>;
 
     using Super = SolverBase<Dim,
         TTimer, 
@@ -29,9 +43,7 @@ public:
         TSPDLinearSolver,
         TRegularizer,
         TConstraintSet>;
-    using typename Super::VectorN;
-    using typename Super::MatrixNX;
-    using typename Super::MatrixXN;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
 
     GeometrySolver();
 
@@ -41,68 +53,48 @@ public:
 
     virtual bool solve(i32 nIter, const MatrixNX* initPointsPtr = nullptr) override;
 
-protected:
-
-    bool isInitialized() const { return m_handleSolverInitialized || m_solverInitialized; }
-
-    scalar evaluateRegularizationTerm(i32 termIdx, const MatrixNX& fullCoords)
-    {
-        VectorN regTerm = -m_regularizationRhs.row(termIdx).transpose();
-        m_regularizationMatrixStorage.evaluate(termIdx, fullCoords, regTerm);
-        return regTerm.squaredNorm() * scalar(0.5);
-    }
+    virtual void getOutput(MatrixNX& output) const override;
 
 protected:
 
-    MatrixNX m_pointsVar1, m_pointsVar2, m_pointsVar3;
+    bool isInitialized() const { return this->m_optimizer.isInitialized(); }
 
-    MatrixNX* m_curPointsVarPtr = nullptr;
-    MatrixNX* m_altPointsVarPtr = nullptr;
-    MatrixNX* m_prevPointsVarPtr = nullptr;
+protected:
 
-    // Coordinates of all points. Ping-pong.
-    MatrixNX m_fullCoords1, m_fullCoords2;
-    MatrixNX* m_fullCoordsPtr = nullptr;
+    //MatrixNX m_pointsVar1, m_pointsVar2, m_pointsVar3;
 
-    // Constraint projections. Ping-pong.
-    MatrixNX m_projections1, m_projections2;
-    MatrixNX* m_projectionsPtr = nullptr;
+    //MatrixNX* m_curPointsVarPtr = nullptr;
+    //MatrixNX* m_altPointsVarPtr = nullptr;
+    //MatrixNX* m_prevPointsVarPtr = nullptr;
+
+    //// Coordinates of all points. Ping-pong.
+    //MatrixNX m_fullCoords1, m_fullCoords2;
+    //MatrixNX* m_fullCoordsPtr = nullptr;
+
+    //// Constraint projections. Ping-pong.
+    //MatrixNX m_projections1, m_projections2;
+    //MatrixNX* m_projectionsPtr = nullptr;
     
-    // Regularization.
-    RowSparseStorage m_regularizationMatrixStorage;
-    MatrixXN m_regularizationRhs;
+    //// Regularization.
+    //RowSparseStorage m_regularizationMatrixStorage;
+    //MatrixXN m_regularizationRhs;
 
-    VectorX m_consError;
-    VectorX m_regError;
-    VectorX m_altConsError;
-    VectorX m_altRegError;
-    VectorX m_lbfgsError;
+    GeometrySolverErrorEvaluator<Dim> m_errorEvaluator;
 
-    ColMSMatrix m_varSelection, m_handleSelection;
-    VectorXi m_handleIndices, m_varPointIndices;
-    ColMSMatrix m_rhsHandleContribution;
+    //ColMSMatrix m_varSelection, m_handleSelection;
+    //VectorXi m_handleIndices, m_varPointIndices;
+    //ColMSMatrix m_rhsHandleContribution;
 
-    ColMSMatrix m_AT;
-    MatrixNX m_rhsFixed;
+    //ColMSMatrix m_AT;
+    //MatrixNX m_rhsFixed;
 
-    //RowSparseStorage m_AT_Jacobi;
-    //JacobiRowSparseStorage m_globalJacobiStorage;
-
-    bool m_solverInitialized = false;
-    bool m_handleSolverInitialized = false;
+    //bool m_solverInitialized = false;
+    //bool m_handleSolverInitialized = false;
 
 public:
-    std::deque<bool> m_AndersonReset;
+    //std::vector<bool> m_AndersonReset;
     std::vector<double> m_funcValues;
     std::vector<double> m_elapsedTimes;
-
-protected:
-    void clearIterationHistory()
-    {
-        m_AndersonReset.clear();
-        m_funcValues.clear();
-        m_elapsedTimes.clear();
-    }
 };
 
 END_NAMESPACE()

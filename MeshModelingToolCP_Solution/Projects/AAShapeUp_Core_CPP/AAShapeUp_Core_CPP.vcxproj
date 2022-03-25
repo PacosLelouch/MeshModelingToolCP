@@ -165,7 +165,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>Create</PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeaderOutputFile>$(IntDir)$(TargetName).pch</PrecompiledHeaderOutputFile>
@@ -180,10 +180,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Codes\CPPCore\Dummy.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\EigenMesh.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\ConstraintCollection.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PointToRefSurfaceConstraint.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\TestBoundingSphereConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Optimizers\Optimizer.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\ClosenessRegTerm.h" />
@@ -193,6 +195,9 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.h" />
     <ClInclude Include="..\..\Codes\MeshAABB.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\OperationBase.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.h" />
     <ClInclude Include="..\..\Codes\OpenMPHelper.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
     <ClInclude Include="..\..\Codes\pch.h" />
@@ -213,7 +218,16 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\Codes\pch.cpp" />
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\OperationBase.cpp" />
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\pch.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.inl" />

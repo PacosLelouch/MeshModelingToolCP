@@ -37,7 +37,8 @@ inline int cuda_arch()
     return h_arch;
 }
 
-static WCHAR* getFrac(WCHAR* dst, double f, int precision) 
+template<typename TCHAR>
+static TCHAR* getFrac(TCHAR* dst, double f, int precision) 
 {
     //int result = 0;
     double f1 = f;
@@ -52,12 +53,22 @@ static WCHAR* getFrac(WCHAR* dst, double f, int precision)
     return dst;
 }
 
+#ifdef UNICODE
+using CHAR_T = WCHAR;
+using LPSTR_T = LPWSTR;
+#define mbstowcs_t(A,B,C) mbstowcs(A,B,C)
+#else
+using CHAR_T = CHAR;
+using LPSTR_T = LPSTR;
+#define mbstowcs_t(A,B,C) strcpy(A,B)
+#endif
+
 cudaDeviceProp cuda_query(const int dev, bool quiet = false, std::string* outStr = nullptr)
 {
     cudaDeviceProp devProp;
-    WCHAR message[16384]{ 0 };
+    CHAR_T message[16384]{ 0 };
     //memset(message, 0, sizeof(message));
-    LPWSTR cursor = message;
+    LPSTR_T cursor = message;
     //cursor += wsprintf(cursor, TEXT("----------------CUDATestFunction------------------\n"));
     // Various query about the device we are using
     int deviceCount;
@@ -77,14 +88,14 @@ cudaDeviceProp cuda_query(const int dev, bool quiet = false, std::string* outStr
 
         cursor += wsprintf(cursor, TEXT("Total number of device: %d\n"), deviceCount);
         cursor += wsprintf(cursor, TEXT("Using device Number: %d\n"), dev);
-        WCHAR devName[256]{ 0 };
-        mbstowcs(devName, devProp.name, strlen(devProp.name));
+        CHAR_T devName[256]{ 0 };
+        mbstowcs_t(devName, devProp.name, strlen(devProp.name));
         cursor += wsprintf(cursor, TEXT("Device name: %s\n"), devName);
         cursor += wsprintf(cursor, TEXT("Compute Capability: %d.%d\n"), (int)devProp.major,
             (int)devProp.minor);
         float gmem = (float)devProp.totalGlobalMem / 1048576.0f;
-        WCHAR frac0[16]{ 0 };
-        WCHAR frac1[16]{ 0 };
+        CHAR_T frac0[16]{ 0 };
+        CHAR_T frac1[16]{ 0 };
         cursor += wsprintf(cursor, TEXT("Total amount of global memory (MB): %d.%s\n"), 
             (int)gmem, getFrac(frac0, gmem, 1));
         cursor += wsprintf(cursor, TEXT("%d Multiprocessors, %d CUDA Cores/MP: %d CUDA Cores\n"), 

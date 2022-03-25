@@ -5,12 +5,14 @@
 #ifdef USE_OPENMP
 #include <omp.h>
 #ifdef USE_MSVC
+#define OMP_PARALLEL_(what) __pragma(omp parallel what)
 #define OMP_PARALLEL __pragma(omp parallel)
 #define OMP_FOR __pragma(omp for)
 #define OMP_SINGLE __pragma(omp single)
 #define OMP_SECTIONS __pragma(omp sections)
 #define OMP_SECTION __pragma(omp section)
 #else
+#define OMP_PARALLEL_(what) _Pragma("omp parallel " #what)
 #define OMP_PARALLEL _Pragma("omp parallel")
 #define OMP_FOR _Pragma("omp for")
 #define OMP_SINGLE _Pragma("omp single")
@@ -19,6 +21,7 @@
 #endif
 #else
 #include <ctime>
+#define OMP_PARALLEL_(what)
 #define OMP_PARALLEL
 #define OMP_FOR
 #define OMP_SINGLE
@@ -37,6 +40,8 @@ class OpenMPTimer : public NullTimer
 {
 public:
     using NullTimer::EventID;
+
+    virtual ~OpenMPTimer() override {}
 
     virtual EventID recordTime(const char* eventName = nullptr) override
     {

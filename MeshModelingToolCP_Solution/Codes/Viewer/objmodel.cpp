@@ -65,6 +65,7 @@ void ObjModel::drawObj()
 
 void ObjModel::generateDrawables()
 {
+	mDrawables.clear();
 	bool hasColor = !attrib.colors.empty();
 	bool hasNormal = !attrib.normals.empty();
 

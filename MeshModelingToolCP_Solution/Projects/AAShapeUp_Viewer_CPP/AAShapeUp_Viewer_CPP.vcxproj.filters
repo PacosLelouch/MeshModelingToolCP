@@ -36,6 +36,9 @@
     <ClCompile Include="..\..\Codes\Viewer\MyViewer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\Viewer\ObjToEigenConverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Codes\Viewer\viewer.h">
@@ -60,6 +63,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Codes\Viewer\MyViewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\Viewer\ObjToEigenConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
