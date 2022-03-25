@@ -14,7 +14,7 @@ public:
 
     virtual bool initializeConstraintsAndRegularizations() override;
 
-    virtual MeshDirtyFlag getPlanarityErrors(std::vector<scalar>& outErrors, scalar maxError, std::optional<scalar> minError = std::optional<scalar>()) const override;
+    virtual MeshDirtyFlag getPlanarityErrors(std::vector<scalar>& outErrors, scalar maxError = 1) const override;
 
     virtual MeshDirtyFlag getMeshDirtyFlag() const override;
 

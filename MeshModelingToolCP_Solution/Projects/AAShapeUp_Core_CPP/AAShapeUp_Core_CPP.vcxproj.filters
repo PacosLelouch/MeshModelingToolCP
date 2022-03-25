@@ -28,6 +28,12 @@
     <Filter Include="Header Files\Solvers">
       <UniqueIdentifier>{c7707c77-c880-429e-8b43-90a75889b9aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Operations">
+      <UniqueIdentifier>{8f2491c3-7435-4e47-bf2a-488dde615879}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Operations">
+      <UniqueIdentifier>{ee56e17e-3dcf-47df-b3a8-796a2cb0e0e3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.h">
@@ -84,14 +90,14 @@
     <ClInclude Include="..\..\Codes\OpenMPHelper.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Codes\CPPCore\EigenMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.h">
+      <Filter>Header Files\Operations</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\Codes\CPPCore\Operations\OperationBase.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Operations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -105,10 +111,10 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Operations</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Codes\CPPCore\Operations\OperationBase.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Operations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

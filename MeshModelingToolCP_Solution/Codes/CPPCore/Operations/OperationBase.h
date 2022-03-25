@@ -2,7 +2,6 @@
 
 #include "LGSolver/Solvers/GeometrySolver.h"
 #include "EigenMesh.h"
-#include <optional>
 
 BEGIN_NAMESPACE(AAShapeUp)
 
@@ -18,9 +17,9 @@ public:
 
     virtual bool solve(Matrix3X& newPositions, i32 nIter = 5);
 
-    MeshDirtyFlag visualizePlanarityError(Matrix3X& outColors, scalar maxError = 1, std::optional<scalar> minError = std::optional<scalar>()) const;
+    MeshDirtyFlag visualizePlanarityError(Matrix3X& outColors, scalar maxError = 1) const;
 
-    virtual MeshDirtyFlag getPlanarityErrors(std::vector<scalar>& outErrors, scalar maxError, std::optional<scalar> minError = std::optional<scalar>()) const = 0;
+    virtual MeshDirtyFlag getPlanarityErrors(std::vector<scalar>& outErrors, scalar maxError = 1) const = 0;
 
     virtual MeshDirtyFlag getMeshDirtyFlag() const = 0;
 

@@ -29,10 +29,10 @@ bool OperationBase::solve(Matrix3X& newPositions, i32 nIter)
     return true;
 }
 
-MeshDirtyFlag OperationBase::visualizePlanarityError(Matrix3X& outColors, scalar maxError, std::optional<scalar> minError) const
+MeshDirtyFlag OperationBase::visualizePlanarityError(Matrix3X& outColors, scalar maxError) const
 {
 	std::vector<scalar> errors;
-	MeshDirtyFlag dirtyFlag_IsItUseful = getPlanarityErrors(errors, maxError, minError);
+	MeshDirtyFlag dirtyFlag_IsItUseful = getPlanarityErrors(errors, maxError);
 
 	outColors.resize(Eigen::NoChange, static_cast<i64>(errors.size()));
 

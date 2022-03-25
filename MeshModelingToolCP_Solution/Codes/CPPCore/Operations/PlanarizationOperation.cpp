@@ -10,7 +10,7 @@ bool PlanarizationOperation::initializeConstraintsAndRegularizations()
     return true;
 }
 
-MeshDirtyFlag PlanarizationOperation::getPlanarityErrors(std::vector<scalar>& outErrors, scalar maxError, std::optional<scalar> minError) const
+MeshDirtyFlag PlanarizationOperation::getPlanarityErrors(std::vector<scalar>& outErrors, scalar maxError) const
 {
     //TODO: Generate planarity error as color.
     return MeshDirtyFlag::ColorDirty;
