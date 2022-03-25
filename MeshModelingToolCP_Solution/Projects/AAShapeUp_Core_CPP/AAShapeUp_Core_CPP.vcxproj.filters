@@ -90,6 +90,9 @@
     <ClInclude Include="..\..\Codes\CPPCore\EigenMesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\OperationBase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">
@@ -102,6 +105,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\OperationBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

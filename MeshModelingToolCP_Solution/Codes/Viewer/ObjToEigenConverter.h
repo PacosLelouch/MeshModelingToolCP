@@ -14,7 +14,9 @@ public:
 
     bool generateEigenMatrices(bool mergeSections = false);
 
-    bool updateSourceMesh(MeshDirtyFlag dirtyFlag);
+    bool updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateBufferNow = false);
+
+    void updateBuffer();
 
 protected:
     ObjModel* m_inObjModelPtr = nullptr;

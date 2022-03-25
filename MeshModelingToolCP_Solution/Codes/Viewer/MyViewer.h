@@ -16,9 +16,11 @@ public:
 	void executePlanarization();
 	void executeWireMeshDesign();
 	void executeARAP2D();
+	void executeTestBoundingBox();
 
 private:
 	int mOperationType = 0;
+	int mNumIter = 5;
 
 	float mTimeScale = 1.0f;
 	float mTime = 0;

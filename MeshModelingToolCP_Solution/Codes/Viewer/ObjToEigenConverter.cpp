@@ -61,7 +61,7 @@ bool ObjToEigenConverter::generateEigenMatrices(bool mergeSections)
     return true;
 }
 
-bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag)
+bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateBufferNow)
 {
     ui64 dirtyFlagInt = static_cast<ui64>(dirtyFlag);
     if (dirtyFlagInt & static_cast<ui64>(MeshDirtyFlag::PositionDirty))
@@ -104,8 +104,16 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag)
         }
     }
 
-    m_inObjModelPtr->generateDrawables();
+    if (updateBufferNow)
+    {
+        updateBuffer();
+    }
     return true;
+}
+
+void ObjToEigenConverter::updateBuffer()
+{
+    m_inObjModelPtr->generateDrawables();
 }
 
 
