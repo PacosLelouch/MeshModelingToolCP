@@ -182,8 +182,8 @@ inline void MeanCenteringTransformer<Dim, TConstraintAbstract>::generateTransfor
     {
         this->m_transformedPoints.col(i) = points.col(constraint.getIdIncidentPoints()[i]);
     }
-    typename TConstraintAbstract::VectorN meanPoint = constraint.m_transformedPoints.rowwise().mean();
-    constraint.m_transformedPoints.colwise() -= meanPoint;
+    typename TConstraintAbstract::VectorN meanPoint = this->m_transformedPoints.rowwise().mean();
+    this->m_transformedPoints.colwise() -= meanPoint;
 }
 
 //// End MeanCenteringTransformer

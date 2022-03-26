@@ -20,6 +20,10 @@ public:
 
     virtual MeshDirtyFlag getMeshDirtyFlag() const override;
 
+
+    EigenMesh<3> refMesh;
+    scalar closeness_weight, relative_laplacian_weight, laplacian_weight, planarity_weight;
+
 protected:
 };
 

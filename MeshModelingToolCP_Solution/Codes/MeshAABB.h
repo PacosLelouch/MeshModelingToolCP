@@ -11,7 +11,7 @@ public:
         Matrix3X ref_mesh_points;
         Eigen::Matrix3Xi ref_mesh_faces;
         ref_mesh_points = ref_mesh.m_positions;
-        ref_mesh.getTriangleVertexIndex(ref_mesh_faces);
+        ref_mesh.m_section.getFaceVertexIndex(ref_mesh_faces);
         vRef = ref_mesh_points.transpose();
         fRef = ref_mesh_faces.transpose();
 

@@ -1,119 +1,98 @@
 #include "pch.h"
 #include "PlanarizationOperation.h"
+#include "MeshAABB.h"
+#include "LGSolver/Constraints/PointToRefSurfaceConstraint.h"
+#include "LGSolver/Constraints/PlaneConstraint.h"
+#include "LGSolver/Regularizations/LaplacianRegTerm.h"
 
 BEGIN_NAMESPACE(AAShapeUp)
 
 bool PlanarizationOperation::initializeConstraintsAndRegularizations()
 {
+    const Matrix3X &vertices = this->m_mesh.m_positions;
+    const EigenMeshSection& meshIndices = this->m_mesh.m_section;
+    int vertNum = vertices.cols();
 
-    Matrix3X p;
-    get_vertex_points(this->m_mesh, p);
-
-    GeometrySolver<3> solver;
-    std::shared_ptr<TriMeshAABB> aabb = std::make_shared<TriMeshAABB>(ref_mesh);
+    auto& solver = this->m_solverShPtr;
+    std::shared_ptr<MeshAABB> refMeshTree = std::make_shared<MeshAABB>(this->refMesh);
 
     if (closeness_weight > 0) {
-        int n_vtx = p.cols();
-        for (int i = 0; i < n_vtx; ++i) {
-            solver.add_constraint(
-                new PointToRefSurfaceConstraint(i, closeness_weight, aabb));
+        for (int i = 0; i < vertNum; ++i) {
+            solver->addConstraint(std::make_shared<PointToRefSurfaceConstraint>(i, closeness_weight, refMeshTree));
         }
-        //solver.add_constraint(new ReferenceSurfceConstraint(p.cols(), closeness_weight, ref_mesh_points, ref_mesh_faces));
     }
 
-    // Add closeness constraints
-    for (PolyMesh::ConstVertexIter v_it = this->m_mesh.vertices_begin();
-        v_it != this->m_mesh.vertices_end(); ++v_it) {
-        if (laplacian_weight <= 0 && relative_laplacian_weight <= 0) {
-            continue;
-        }
+    std::unordered_map<i32, std::unordered_set<i32>> vertexAdjacentVerticesMap;
+    meshIndices.getVertexAdjacentVerticesMap(vertexAdjacentVerticesMap);
+    std::unordered_set<i32> boundaryVertexSet;
+    meshIndices.getBoundaryVertexSet(boundaryVertexSet);
+    std::unordered_set<EigenEdge> boundaryEdgeSet;
+    meshIndices.getBoundaryEdgeSet(boundaryEdgeSet);
+    std::unordered_map<i32, std::unordered_set<EigenEdge>> vertexEdgesMap;
+    meshIndices.getVertexEdgesMap(vertexEdgesMap);
 
-        if (!this->m_mesh.is_boundary(*v_it)) {
+    for (auto& adjacentVerts : vertexAdjacentVerticesMap) {
+        i32 origin = adjacentVerts.first;
+        if (boundaryVertexSet.find(origin) == boundaryVertexSet.end()) {
+            auto nearSet = adjacentVerts.second;
+            if (!nearSet.empty()) {
+                std::vector<i32> adjacentVec{ origin };
+                adjacentVec.insert(adjacentVec.end(), nearSet.begin(), nearSet.end());
 
-            std::vector<int> vhs;
-            vhs.push_back(v_it->idx());
-
-            for (PolyMesh::ConstVertexVertexIter cvv_it = this->m_mesh.cvv_iter(*v_it);
-                cvv_it.is_valid(); ++cvv_it) {
-                vhs.push_back(cvv_it->idx());
-            }
-
-            if (static_cast<int>(vhs.size()) == 5) {
-                if (relative_laplacian_weight > 0) {
-                    solver.add_relative_uniform_laplacian(std::vector<int>({ vhs[0],
-                        vhs[1], vhs[3] }),
-                        relative_laplacian_weight, p);
-                    solver.add_relative_uniform_laplacian(std::vector<int>({ vhs[0],
-                        vhs[2], vhs[4] }),
-                        relative_laplacian_weight, p);
+                if (adjacentVec.size() == 5) {
+                    std::vector<i32> vector1{ adjacentVec[0], adjacentVec[1], adjacentVec[3] }, vector2{ adjacentVec[0], adjacentVec[2], adjacentVec[4] };
+                    if (relative_laplacian_weight > 0) {
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRelativeRegTerm<3>>(vector1, relative_laplacian_weight, vertices));
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRelativeRegTerm<3>>(vector2, relative_laplacian_weight, vertices));
+                    }
+                    if (laplacian_weight > 0) {
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRegTerm<3>>(vector1, laplacian_weight));
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRegTerm<3>>(vector2, laplacian_weight));
+                    }
                 }
-
-                if (laplacian_weight > 0) {
-                    solver.add_uniform_laplacian(std::vector<int>({ vhs[0], vhs[1],
-                        vhs[3] }),
-                        laplacian_weight);
-                    solver.add_uniform_laplacian(std::vector<int>({ vhs[0], vhs[2],
-                        vhs[4] }),
-                        laplacian_weight);
-                }
-            }
-            else {
-                if (relative_laplacian_weight > 0) {
-                    solver.add_relative_uniform_laplacian(vhs, relative_laplacian_weight,
-                        p);
-                }
-
-                if (laplacian_weight > 0) {
-                    solver.add_uniform_laplacian(vhs, laplacian_weight);
+                else {
+                    if (relative_laplacian_weight > 0) {
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRelativeRegTerm<3>>(adjacentVec, relative_laplacian_weight, vertices));
+                    }
+                    if (laplacian_weight > 0) {
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRegTerm<3>>(adjacentVec, laplacian_weight));
+                    }
                 }
             }
         }
         else {
-            std::vector<int> vhs;
-            vhs.push_back(v_it->idx());
-
-            std::vector<int> fhs;
-            for (PolyMesh::ConstVertexOHalfedgeIter cvoh_it = this->m_mesh.cvoh_iter(*v_it);
-                cvoh_it.is_valid(); ++cvoh_it) {
-                if (this->m_mesh.is_boundary(this->m_mesh.edge_handle(*cvoh_it))) {
-                    PolyMesh::HalfedgeHandle heh = *cvoh_it;
-                    vhs.push_back(this->m_mesh.to_vertex_handle(heh).idx());
-
-                    if (this->m_mesh.is_boundary(heh)) {
-                        heh = this->m_mesh.opposite_halfedge_handle(heh);
+            auto& edgeSet = vertexEdgesMap[origin];
+            if (edgeSet.size() >= 3) {
+                std::vector<i32> adjacentVec{ origin };
+                for (auto& e : edgeSet) {
+                    if (boundaryEdgeSet.find(e) != boundaryEdgeSet.end()) {
+                        adjacentVec.push_back(e.first == origin ? e.second : e.first);
                     }
+                }
 
-                    fhs.push_back(this->m_mesh.face_handle(heh).idx());
+                if (adjacentVec.size() == 3) {
+                    if (relative_laplacian_weight > 0) {
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRelativeRegTerm<3>>(adjacentVec, relative_laplacian_weight, vertices));
+                    }
+                    if (laplacian_weight > 0) {
+                        solver->addRegularizationTerm(std::make_shared<UniformLaplacianRegTerm<3>>(adjacentVec, laplacian_weight));
+                    }
                 }
             }
-
-            if (static_cast<int>(fhs.size()) == 2 && fhs[0] != fhs[1]) {
-                if (relative_laplacian_weight > 0) {
-                    solver.add_relative_uniform_laplacian(vhs, relative_laplacian_weight,
-                        p);
-                }
-
-                if (laplacian_weight > 0) {
-                    solver.add_uniform_laplacian(vhs, laplacian_weight);
-                }
-            }
+            
         }
     }
 
-    for (PolyMesh::ConstFaceIter f_it = this->m_mesh.faces_begin();
-        f_it != this->m_mesh.faces_end(); ++f_it) {
-        if (planarity_weight > 0) {
-            std::vector<int> id_vector;
-            for (PolyMesh::ConstFaceVertexIter fv_it = this->m_mesh.cfv_iter(*f_it);
-                fv_it.is_valid(); ++fv_it) {
-                id_vector.push_back(fv_it->idx());
-            }
+    if (planarity_weight > 0) {
+        auto vIter = meshIndices.m_positionIndices.begin();
+        for (int vn : meshIndices.m_numFaceVertices) {
+            std::vector<i32> indices(vIter, vIter + vn);
+            vIter += vn;
 
-            if (static_cast<int>(id_vector.size()) > 3) {
-                solver.add_constraint(new PlaneConstraint(id_vector, planarity_weight));
-            }
+            solver->addConstraint(std::make_shared<PlaneConstraint>(indices, planarity_weight));
         }
     }
+  
     return true;
 }
 

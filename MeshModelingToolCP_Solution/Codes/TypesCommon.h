@@ -1,5 +1,7 @@
 #pragma once
 
+#define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
+
 #include "Eigen/Dense"
 #include "Eigen/Sparse"
 #include "glm/glm.hpp"
