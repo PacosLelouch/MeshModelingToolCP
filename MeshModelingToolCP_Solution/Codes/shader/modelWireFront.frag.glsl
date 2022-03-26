@@ -9,6 +9,10 @@ uniform float uAlpha = 1.0;
 
 void main()
 {
+    if (norP.z < 0)
+    {
+        discard;
+    }
     //fCol = vec4(0.5 * (nor + 1), 1.0);
     //fCol = vec4(color * gl_FragCoord.xyz, 1.0);
     float weight = max(0.1, gl_FragCoord.z);

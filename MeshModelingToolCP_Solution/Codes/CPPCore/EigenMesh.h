@@ -89,6 +89,15 @@ public:
     Matrix2X m_texCoords;
 };
 
+template<typename TMesh>
+MeshDirtyFlag regenerateNormals(TMesh& mesh)
+{
+    return MeshDirtyFlag::None;
+}
+
+template<>
+MeshDirtyFlag regenerateNormals(EigenMesh<3>& mesh);
+
 END_NAMESPACE()
 
 BEGIN_NAMESPACE(std)

@@ -65,7 +65,8 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
 MeshDirtyFlag TestBoundingSphereOperation::getOutputErrors(std::vector<scalar>& outErrors, scalar maxError) const
 {
     //TODO: Generate planarity error as color.
-    return MeshDirtyFlag::ColorDirty;
+    return MeshDirtyFlag::None;
+    //return MeshDirtyFlag::ColorDirty;
 }
 
 MeshDirtyFlag TestBoundingSphereOperation::getMeshDirtyFlag() const

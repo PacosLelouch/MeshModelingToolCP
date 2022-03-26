@@ -81,8 +81,7 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
         return false;
     }
 
-    ui64 dirtyFlagInt = static_cast<ui64>(dirtyFlag);
-    if (dirtyFlagInt & static_cast<ui64>(MeshDirtyFlag::PositionDirty))
+    if ((dirtyFlag & MeshDirtyFlag::PositionDirty) != MeshDirtyFlag::None)
     {
         i64 sourceSize = static_cast<i64>(m_inObjModelPtr->attrib.vertices.size() / 3);
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_positions.cols(); ++i)
@@ -92,7 +91,7 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
             m_inObjModelPtr->attrib.vertices[i * 3 + 2] = m_outMesh.m_positions(2, i);
         }
     }
-    if (dirtyFlagInt & static_cast<ui64>(MeshDirtyFlag::NormalDirty))
+    if ((dirtyFlag & MeshDirtyFlag::NormalDirty) != MeshDirtyFlag::None)
     {
         i64 sourceSize = static_cast<i64>(m_inObjModelPtr->attrib.normals.size() / 3);
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_normals.cols(); ++i)
@@ -102,7 +101,7 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
             m_inObjModelPtr->attrib.normals[i * 3 + 2] = m_outMesh.m_normals(2, i);
         }
     }
-    if (dirtyFlagInt & static_cast<ui64>(MeshDirtyFlag::ColorDirty))
+    if ((dirtyFlag & MeshDirtyFlag::ColorDirty) != MeshDirtyFlag::None)
     {
         i64 sourceSize = static_cast<i64>(m_inObjModelPtr->attrib.colors.size() / 3);
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_colors.cols(); ++i)
@@ -112,7 +111,7 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
             m_inObjModelPtr->attrib.colors[i * 3 + 2] = m_outMesh.m_colors(2, i);
         }
     }
-    if (dirtyFlagInt & static_cast<ui64>(MeshDirtyFlag::TexCoordsDirty))
+    if ((dirtyFlag & MeshDirtyFlag::TexCoordsDirty) != MeshDirtyFlag::None)
     {
         i64 sourceSize = static_cast<i64>(m_inObjModelPtr->attrib.texcoords.size() / 2);
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_texCoords.cols(); ++i)

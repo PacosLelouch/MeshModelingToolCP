@@ -133,5 +133,14 @@
     <None Include="..\..\Codes\shader\modelWire.frag.glsl">
       <Filter>Shader Files</Filter>
     </None>
+    <None Include="..\..\Codes\shader\modelNormalFlat.geom.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelGeom.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelWireFront.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

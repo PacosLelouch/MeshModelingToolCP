@@ -125,9 +125,15 @@ Viewer::Viewer(const std::string& name) :
 	mGridShader = std::make_unique<Shader>(path + "Codes/shader/grid.vert.glsl", path + "Codes/shader/grid.frag.glsl");
 
 	mModelShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/model.frag.glsl");
+	mModelFlatShader = std::make_unique<Shader>(path + "Codes/shader/modelGeom.vert.glsl", path + "Codes/shader/model.frag.glsl",
+		path + "Codes/shader/modelNormalFlat.geom.glsl");
 	mModelColorShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/modelColor.frag.glsl");
 	mModelNormalShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/modelNormal.frag.glsl");
-	mModelWireShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/modelWire.frag.glsl",
+	mModelNormalFlatShader = std::make_unique<Shader>(path + "Codes/shader/modelGeom.vert.glsl", path + "Codes/shader/modelNormal.frag.glsl",
+		path + "Codes/shader/modelNormalFlat.geom.glsl");
+	mModelWireShader = std::make_unique<Shader>(path + "Codes/shader/modelGeom.vert.glsl", path + "Codes/shader/modelWire.frag.glsl",
+		path + "Codes/shader/modelWire.geom.glsl");
+	mModelWireFrontShader = std::make_unique<Shader>(path + "Codes/shader/modelGeom.vert.glsl", path + "Codes/shader/modelWireFront.frag.glsl",
 		path + "Codes/shader/modelWire.geom.glsl");
 
 	createGridGround();
@@ -273,8 +279,8 @@ void Viewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 			mFirstMouse = false;
 		}
 
-		int deltaX = xpos - mLastX;
-		int deltaY = mLastY - ypos; // reversed since y-coordinates go from bottom to top
+		int deltaX = static_cast<int>(xpos - mLastX);
+		int deltaY = static_cast<int>(mLastY - ypos); // reversed since y-coordinates go from bottom to top
 		bool moveLeftRight = std::abs(deltaX) > std::abs(deltaY);
 		bool moveUpDown = !moveLeftRight;
 		if (mHoldLeftButton)  // Rotate
@@ -284,12 +290,12 @@ void Viewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 		}
 		else if (mHoldMidButton) // Zoom
 		{
-			if (moveUpDown) mCamera.PolarZoom(deltaY);
+			if (moveUpDown) mCamera.PolarZoom(static_cast<float>(deltaY));
 		}
 		else if (mHoldRightButton)
 		{
-			if (moveLeftRight) mCamera.PolarPanX(-deltaX * 0.01);
-			else if (moveUpDown) mCamera.PolarPanY(-deltaY * 0.01);
+			if (moveLeftRight) mCamera.PolarPanX(-static_cast<float>(deltaX) * 0.01f);
+			else if (moveUpDown) mCamera.PolarPanY(-static_cast<float>(deltaY) * 0.01f);
 		}
 
 		mLastX = xpos;
@@ -299,7 +305,7 @@ void Viewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 void Viewer::scrollCallBack(GLFWwindow* window, double xoffset, double yoffset)
 {
-	mCamera.PolarZoom(yoffset * 0.25);
+	mCamera.PolarZoom(static_cast<float>(yoffset * 0.25));
 }
 
 void Viewer::createGridGround()

@@ -9,5 +9,5 @@ uniform float uAlpha = 1.0;
 
 void main()
 {
-    fCol = vec4(0.5 * (nor + 1.0), 1.0);
+    fCol = vec4(0.5 * (normalize(nor) + 1.0), 1.0);
 } 

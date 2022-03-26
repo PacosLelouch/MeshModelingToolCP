@@ -186,9 +186,44 @@ bool EigenMeshSection::getFaceVertexIndex(Matrix3Xi& outFaceVertexIdx, bool must
     for (i64 i = 0; i < i64(triVertIdxs.size()); ++i)
     {
         auto& triTuple = triVertIdxs[i];
-        outFaceVertexIdx.col(i) = Eigen::Map<Vector3i>(&std::get<0>(triTuple), 3);
+        outFaceVertexIdx.col(i) = Vector3i(std::get<0>(triTuple), std::get<1>(triTuple), std::get<2>(triTuple));//Eigen::Map<Vector3i>(&std::get<0>(triTuple), 3);
     }
     return true;
+}
+
+template<>
+MeshDirtyFlag regenerateNormals(EigenMesh<3>& mesh)
+{
+    Matrix3Xi faceVertexIdx;
+    if (!mesh.m_section.getFaceVertexIndex(faceVertexIdx, false))
+    {
+        return MeshDirtyFlag::None;
+    }
+
+    mesh.m_normals.setZero(mesh.m_normals.rows(), mesh.m_positions.cols());
+
+    for (i64 i = 0; i < faceVertexIdx.cols(); ++i)
+    {
+        Vector3i idxs = faceVertexIdx.col(i);
+        Vector3 v0 = mesh.m_positions.col(idxs(0));
+        Vector3 v1 = mesh.m_positions.col(idxs(1));
+        Vector3 v2 = mesh.m_positions.col(idxs(2));
+
+        Vector3 v10 = v1 - v0;
+        Vector3 v20 = v2 - v0;
+
+        Vector3 normalFlat = v10.cross(v20);
+        mesh.m_normals.col(idxs(0)) += normalFlat;
+        mesh.m_normals.col(idxs(1)) += normalFlat;
+        mesh.m_normals.col(idxs(2)) += normalFlat;
+    }
+
+    for (i64 i = 0; i < mesh.m_normals.cols(); ++i)
+    {
+        mesh.m_normals.col(i).normalize();
+    }
+
+    return MeshDirtyFlag::NormalDirty;
 }
 
 END_NAMESPACE()

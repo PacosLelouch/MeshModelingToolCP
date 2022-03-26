@@ -14,16 +14,22 @@ namespace MyViewerOp
 namespace MyViewerSh
 {
 	constexpr int Model = 0;
-	constexpr int ModelColor = Model + 1;
+	constexpr int ModelFlat = Model + 1;
+	constexpr int ModelColor = ModelFlat + 1;
 	constexpr int ModelNormal = ModelColor + 1;
-	constexpr int ModelWire = ModelNormal + 1;
+	constexpr int ModelNormalFlat = ModelNormal + 1;
+	constexpr int ModelWire = ModelNormalFlat + 1;
+	constexpr int ModelWireFront = ModelWire + 1;
 	
 	const std::vector<const char*> shadingTypeNames =
 	{
 		"Model",
+		"Model Flat",
 		"Model Color",
 		"Model Normal",
+		"Model Normal Flat",
 		"Model Wire",
+		"Model Wire Front",
 	};
 }
 
@@ -64,9 +70,15 @@ MyViewer::~MyViewer()
 
 void MyViewer::createGUIWindow()
 {
+	ImGui::BeginMainMenuBar();
+	ImGui::Combo("Shading Type", &mShadingType, MyViewerSh::shadingTypeNames.data(), static_cast<int>(MyViewerSh::shadingTypeNames.size()), -1);
+	ImGui::Text("| App Avg %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	ImGui::EndMainMenuBar();
 	ImGui::Begin("Editor");
 	//Viewer::createGUIWindow();
-	ImGui::Combo("Shading Type", &mShadingType, MyViewerSh::shadingTypeNames.data(), static_cast<int>(MyViewerSh::shadingTypeNames.size()), -1);
+	//ImGui::SliderFloat("Model Scale", &mModelScale, 0.01f, 100.0f);
+	ImGui::InputFloat("Model Scale", &mModelScale, 0.01f, 0.2f);
+	ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
 
 	if (ImGui::RadioButton("Planarization", &mOperationType, MyViewerOp::Planarization)) { resetOperation(); }
 	ImGui::SameLine();
@@ -77,10 +89,6 @@ void MyViewer::createGUIWindow()
 	if (ImGui::RadioButton("Test Bounding Sphere", &mOperationType, MyViewerOp::TestBoundingSphere)) { resetOperation(); }
 
 	if (ImGui::Button("Load Model")) { loadOBJFile(); }
-
-	ImGui::SliderFloat("Model Scale", &mModelScale, 0.01f, 100.0f);
-	//ImGui::InputFloat("Model Scale", &mModelScale);
-	ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
 
 	createOperationGUI();
 	
@@ -145,7 +153,6 @@ void MyViewer::createGUIWindow()
 	//		}
 	//	}
 	//}
-	//ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	ImGui::End();
 
 }
@@ -177,14 +184,23 @@ void MyViewer::drawScene()
 	case MyViewerSh::Model:
 		shaderUsing = mModelShader.get();
 		break;
+	case MyViewerSh::ModelFlat:
+		shaderUsing = mModelFlatShader.get();
+		break;
 	case MyViewerSh::ModelColor:
 		shaderUsing = mModelColorShader.get();
 		break;
 	case MyViewerSh::ModelNormal:
 		shaderUsing = mModelNormalShader.get();
 		break;
+	case MyViewerSh::ModelNormalFlat:
+		shaderUsing = mModelNormalFlatShader.get();
+		break;
 	case MyViewerSh::ModelWire:
 		shaderUsing = mModelWireShader.get();
+		break;
+	case MyViewerSh::ModelWireFront:
+		shaderUsing = mModelWireFrontShader.get();
 		break;
 	default:
 		break;
@@ -307,8 +323,8 @@ void MyViewer::executeTestBoundingSphere()
 	}
 
 	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mTestBoudingSphereOperation->visualizeOutputErrors(mesh.m_colors, 1.0f);
-
-	if (!mMeshConverter.updateSourceMesh(mTestBoudingSphereOperation->getMeshDirtyFlag() | colorDirtyFlag, true))
+	AAShapeUp::MeshDirtyFlag normalDirtyFlag = AAShapeUp::regenerateNormals(mesh);
+	if (!mMeshConverter.updateSourceMesh(mTestBoudingSphereOperation->getMeshDirtyFlag() | colorDirtyFlag | normalDirtyFlag, true))
 	{
 		std::cout << "Fail to update source mesh!" << std::endl;
 		return;
@@ -351,10 +367,6 @@ void MyViewer::loadOBJFile()
 		resetModelToOrigin();
 		mLoaded = true;
 		resetOperation();
-	}
-	else
-	{
-		mLoaded = false;
 	}
 }
 

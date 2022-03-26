@@ -198,9 +198,12 @@
     <None Include="..\..\Codes\shader\model.vert.glsl" />
     <None Include="..\..\Codes\shader\modelColor.frag.glsl" />
     <None Include="..\..\Codes\shader\modelFlat.frag.glsl" />
+    <None Include="..\..\Codes\shader\modelGeom.vert.glsl" />
     <None Include="..\..\Codes\shader\modelNormal.frag.glsl" />
+    <None Include="..\..\Codes\shader\modelNormalFlat.geom.glsl" />
     <None Include="..\..\Codes\shader\modelWire.frag.glsl" />
     <None Include="..\..\Codes\shader\modelWire.geom.glsl" />
+    <None Include="..\..\Codes\shader\modelWireFront.frag.glsl" />
     <None Include="..\..\Codes\shader\point.frag.glsl" />
     <None Include="..\..\Codes\shader\point.vert.glsl" />
     <None Include="..\..\Codes\shader\point3d.frag.glsl" />

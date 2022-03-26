@@ -8,19 +8,19 @@ uniform mat3 uModelInvTr; // The inverse transpose of the model matrix.
 uniform mat4 uProjView;
 uniform vec3 uLightPos;
 
-out vec3 posW;
-out vec3 nor;
-out vec3 lightDir;
-out vec3 vertCol;
+out vec3 gPosW;
+out vec3 gNor;
+out vec3 gLightDir;
+out vec3 gVertCol;
 
 void main()
 {
-    posW = vPos;
+    gPosW = vPos;
     vec4 modelPos = uModel * vec4(vPos, 1.0);
-    lightDir = uLightPos - vec3(modelPos);
-    vertCol = vCol;
-    
-    nor = normalize(uModelInvTr * vNor);
+    gLightDir = uLightPos - vec3(modelPos);
+    gVertCol = vCol;
+
+    gNor = normalize(uModelInvTr * vNor);
 
     gl_Position = uProjView * modelPos;
 }
