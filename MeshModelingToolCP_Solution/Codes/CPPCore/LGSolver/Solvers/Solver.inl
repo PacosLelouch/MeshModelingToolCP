@@ -11,6 +11,12 @@ inline void SolverAbstract<Dim, TRegularizer, TConstraintSet>::clearConstraints(
 }
 
 template<i32 Dim, typename TRegularizer, typename TConstraintSet>
+inline void SolverAbstract<Dim, TRegularizer, TConstraintSet>::clearRegularizations()
+{
+    m_regularizer.clearRegularizationData();
+}
+
+template<i32 Dim, typename TRegularizer, typename TConstraintSet>
 inline i32 SolverAbstract<Dim, TRegularizer, TConstraintSet>::addConstraint(const std::shared_ptr<ConstraintAbstract<Dim> >& constraintShPtr)
 {
     return m_constraintSet.addConstraint(constraintShPtr);

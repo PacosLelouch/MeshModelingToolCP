@@ -10,8 +10,12 @@ ObjToEigenConverter::ObjToEigenConverter(ObjModel* objModelPtr)
 
 bool ObjToEigenConverter::generateEigenMatrices(bool mergeSections)
 {
-    m_outMesh.m_sections.clear();
-    m_outMesh.m_sections.reserve(m_inObjModelPtr->shapes.size());
+    if (!m_inObjModelPtr)
+    {
+        return false;
+    }
+
+    m_outMesh.m_section.clear();
     
     m_outMesh.m_positions.resize(Eigen::NoChange, m_inObjModelPtr->attrib.vertices.size() / 3);
     m_outMesh.m_normals.resize(Eigen::NoChange, m_inObjModelPtr->attrib.normals.size() / 3);
@@ -42,20 +46,29 @@ bool ObjToEigenConverter::generateEigenMatrices(bool mergeSections)
         m_outMesh.m_texCoords(1, i) = m_inObjModelPtr->attrib.texcoords[i * 2 + 1];
     }
 
+    size_t idxSize = 0;
+    size_t numFacesSize = 0;
+
     for (auto& shape : m_inObjModelPtr->shapes)
     {
-        auto& newSection = m_outMesh.m_sections.emplace_back();
-        newSection.m_positionIndices.reserve(shape.mesh.indices.size());
-        newSection.m_normalIndices.reserve(shape.mesh.indices.size());
-        newSection.m_colorIndices.reserve(shape.mesh.indices.size());
-        newSection.m_texCoordsIndices.reserve(shape.mesh.indices.size());
-    
+        idxSize += shape.mesh.indices.size();
+        numFacesSize += shape.mesh.num_face_vertices.size();
+    }
+
+    m_outMesh.m_section.reserve(idxSize, numFacesSize);
+
+    for (auto& shape : m_inObjModelPtr->shapes)
+    {
         for (auto& index : shape.mesh.indices)
         {
-            newSection.m_positionIndices.push_back(index.vertex_index);
-            newSection.m_normalIndices.push_back(index.normal_index);
-            newSection.m_colorIndices.push_back(index.vertex_index);
-            newSection.m_texCoordsIndices.push_back(index.texcoord_index);
+            m_outMesh.m_section.m_positionIndices.push_back(index.vertex_index);
+            m_outMesh.m_section.m_normalIndices.push_back(index.normal_index);
+            m_outMesh.m_section.m_colorIndices.push_back(index.vertex_index);
+            m_outMesh.m_section.m_texCoordsIndices.push_back(index.texcoord_index);
+        }
+        for (auto& numVertexIndices : shape.mesh.num_face_vertices)
+        {
+            m_outMesh.m_section.m_numFaceVertices.push_back(numVertexIndices);
         }
     }
     return true;
@@ -63,6 +76,11 @@ bool ObjToEigenConverter::generateEigenMatrices(bool mergeSections)
 
 bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateBufferNow)
 {
+    if (!m_inObjModelPtr)
+    {
+        return false;
+    }
+
     ui64 dirtyFlagInt = static_cast<ui64>(dirtyFlag);
     if (dirtyFlagInt & static_cast<ui64>(MeshDirtyFlag::PositionDirty))
     {
@@ -113,6 +131,10 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
 
 void ObjToEigenConverter::updateBuffer()
 {
+    if (!m_inObjModelPtr)
+    {
+        return;
+    }
     m_inObjModelPtr->generateDrawables();
 }
 

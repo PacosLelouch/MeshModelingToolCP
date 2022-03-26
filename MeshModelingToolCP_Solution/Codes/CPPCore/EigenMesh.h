@@ -21,13 +21,29 @@ enum class MeshDirtyFlag : ui64
     EndFlag = AllDirty + 1ll,
 };
 
-template<i32 Dim>
 struct EigenMeshSection
 {
 public:
-    USING_MATRIX_VECTOR_SHORTNAME(Dim)
+    void clear()
+    {
+        m_positionIndices.clear();
+        m_normalIndices.clear();
+        m_colorIndices.clear();
+        m_texCoordsIndices.clear();
 
-public:
+        m_numFaceVertices.clear();
+    }
+
+    void reserve(size_t idxSize, size_t numFacesSize)
+    {
+        m_positionIndices.reserve(idxSize);
+        m_normalIndices.reserve(idxSize);
+        m_colorIndices.reserve(idxSize);
+        m_texCoordsIndices.reserve(idxSize);
+
+        m_numFaceVertices.reserve(numFacesSize);
+    }
+
     std::vector<i32> m_positionIndices;
     std::vector<i32> m_normalIndices;
     std::vector<i32> m_colorIndices;
@@ -44,7 +60,7 @@ public:
     USING_MATRIX_VECTOR_SHORTNAME(Dim)
 
 public:
-    std::vector<EigenMeshSection<Dim> > m_sections;
+    EigenMeshSection m_section;
 
     MatrixNX m_positions;
     MatrixNX m_normals;

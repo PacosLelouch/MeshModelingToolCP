@@ -48,7 +48,7 @@ inline scalar TestBoundingSphereProjectionOperator<Dim, TConstraintAbstract>::pr
 
     VectorN diff = transformedPoints.col(0) - this->m_center;
 
-    projectionBlock.col(0) = diff.normalized() * this->m_radius;
+    projectionBlock.col(0) = this->m_center + diff.normalized() * this->m_radius;
 
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
