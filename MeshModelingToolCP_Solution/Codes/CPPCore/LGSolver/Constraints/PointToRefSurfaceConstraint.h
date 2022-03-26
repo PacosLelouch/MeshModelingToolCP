@@ -11,7 +11,7 @@ class PointToRefSurfaceProjectionOperator : public ConstraintProjectionOperatorA
 public:
     scalar project(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& transformedPoints, typename ConstraintAbstract<3>::MatrixNX& projections) const;
 
-    MeshAABB refMeshTree;
+    std::shared_ptr<MeshAABB> refMeshTree;
 };
 
 class PointToRefSurfaceConstraint : public ConstraintBase<3,
@@ -25,10 +25,10 @@ public:
         IdentityWeightTripletGenerator<3>,
         IdentityTransformer<3> >;
 
-    PointToRefSurfaceConstraint(i32 idx, scalar weight, EigenMesh<3>& refMesh)
+    PointToRefSurfaceConstraint(i32 idx, scalar weight, std::shared_ptr<MeshAABB> refMeshTree)
         : Super(std::vector<i32>({ idx }), weight)
     {
-        this->m_projectionOperator.refMeshTree = MeshAABB(refMesh); //NOTICE: the refMesh should be triangualted
+        this->m_projectionOperator.refMeshTree = refMeshTree; //NOTICE: the refMesh should be triangualted
     }
 
     virtual ~PointToRefSurfaceConstraint() {}
@@ -41,7 +41,7 @@ inline scalar PointToRefSurfaceProjectionOperator::project(ConstraintAbstract<3>
     Eigen::Map<MatrixNX> projectionBlock(&projections(0, constraint.getIdConstraint()), 3, transformedPoints.cols());
 
     Vector3 closestPoint;
-    refMeshTree.getClosestPoint(transformedPoints.col(0), closestPoint);
+    refMeshTree->getClosestPoint(transformedPoints.col(0), closestPoint);
     projectionBlock.col(0) = closestPoint;
 
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
