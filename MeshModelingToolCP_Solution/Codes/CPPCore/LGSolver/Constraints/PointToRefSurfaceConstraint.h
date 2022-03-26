@@ -1,52 +1,50 @@
 #pragma once
 
 #include "Constraint.h"
+#include "MeshAABB.h"
+#include "EigenMesh.h"
 
 BEGIN_NAMESPACE(AAShapeUp)
 
-template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
-class PointToRefSurfaceProjectionOperator : public ConstraintProjectionOperatorAbstract<Dim, TConstraintAbstract>
+class PointToRefSurfaceProjectionOperator : public ConstraintProjectionOperatorAbstract<3, ConstraintAbstract<3>>
 {
 public:
-    scalar project(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& transformedPoints, typename TConstraintAbstract::MatrixNX& projections) const;
+    scalar project(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& transformedPoints, typename ConstraintAbstract<3>::MatrixNX& projections) const;
 
-    scalar m_targetLength;
+    MeshAABB refMeshTree;
 };
 
-template<i32 Dim>
-class PointToRefSurfaceConstraint : public ConstraintBase<Dim,
-    PointToRefSurfaceProjectionOperator<Dim>,
-    IdentityWeightTripletGenerator<Dim>,
-    IdentityTransformer<Dim>>
+class PointToRefSurfaceConstraint : public ConstraintBase<3,
+    PointToRefSurfaceProjectionOperator,
+    IdentityWeightTripletGenerator<3>,
+    IdentityTransformer<3>>
 {
 public:
-    using Super = ConstraintBase<Dim,
-        PointToRefSurfaceProjectionOperator<Dim>,
-        IdentityWeightTripletGenerator<Dim>,
-        IdentityTransformer<Dim> >;
+    using Super = ConstraintBase<3,
+        PointToRefSurfaceProjectionOperator,
+        IdentityWeightTripletGenerator<3>,
+        IdentityTransformer<3> >;
 
-    PointToRefSurfaceConstraint(i32 idx1, i32 idx2, scalar weight, scalar targetLength)
-        : Super(std::vector<i32>({ idx1, idx2 }), weight)
+    PointToRefSurfaceConstraint(i32 idx, scalar weight, EigenMesh<3>& refMesh)
+        : Super(std::vector<i32>({ idx }), weight)
     {
-        this->m_projectionOperator.m_targetLength = targetLength;
+        this->m_projectionOperator.refMeshTree = MeshAABB(refMesh);
     }
 
     virtual ~PointToRefSurfaceConstraint() {}
 };
 
-template<i32 Dim, typename TConstraintAbstract>
-inline scalar PointToRefSurfaceProjectionOperator<Dim, TConstraintAbstract>::project(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& transformedPoints, typename TConstraintAbstract::MatrixNX& projections) const
+inline scalar PointToRefSurfaceProjectionOperator::project(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& transformedPoints, typename ConstraintAbstract<3>::MatrixNX& projections) const
 {
-    using MatrixNX = typename TConstraintAbstract::MatrixNX;
+    using MatrixNX = typename ConstraintAbstract<3>::MatrixNX;
 
-    Eigen::Map<MatrixNX> projectionBlock(&projections(0, constraint.getIdConstraint()), Dim, transformedPoints.cols());
+    Eigen::Map<MatrixNX> projectionBlock(&projections(0, constraint.getIdConstraint()), 3, transformedPoints.cols());
 
-    projectionBlock.col(0) = transformedPoints.col(0).normalized() * this->m_targetLength;
+    Vector3 closestPoint;
+    refMeshTree.getClosestPoint(transformedPoints.col(0), closestPoint);
+    projectionBlock.col(0) = closestPoint;
 
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
-
-    projectionBlock *= constraint.getWeight();
-
     return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
 }
 

@@ -111,6 +111,9 @@
     <ClInclude Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.h">
       <Filter>Header Files\Operations</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PlaneConstraint.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">

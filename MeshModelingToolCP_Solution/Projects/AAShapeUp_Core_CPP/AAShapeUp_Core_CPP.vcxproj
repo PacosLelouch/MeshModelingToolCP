@@ -184,6 +184,7 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\ConstraintCollection.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PlaneConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PointToRefSurfaceConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\TestBoundingSphereConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.h" />
