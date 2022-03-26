@@ -37,6 +37,8 @@ struct EigenEdge
 {
     i32 first = -1, second = -1;
     bool operator==(const EigenEdge& edge) const;
+
+    i32 getAnotherVertex(i32 curVertex) const;
 };
 
 struct EigenMeshSection

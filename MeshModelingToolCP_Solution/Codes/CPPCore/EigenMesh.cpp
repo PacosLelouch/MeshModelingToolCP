@@ -8,6 +8,19 @@ bool EigenEdge::operator==(const EigenEdge& edge) const
     return (first == edge.first && second == edge.second) || (first == edge.second && second == edge.first);
 }
 
+i32 EigenEdge::getAnotherVertex(i32 curVertex) const
+{
+    if (curVertex == first)
+    {
+        return second;
+    }
+    else if (curVertex == second)
+    {
+        return first;
+    }
+    return INVALID_INT;
+}
+
 void EigenMeshSection::clear()
 {
     m_positionIndices.clear();

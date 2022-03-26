@@ -1,7 +1,7 @@
 #version 330
 
 layout (triangles) in;
-layout (line_strip, max_vertices = 3) out;
+layout (line_strip, max_vertices = 4) out;
 
 in vec3 gNor[];
 in vec3 gLightDir[];
@@ -34,6 +34,11 @@ void main()
     gl_Position = p2;
     lightDir = gLightDir[2];
     vertCol = gVertCol[2];
+    EmitVertex();
+
+    gl_Position = p0;
+    lightDir = gLightDir[0];
+    vertCol = gVertCol[0];
     EmitVertex();
     
     EndPrimitive();
