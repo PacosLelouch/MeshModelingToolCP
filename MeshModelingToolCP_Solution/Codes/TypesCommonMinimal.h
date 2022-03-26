@@ -1,7 +1,7 @@
 #pragma once
 
 #define BEGIN_NAMESPACE(Namespace) namespace Namespace {
-#define END_NAMESPACE() }
+#define END_NAMESPACE(...) }
 
 BEGIN_NAMESPACE(AAShapeUp)
 

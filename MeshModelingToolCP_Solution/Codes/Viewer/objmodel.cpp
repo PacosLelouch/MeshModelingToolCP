@@ -73,8 +73,7 @@ void ObjModel::generateDrawables()
 		std::unique_ptr<Drawable> drawable = std::make_unique<Drawable>();
 		std::vector<glm::vec3> vertexBuffer; // pos, color, normal
 
-		generateDrawableTriangles(drawable, vertexBuffer, shapes[s]);
-		generateDrawableTriangles(drawable, vertexBuffer, shapes[s]);
+		generateDrawablePolygons(drawable, vertexBuffer, shapes[s]);
 
 		glBindVertexArray(drawable->VAO);
 
