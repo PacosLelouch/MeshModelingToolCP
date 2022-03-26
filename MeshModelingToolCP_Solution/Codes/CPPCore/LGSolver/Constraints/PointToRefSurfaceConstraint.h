@@ -28,7 +28,7 @@ public:
     PointToRefSurfaceConstraint(i32 idx, scalar weight, EigenMesh<3>& refMesh)
         : Super(std::vector<i32>({ idx }), weight)
     {
-        this->m_projectionOperator.refMeshTree = MeshAABB(refMesh);
+        this->m_projectionOperator.refMeshTree = MeshAABB(refMesh); //NOTICE: the refMesh should be triangualted
     }
 
     virtual ~PointToRefSurfaceConstraint() {}
