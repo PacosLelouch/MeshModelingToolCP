@@ -251,7 +251,7 @@ void MyViewer::executeTestBoundingSphere()
 
 	auto& mesh = mMeshConverter.getEigenMesh();
 	std::cout << "Apply processing " << "\"executeTestBoundingSphere\"" << "..." << std::endl;
-	if (!mTestBoudingSphereOperation->initialize(mesh.m_section.m_positionIndices, mesh.m_section.m_numFaceVertices, mesh.m_positions, {}))
+	if (!mTestBoudingSphereOperation->initialize(mesh, {}))
 	{
 		std::cout << "Fail to initialize!" << std::endl;
 	}

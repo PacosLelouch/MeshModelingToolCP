@@ -3,11 +3,12 @@
 
 BEGIN_NAMESPACE(AAShapeUp)
 
-bool OperationBase::initialize(const std::vector<i32>& vertexIndices, const std::vector<i32>& numFaceVertices, const Matrix3X& positions, const std::vector<i32>& handleIndices)
+bool OperationBase::initialize(const EigenMesh<3>& mesh, const std::vector<i32>& handleIndices)
 {
-    m_vertexIndices = vertexIndices;
-    m_numFaceVertices = numFaceVertices;
-    m_initialPositions = positions;
+    //m_vertexIndices = vertexIndices;
+    //m_numFaceVertices = numFaceVertices;
+    m_initialPositions = mesh.m_positions;
+	m_mesh = mesh;
     m_handleIndices = handleIndices;
 
 	m_solverShPtr->clearConstraints();
@@ -18,7 +19,7 @@ bool OperationBase::initialize(const std::vector<i32>& vertexIndices, const std:
         return false;
     }
 
-    return m_solverShPtr && m_solverShPtr->initialize(static_cast<i32>(positions.cols()), m_handleIndices);
+    return m_solverShPtr && m_solverShPtr->initialize(static_cast<i32>(m_initialPositions.cols()), m_handleIndices);
 }
 
 bool OperationBase::solve(Matrix3X& newPositions, i32 nIter)

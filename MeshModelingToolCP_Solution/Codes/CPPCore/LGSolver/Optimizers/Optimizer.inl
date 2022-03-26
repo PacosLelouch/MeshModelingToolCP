@@ -8,7 +8,23 @@ template<i32 Dim>
 inline bool LocalGlobalOptimizer<Dim>::initialize(i32 nPoints, ConstraintSetAbstract<Dim>& constraintSet, RegularizerAbstract<Dim>& regularizer,
     ErrorEvaluatorAbstract<Dim>* errorEvaluatorPtr, SPDLinearSolverAbstract<Dim>* linearSolverPtr, const std::vector<i32>& handleIndices)
 {
-    return false;//TODO
+    if (!errorEvaluatorPtr)
+    {
+        return false;
+    }
+    if (!linearSolverPtr)
+    {
+        return false;
+    }
+    //assert(std::unordered_set<i32>(handleIndices.begin(), handleIndices.end()).size() == handleIndices.size());
+    if (!(std::unordered_set<i32>(handleIndices.begin(), handleIndices.end()).size() == handleIndices.size()))
+    {
+        // Duplicate indices in handle array.
+        return false;
+    }
+    regularizer.generateRegularizationData();
+    //TODO
+    return true;
 }
 
 template<i32 Dim>
@@ -62,18 +78,8 @@ template<i32 Dim>
 inline bool AndersonAccelerationOptimizer<Dim>::initialize(i32 nPoints, ConstraintSetAbstract<Dim>& constraintSet, RegularizerAbstract<Dim>& regularizer,
     ErrorEvaluatorAbstract<Dim>* errorEvaluatorPtr, SPDLinearSolverAbstract<Dim>* linearSolverPtr, const std::vector<i32>& handleIndices)
 {
-    if (!errorEvaluatorPtr)
+    if (!Super::initialize(nPoints, constraintSet, regularizer, errorEvaluatorPtr, linearSolverPtr, handleIndices))
     {
-        return false;
-    }
-    if (!linearSolverPtr)
-    {
-        return false;
-    }
-    //assert(std::unordered_set<i32>(handleIndices.begin(), handleIndices.end()).size() == handleIndices.size());
-    if (!(std::unordered_set<i32>(handleIndices.begin(), handleIndices.end()).size() == handleIndices.size()))
-    {
-        // Duplicate indices in handle array.
         return false;
     }
 

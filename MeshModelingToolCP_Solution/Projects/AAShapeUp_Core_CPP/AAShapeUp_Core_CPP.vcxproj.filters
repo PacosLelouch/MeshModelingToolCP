@@ -134,6 +134,9 @@
     <ClCompile Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.cpp">
       <Filter>Source Files\Operations</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\EigenMesh.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.inl">
