@@ -84,4 +84,14 @@ inline UniformLaplacianRelativeRegTerm<Dim>::UniformLaplacianRelativeRegTerm(con
 
 //// End UniformLaplacianRelativeRegTerm
 
+//// Begin LaplacianRelativeRegTerm
+
+template<i32 Dim>
+inline LaplacianRelativeRegTerm<Dim>::LaplacianRelativeRegTerm(const std::vector<i32>& indices, const std::vector<scalar>& coefs, scalar weight, const MatrixNX& refPoints)
+    : Super(indices, coefs, weight, &refPoints)
+{
+}
+
+//// End LaplacianRelativeRegTerm
+
 END_NAMESPACE()

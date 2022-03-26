@@ -26,6 +26,9 @@ public:
 protected:
 	void generateDrawables();
 
+	void generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape);
+	void generateDrawablePolygons(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape);
+
 protected:
 	std::vector<tinyobj::shape_t> shapes; 
 	std::vector<tinyobj::material_t> materials;

@@ -93,7 +93,7 @@ inline bool AndersonAccelerationOptimizer<Dim>::initialize(i32 nPoints, Constrai
     i32 nConstraints = i32(constraints.size());
 
     assert(nPoints > 0);
-    assert(nConstraints > 0);
+    //assert(nConstraints > 0); // Only have regularization may also work...
 
     i32 nVarPoints = nPoints - nHandles;
 

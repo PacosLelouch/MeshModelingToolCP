@@ -5,6 +5,16 @@
 
 using MyGeometrySolver = AAShapeUp::GeometrySolver<3, AAShapeUp::OpenMPTimer, AAShapeUp::AndersonAccelerationOptimizer<3>>;
 
+struct PlanarizationParameter
+{
+	float mWeightPlanar = 1.0f, mWeightRef = 1.0f, mWeightFair = 1.0f, mWeight2nd = 1.0f;
+};
+
+struct TestBoundingSphereParameter
+{
+	float mSphereProjection = 1.0f, mLaplacian = 0.1f;
+};
+
 class MyViewer : public Viewer
 {
 public:
@@ -14,16 +24,22 @@ public:
 	virtual void drawScene() override;
 
 	virtual void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override;
-	virtual void cursorPosCallback(GLFWwindow* window, double xpos, double ypos)override;
+	virtual void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override;
 
 	void executePlanarization();
 	void executeWireMeshDesign();
 	void executeARAP2D();
 	void executeTestBoundingSphere();
 
-private:
+protected:
+	void createOperationGUI();
+
+protected:
 	int mOperationType = 0;
+	int mShadingType = 0;
 	int mNumIter = 5;
+
+	float mModelScale = 1.0f;
 
 	float mTimeScale = 1.0f;
 	float mTime = 0;
@@ -33,8 +49,9 @@ private:
 	std::unique_ptr<ObjModel> mModelOrigin;
 	std::unique_ptr<ObjModel> mModel;
 
-	// For planarization.
-	float mWeightPlanar = 1.0f, mWeightRef = 1.0f, mWeightFair = 1.0f, mWeight2nd = 1.0f;
+	PlanarizationParameter mPlanarizationParameter;
+	TestBoundingSphereParameter mTestBoundingSphereParameter;
+
 
 	void loadOBJFile();
 	void resetOperation();

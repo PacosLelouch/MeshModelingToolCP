@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{836d39af-0e44-4fb4-8310-44e9cfd685bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\Viewer\main.cpp">
@@ -68,5 +71,76 @@
     <ClInclude Include="..\..\Codes\Viewer\ObjToEigenConverter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Codes\shader\betaCharacter.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\betaCharacter.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\curve.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\curve.geom.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\curve.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\grid.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\grid.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\model.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\model.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelFlat.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\point.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\point.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\point3d.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\point3d.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\skeleton.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\skeleton.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelColor.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelNormal.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelWire.geom.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelWire.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelNormalFlat.geom.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelGeom.vert.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="..\..\Codes\shader\modelWireFront.frag.glsl">
+      <Filter>Shader Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

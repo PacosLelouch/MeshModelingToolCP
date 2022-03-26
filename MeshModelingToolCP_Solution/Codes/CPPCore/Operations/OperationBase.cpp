@@ -36,7 +36,7 @@ bool OperationBase::solve(Matrix3X& newPositions, i32 nIter)
 MeshDirtyFlag OperationBase::visualizeOutputErrors(Matrix3X& outColors, scalar maxError) const
 {
 	std::vector<scalar> errors;
-	MeshDirtyFlag dirtyFlag_IsItUseful = getOutputErrors(errors, maxError);
+	MeshDirtyFlag dirtyFlag = getOutputErrors(errors, maxError);
 
 	outColors.resize(Eigen::NoChange, static_cast<i64>(errors.size()));
 
@@ -47,7 +47,7 @@ MeshDirtyFlag OperationBase::visualizeOutputErrors(Matrix3X& outColors, scalar m
 		outColors.col(col) = HSV2RGB(colorHSV);
 	}
 	
-	return MeshDirtyFlag::ColorDirty;
+	return dirtyFlag;
 }
 
 void OperationBase::ReinhardOperatorBatch(Matrix3X& inOutColors)

@@ -35,7 +35,7 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
         {
             continue;
         }
-        this->m_solverShPtr->addConstraint(std::make_shared<TestBoundingSphereConstraint<3>>(vidx, this->m_weight, center, radius));
+        this->m_solverShPtr->addConstraint(std::make_shared<TestBoundingSphereConstraint<3>>(vidx, this->m_sphereProjectionWeight, center, radius));
     }
 
     // Regularizations.
@@ -55,7 +55,8 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
         std::unordered_set<i32>& toIdxs = vertexAdjacentVerticesPair.second;
         std::vector<i32> indices(1, fromIdx);
         indices.insert(indices.end(), toIdxs.begin(), toIdxs.end());
-        this->m_solverShPtr->addRegularizationTerm(std::make_shared<UniformLaplacianRelativeRegTerm<3>>(indices, scalar(1.0), this->m_initialPositions));
+        //this->m_solverShPtr->addRegularizationTerm(std::make_shared<UniformLaplacianRelativeRegTerm<3>>(indices, this->m_LaplacianWeight, this->m_initialPositions));
+        this->m_solverShPtr->addRegularizationTerm(std::make_shared<UniformLaplacianRegTerm<3>>(indices, this->m_LaplacianWeight));
     }
 
     return true;
@@ -64,7 +65,8 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
 MeshDirtyFlag TestBoundingSphereOperation::getOutputErrors(std::vector<scalar>& outErrors, scalar maxError) const
 {
     //TODO: Generate planarity error as color.
-    return MeshDirtyFlag::ColorDirty;
+    return MeshDirtyFlag::None;
+    //return MeshDirtyFlag::ColorDirty;
 }
 
 MeshDirtyFlag TestBoundingSphereOperation::getMeshDirtyFlag() const
