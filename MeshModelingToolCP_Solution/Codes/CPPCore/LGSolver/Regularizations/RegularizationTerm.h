@@ -10,11 +10,12 @@ template<i32 Dim>
 class RegularizationTermAbstract
 {
 public:
-    using VectorN = MatrixT<Dim, 1>;
-    using MatrixNX = MatrixT<Dim, Eigen::Dynamic>;
-    using MatrixXN = MatrixT<Eigen::Dynamic, Dim>;
+    USING_MATRIX_VECTOR_SHORTNAME(Dim)
+public:
 
     virtual void evaluate(VectorXi& outPointIndices, VectorX& outCoefficients, VectorN& outValue) const = 0;
+
+    virtual ~RegularizationTermAbstract() {}
 };
 
 END_NAMESPACE()

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "TypesCommon.h"
+#include <unordered_set>
+#include <type_traits>
 
 BEGIN_NAMESPACE(AAShapeUp)
 
@@ -21,28 +23,28 @@ enum class MeshDirtyFlag : ui64
     EndFlag = AllDirty + 1ll,
 };
 
+struct EigenEdge
+{
+    i32 first = -1, second = -1;
+    bool operator==(const EigenEdge& edge) const;
+};
+
 struct EigenMeshSection
 {
 public:
-    void clear()
-    {
-        m_positionIndices.clear();
-        m_normalIndices.clear();
-        m_colorIndices.clear();
-        m_texCoordsIndices.clear();
+    void clear();
 
-        m_numFaceVertices.clear();
-    }
+    void reserve(size_t idxSize, size_t numFacesSize);
 
-    void reserve(size_t idxSize, size_t numFacesSize)
-    {
-        m_positionIndices.reserve(idxSize);
-        m_normalIndices.reserve(idxSize);
-        m_colorIndices.reserve(idxSize);
-        m_texCoordsIndices.reserve(idxSize);
+    void getEdgeCountMap(std::unordered_map<EigenEdge, i32>& outEdgeCountMap) const;
+    void getBoundaryEdgeSet(std::unordered_set<EigenEdge>& outBoundaryEdgeSet) const;
+    void getBoundaryVertexSet(std::unordered_set<i32>& outBoundaryVertexSet) const;
 
-        m_numFaceVertices.reserve(numFacesSize);
-    }
+    void getVertexEdgesMap(std::unordered_map<i32, std::unordered_set<EigenEdge>>& outVertexEdgesMap) const;
+    void getVertexAdjacentVerticesMap(std::unordered_map<i32, std::unordered_set<i32>>& outVertexAdjacentVerticesMap) const;
+
+    bool getFaceVertexIndex(Matrix3Xi& outFaceVertexIdx, bool mustBeTriangle = false) const;
+
 
     std::vector<i32> m_positionIndices;
     std::vector<i32> m_normalIndices;
@@ -69,5 +71,12 @@ public:
     Matrix2X m_texCoords;
 };
 
+END_NAMESPACE()
 
+BEGIN_NAMESPACE(std)
+template<>
+struct hash<AAShapeUp::EigenEdge>
+{
+    size_t operator()(const AAShapeUp::EigenEdge& k) const;
+};
 END_NAMESPACE()

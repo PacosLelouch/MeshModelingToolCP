@@ -14,6 +14,7 @@ template<i32 Dim, typename TRegularizer, typename TConstraintSet>
 inline void SolverAbstract<Dim, TRegularizer, TConstraintSet>::clearRegularizations()
 {
     m_regularizer.clearRegularizationData();
+    m_regularizer.clearRegularizationTerms();
 }
 
 template<i32 Dim, typename TRegularizer, typename TConstraintSet>

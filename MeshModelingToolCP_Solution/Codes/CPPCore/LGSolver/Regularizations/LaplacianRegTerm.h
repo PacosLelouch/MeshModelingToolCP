@@ -9,19 +9,19 @@ class LaplacianRegTermBase : public RegularizationTermAbstract<Dim>
 {
 public:
     using Super = RegularizationTermAbstract<Dim>;
-
-    using typename Super::VectorN;
-    using typename Super::MatrixNX;
-    using typename Super::MatrixXN;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
 
     LaplacianRegTermBase(const std::vector<i32>& indices, const std::vector<scalar>& coefs, scalar weight, const MatrixNX* refPointsPtr = nullptr);
+
+    virtual ~LaplacianRegTermBase() {}
 
     virtual void evaluate(VectorXi& outPointIndices, VectorX& outCoefficients, VectorN& outValue) const override;
 
 protected:
     void generateLaplacianHelper(
         VectorXi& outPointIndices, VectorX& outCoefficients, VectorN& outValue,
-        const std::vector<int>& indices, const std::vector<scalar>& coefs, scalar weight, const MatrixNX* refPoints = nullptr);
+        const std::vector<int>& indices, const std::vector<scalar>& coefs, scalar weight, const MatrixNX* refPoints = nullptr) const;
 
 protected:
     std::vector<i32> m_pointIndices;
@@ -35,12 +35,12 @@ class UniformLaplacianRegTerm : public LaplacianRegTermBase<Dim>
 {
 public:
     using Super = LaplacianRegTermBase<Dim>;
-
-    using typename Super::VectorN;
-    using typename Super::MatrixNX;
-    using typename Super::MatrixXN;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
 
     UniformLaplacianRegTerm(const std::vector<i32>& indices, scalar weight);
+
+    virtual ~UniformLaplacianRegTerm() {}
 
 protected:
 };
@@ -50,12 +50,12 @@ class LaplacianRegTerm : public LaplacianRegTermBase<Dim>
 {
 public:
     using Super = LaplacianRegTermBase<Dim>;
-
-    using typename Super::VectorN;
-    using typename Super::MatrixNX;
-    using typename Super::MatrixXN;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
 
     LaplacianRegTerm(const std::vector<i32>& indices, const std::vector<scalar>& coefs, scalar weight);
+
+    virtual ~LaplacianRegTerm() {}
 
 protected:
 };
@@ -65,12 +65,12 @@ class UniformLaplacianRelativeRegTerm : public LaplacianRegTermBase<Dim>
 {
 public:
     using Super = LaplacianRegTermBase<Dim>;
-
-    using typename Super::VectorN;
-    using typename Super::MatrixNX;
-    using typename Super::MatrixXN;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
 
     UniformLaplacianRelativeRegTerm(const std::vector<i32>& indices, scalar weight, const MatrixNX& refPoints);
+
+    virtual ~UniformLaplacianRelativeRegTerm() {}
 };
 
 
@@ -79,12 +79,12 @@ class LaplacianRelativeRegTerm : public LaplacianRegTermBase<Dim>
 {
 public:
     using Super = LaplacianRegTermBase<Dim>;
-
-    using typename Super::VectorN;
-    using typename Super::MatrixNX;
-    using typename Super::MatrixXN;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
 
     LaplacianRelativeRegTerm(const std::vector<i32>& indices, scalar weight, const MatrixNX& refPoints);
+
+    virtual ~LaplacianRelativeRegTerm() {}
 };
 
 END_NAMESPACE()

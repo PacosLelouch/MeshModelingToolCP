@@ -13,7 +13,7 @@ public:
 
     virtual ~OperationBase() {}
 
-    bool initialize(const std::vector<i32>& vertexIndices, const std::vector<i32>& numFaceVertices, const Matrix3X& positions, const std::vector<i32>& handleIndices);
+    bool initialize(const EigenMesh<3>& mesh, const std::vector<i32>& handleIndices);
 
     virtual bool initializeConstraintsAndRegularizations() = 0;
 
@@ -37,8 +37,9 @@ protected:
 
     std::vector<i32> m_handleIndices;
 
-    std::vector<i32> m_vertexIndices;
-    std::vector<i32> m_numFaceVertices;
+    EigenMesh<3> m_mesh;
+    //std::vector<i32> m_vertexIndices;
+    //std::vector<i32> m_numFaceVertices;
 
     Matrix3X m_initialPositions;
 };

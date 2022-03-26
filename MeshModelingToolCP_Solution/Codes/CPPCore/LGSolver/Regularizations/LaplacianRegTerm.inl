@@ -18,13 +18,13 @@ inline LaplacianRegTermBase<Dim>::LaplacianRegTermBase(const std::vector<i32>& i
 template<i32 Dim>
 inline void LaplacianRegTermBase<Dim>::evaluate(VectorXi& outPointIndices, VectorX& outCoefficients, VectorN& outValue) const
 {
-    this->generateLaplacianHelper(outPointIndices, outCoefficients, outValue, m_pointIndices, m_coefficients, m_weight);
+    this->generateLaplacianHelper(outPointIndices, outCoefficients, outValue, this->m_pointIndices, this->m_coefficients, this->m_weight, this->m_refPointsPtr);
 }
 
 template<i32 Dim>
 inline void LaplacianRegTermBase<Dim>::generateLaplacianHelper(
     VectorXi& outPointIndices, VectorX& outCoefficients, VectorN& outValue,
-    const std::vector<int>& indices, const std::vector<scalar>& coefs, scalar weight, const MatrixNX* refPoints)
+    const std::vector<int>& indices, const std::vector<scalar>& coefs, scalar weight, const MatrixNX* refPoints) const
 {
     assert(indices.size() == coefs.size());
 
@@ -37,7 +37,7 @@ inline void LaplacianRegTermBase<Dim>::generateLaplacianHelper(
     outValue = VectorN::Zero();
     if (refPoints)
     {
-        for (i64 i = 0; i < indices.size(); ++i)
+        for (i64 i = 0; i < i64(indices.size()); ++i)
         {
             outValue += refPoints->col(indices[i]) * coefs[i];
         }
@@ -55,7 +55,7 @@ inline UniformLaplacianRegTerm<Dim>::UniformLaplacianRegTerm(const std::vector<i
     i32 nPoints = static_cast<i32>(indices.size());
     this->m_coefficients.reserve(nPoints);
     this->m_coefficients.push_back(scalar(1.0));
-    this->m_coefficients.insert(coefs.end(), nPoints - 1, scalar(-1.0 / (nPoints - 1)));
+    this->m_coefficients.insert(this->m_coefficients.end(), nPoints - 1, scalar(-1.0 / (nPoints - 1)));
 }
 
 //// End UniformLaplacianRegTerm
@@ -79,7 +79,7 @@ inline UniformLaplacianRelativeRegTerm<Dim>::UniformLaplacianRelativeRegTerm(con
     i32 nPoints = static_cast<i32>(indices.size());
     this->m_coefficients.reserve(nPoints);
     this->m_coefficients.push_back(scalar(1.0));
-    this->m_coefficients.insert(coefs.end(), nPoints - 1, scalar(-1.0 / (nPoints - 1)));
+    this->m_coefficients.insert(this->m_coefficients.end(), nPoints - 1, scalar(-1.0 / (nPoints - 1)));
 }
 
 //// End UniformLaplacianRelativeRegTerm

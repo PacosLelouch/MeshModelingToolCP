@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "LGSolver/Constraints/TestBoundingSphereConstraint.h"
 #include "TestBoundingSphereOperation.h"
+#include "LGSolver/Regularizations/LaplacianRegTerm.h"
 #include <unordered_set>
 
 BEGIN_NAMESPACE(AAShapeUp)
@@ -8,7 +9,10 @@ BEGIN_NAMESPACE(AAShapeUp)
 bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
 {
     // Initialize constraints and regularizations.
+
+    // Constraints.
     std::unordered_set<i32> handleSet(this->m_handleIndices.begin(), this->m_handleIndices.end());
+
     scalar radius = scalar(0);
     scalar invSize = scalar(1) / this->m_initialPositions.cols();
     Vector3 center = this->m_initialPositions.col(0) * invSize;
@@ -34,7 +38,25 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
         this->m_solverShPtr->addConstraint(std::make_shared<TestBoundingSphereConstraint<3>>(vidx, this->m_weight, center, radius));
     }
 
-    //TODO: Test regularizations?
+    // Regularizations.
+    std::unordered_map<i32, std::unordered_set<i32>> vertexAdjacentVerticesMap;
+    this->m_mesh.m_section.getVertexAdjacentVerticesMap(vertexAdjacentVerticesMap);
+
+    std::unordered_set<i32> boundaryVertexSet;
+    this->m_mesh.m_section.getBoundaryVertexSet(boundaryVertexSet);
+
+    for (auto& vertexAdjacentVerticesPair : vertexAdjacentVerticesMap)
+    {
+        i32 fromIdx = vertexAdjacentVerticesPair.first;
+        if (boundaryVertexSet.find(fromIdx) != boundaryVertexSet.end())
+        {
+            continue;
+        }
+        std::unordered_set<i32>& toIdxs = vertexAdjacentVerticesPair.second;
+        std::vector<i32> indices(1, fromIdx);
+        indices.insert(indices.end(), toIdxs.begin(), toIdxs.end());
+        this->m_solverShPtr->addRegularizationTerm(std::make_shared<UniformLaplacianRelativeRegTerm<3>>(indices, scalar(1.0), this->m_initialPositions));
+    }
 
     return true;
 }
