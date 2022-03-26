@@ -11,6 +11,21 @@ namespace MyViewerOp
 	constexpr int ARAP2D = WireMeshDesign + 1;
 	constexpr int TestBoundingSphere = ARAP2D + 1;
 }
+namespace MyViewerSh
+{
+	constexpr int Model = 0;
+	constexpr int ModelColor = Model + 1;
+	constexpr int ModelNormal = ModelColor + 1;
+	constexpr int ModelWire = ModelNormal + 1;
+	
+	const std::vector<const char*> shadingTypeNames =
+	{
+		"Model",
+		"Model Color",
+		"Model Normal",
+		"Model Wire",
+	};
+}
 
 MyViewer::MyViewer(const std::string& name)
 	: Viewer(name)
@@ -51,6 +66,8 @@ void MyViewer::createGUIWindow()
 {
 	ImGui::Begin("Editor");
 	//Viewer::createGUIWindow();
+	ImGui::Combo("Shading Type", &mShadingType, MyViewerSh::shadingTypeNames.data(), static_cast<int>(MyViewerSh::shadingTypeNames.size()), -1);
+
 	if (ImGui::RadioButton("Planarization", &mOperationType, MyViewerOp::Planarization)) { resetOperation(); }
 	ImGui::SameLine();
 	if (ImGui::RadioButton("Wire Mesh Design", &mOperationType, MyViewerOp::WireMeshDesign)) { resetOperation(); }
@@ -58,12 +75,15 @@ void MyViewer::createGUIWindow()
 	if (ImGui::RadioButton("ARAP Deformation", &mOperationType, MyViewerOp::ARAP2D)) { resetOperation(); }
 	//ImGui::SameLine();
 	if (ImGui::RadioButton("Test Bounding Sphere", &mOperationType, MyViewerOp::TestBoundingSphere)) { resetOperation(); }
+
 	if (ImGui::Button("Load Model")) { loadOBJFile(); }
+
+	ImGui::SliderFloat("Model Scale", &mModelScale, 0.01f, 100.0f);
+	//ImGui::InputFloat("Model Scale", &mModelScale);
 	ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
-	ImGui::SliderFloat("Planar Weight", &mWeightPlanar, 0, 1);
-	ImGui::SliderFloat("Ref Weight", &mWeightRef, 0, 1);
-	ImGui::SliderFloat("Fair Weight", &mWeightFair, 0, 1);
-	ImGui::SliderFloat("2nd Fair Weight", &mWeight2nd, 0, 1);
+
+	createOperationGUI();
+	
 	if (ImGui::Button("Apply Processing")) 
 	{
 		std::cout << "Apply processing " << mOperationType << "..." << std::endl;
@@ -134,7 +154,8 @@ void MyViewer::drawScene()
 {
 	glEnable(GL_DEPTH_TEST);
 
-	glm::mat4 model = glm::mat4(1.0f);
+	glm::mat4 model = glm::mat4(mModelScale);
+	model[3][3] = 1.0f;
 	glm::mat4 projView = mCamera.getProjView();
 	// Draw Model
 	//if (mFKIKMode == 0)
@@ -150,14 +171,33 @@ void MyViewer::drawScene()
 	//{
 	//	mFBXModel.drawTargets(projView, model, glm::vec3(0.5, 1.0, 0.4), 20);
 	//}
+	Shader* shaderUsing = nullptr;
+	switch (mShadingType)
+	{
+	case MyViewerSh::Model:
+		shaderUsing = mModelShader.get();
+		break;
+	case MyViewerSh::ModelColor:
+		shaderUsing = mModelColorShader.get();
+		break;
+	case MyViewerSh::ModelNormal:
+		shaderUsing = mModelNormalShader.get();
+		break;
+	case MyViewerSh::ModelWire:
+		shaderUsing = mModelWireShader.get();
+		break;
+	default:
+		break;
+	}
+
 	drawGridGround(projView);
-	if (mLoaded) {
-		mModelShader->use();
-		mModelShader->setMat4("uProjView", projView);
-		mModelShader->setVec3("uLightPos", glm::vec3(20, 0, 20));
-		mModelShader->setMat4("uModel", model);
-		mModelShader->setMat3("uModelInvTr", glm::mat3(glm::transpose(glm::inverse(model))));
-		mModelShader->setVec3("color", glm::vec3(0.8, 0, 0));
+	if (mLoaded && shaderUsing) {
+		shaderUsing->use();
+		shaderUsing->setMat4("uProjView", projView);
+		shaderUsing->setVec3("uLightPos", glm::vec3(20, 0, 20));
+		shaderUsing->setMat4("uModel", model);
+		shaderUsing->setMat3("uModelInvTr", glm::mat3(glm::transpose(glm::inverse(model))));
+		shaderUsing->setVec3("color", glm::vec3(0.8, 0.4, 0.2));
 		mModel->drawObj();
 	}
 }
@@ -249,21 +289,54 @@ void MyViewer::executeTestBoundingSphere()
 		return;
 	}
 
+	mTestBoudingSphereOperation->m_LaplacianWeight = mTestBoundingSphereParameter.mLaplacian;
+	mTestBoudingSphereOperation->m_sphereProjectionWeight = mTestBoundingSphereParameter.mSphereProjection;
+
 	auto& mesh = mMeshConverter.getEigenMesh();
 	std::cout << "Apply processing " << "\"executeTestBoundingSphere\"" << "..." << std::endl;
 	if (!mTestBoudingSphereOperation->initialize(mesh, {}))
 	{
 		std::cout << "Fail to initialize!" << std::endl;
+		return;
 	}
 
 	if (!mTestBoudingSphereOperation->solve(mesh.m_positions, mNumIter))
 	{
 		std::cout << "Fail to solve!" << std::endl;
+		return;
 	}
 
-	if (!mMeshConverter.updateSourceMesh(mTestBoudingSphereOperation->getMeshDirtyFlag(), true))
+	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mTestBoudingSphereOperation->visualizeOutputErrors(mesh.m_colors, 1.0f);
+
+	if (!mMeshConverter.updateSourceMesh(mTestBoudingSphereOperation->getMeshDirtyFlag() | colorDirtyFlag, true))
 	{
 		std::cout << "Fail to update source mesh!" << std::endl;
+		return;
+	}
+}
+
+void MyViewer::createOperationGUI()
+{
+	switch (mOperationType)
+	{
+	case MyViewerOp::Planarization:
+		ImGui::SliderFloat("Planar Weight", &mPlanarizationParameter.mWeightPlanar, 0, 1);
+		ImGui::SliderFloat("Ref Weight", &mPlanarizationParameter.mWeightRef, 0, 1);
+		ImGui::SliderFloat("Fair Weight", &mPlanarizationParameter.mWeightFair, 0, 1);
+		ImGui::SliderFloat("2nd Fair Weight", &mPlanarizationParameter.mWeight2nd, 0, 1);
+		break;
+	case MyViewerOp::WireMeshDesign:
+
+		break;
+	case MyViewerOp::ARAP2D:
+
+		break;
+	case MyViewerOp::TestBoundingSphere:
+		ImGui::SliderFloat("Sphere Projection", &mTestBoundingSphereParameter.mSphereProjection, 0, 1);
+		ImGui::SliderFloat("Laplacian Weight", &mTestBoundingSphereParameter.mLaplacian, 0, 1);
+		break;
+	default:
+		break;
 	}
 }
 
@@ -299,7 +372,7 @@ void MyViewer::resetOperation()
 
 		break;
 	case MyViewerOp::TestBoundingSphere:
-		mTestBoudingSphereOperation.reset(new AAShapeUp::TestBoundingSphereOperation(mGeometrySolverShPtr, 1.0f));
+		mTestBoudingSphereOperation.reset(new AAShapeUp::TestBoundingSphereOperation(mGeometrySolverShPtr));
 		break;
 	default:
 		std::cout << "Nothing happened. Not implemented?" << std::endl;

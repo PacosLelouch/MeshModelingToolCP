@@ -23,6 +23,16 @@ enum class MeshDirtyFlag : ui64
     EndFlag = AllDirty + 1ll,
 };
 
+inline MeshDirtyFlag operator&(const MeshDirtyFlag f1, const MeshDirtyFlag f2)
+{
+    return MeshDirtyFlag(ui64(f1) & ui64(f2));
+}
+
+inline MeshDirtyFlag operator|(const MeshDirtyFlag f1, const MeshDirtyFlag f2)
+{
+    return MeshDirtyFlag(ui64(f1) | ui64(f2));
+}
+
 struct EigenEdge
 {
     i32 first = -1, second = -1;
@@ -62,13 +72,13 @@ public:
     USING_MATRIX_VECTOR_SHORTNAME(Dim)
 
 public:
-    void getTriangleVertexIndex(Eigen::Matrix3Xi& result) const {
-        int faceNum = m_section.m_positionIndices.size() / 3;
-        result.resize(3, faceNum);
-        for (int i = 0; i < faceNum; i++) {
-            result.col(i) = { m_section.m_positionIndices[i * 3], m_section.m_positionIndices[i * 3 + 1], m_section.m_positionIndices[i * 3 + 2] };
-        }
-    };
+    //void getTriangleVertexIndex(Eigen::Matrix3Xi& result) const {
+    //    int faceNum = m_section.m_positionIndices.size() / 3;
+    //    result.resize(3, faceNum);
+    //    for (int i = 0; i < faceNum; i++) {
+    //        result.col(i) = { m_section.m_positionIndices[i * 3], m_section.m_positionIndices[i * 3 + 1], m_section.m_positionIndices[i * 3 + 2] };
+    //    }
+    //}
 
     EigenMeshSection m_section;
 

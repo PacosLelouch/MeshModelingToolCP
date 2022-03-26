@@ -186,6 +186,28 @@
       <Project>{16470a6c-46f6-438b-96d2-c9c444e0b7af}</Project>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Codes\shader\betaCharacter.frag.glsl" />
+    <None Include="..\..\Codes\shader\betaCharacter.vert.glsl" />
+    <None Include="..\..\Codes\shader\curve.frag.glsl" />
+    <None Include="..\..\Codes\shader\curve.geom.glsl" />
+    <None Include="..\..\Codes\shader\curve.vert.glsl" />
+    <None Include="..\..\Codes\shader\grid.frag.glsl" />
+    <None Include="..\..\Codes\shader\grid.vert.glsl" />
+    <None Include="..\..\Codes\shader\model.frag.glsl" />
+    <None Include="..\..\Codes\shader\model.vert.glsl" />
+    <None Include="..\..\Codes\shader\modelColor.frag.glsl" />
+    <None Include="..\..\Codes\shader\modelFlat.frag.glsl" />
+    <None Include="..\..\Codes\shader\modelNormal.frag.glsl" />
+    <None Include="..\..\Codes\shader\modelWire.frag.glsl" />
+    <None Include="..\..\Codes\shader\modelWire.geom.glsl" />
+    <None Include="..\..\Codes\shader\point.frag.glsl" />
+    <None Include="..\..\Codes\shader\point.vert.glsl" />
+    <None Include="..\..\Codes\shader\point3d.frag.glsl" />
+    <None Include="..\..\Codes\shader\point3d.vert.glsl" />
+    <None Include="..\..\Codes\shader\skeleton.frag.glsl" />
+    <None Include="..\..\Codes\shader\skeleton.vert.glsl" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

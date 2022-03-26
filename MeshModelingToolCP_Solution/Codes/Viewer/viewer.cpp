@@ -122,8 +122,14 @@ Viewer::Viewer(const std::string& name) :
 	mPointShader = std::make_unique<Shader>(path + "Codes/shader/point.vert.glsl", path + "Codes/shader/point.frag.glsl");
 	mCurveShader = std::make_unique<Shader>(path + "Codes/shader/curve.vert.glsl", path + "Codes/shader/curve.frag.glsl",
 		path + "Codes/shader/curve.geom.glsl");
-	mModelShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/model.frag.glsl");
 	mGridShader = std::make_unique<Shader>(path + "Codes/shader/grid.vert.glsl", path + "Codes/shader/grid.frag.glsl");
+
+	mModelShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/model.frag.glsl");
+	mModelColorShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/modelColor.frag.glsl");
+	mModelNormalShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/modelNormal.frag.glsl");
+	mModelWireShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/modelWire.frag.glsl",
+		path + "Codes/shader/modelWire.geom.glsl");
+
 	createGridGround();
 
 }

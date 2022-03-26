@@ -47,8 +47,12 @@ protected:
 	// Some shaders
 	std::unique_ptr<Shader> mPointShader;
 	std::unique_ptr<Shader> mCurveShader;
-	std::unique_ptr<Shader> mModelShader;
 	std::unique_ptr<Shader> mGridShader;
+
+	std::unique_ptr<Shader> mModelShader;
+	std::unique_ptr<Shader> mModelColorShader;
+	std::unique_ptr<Shader> mModelNormalShader;
+	std::unique_ptr<Shader> mModelWireShader;
 
 	// Some drawables
 	std::unique_ptr<Drawable> mGridGround;

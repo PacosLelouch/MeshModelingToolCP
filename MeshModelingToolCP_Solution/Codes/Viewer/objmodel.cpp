@@ -78,6 +78,7 @@ void ObjModel::generateDrawables()
 
 											 // Construct buffer
 											 // Iterate all faces
+		vertexBuffer.reserve(drawable->elementCount * 3);
 		for (size_t f = 0; f < drawable->elementCount / 3; ++f)
 		{
 			int idx0 = shapes[s].mesh.indices[3 * f + 0].vertex_index;
@@ -104,25 +105,48 @@ void ObjModel::generateDrawables()
 				nor0 = nor1 = nor2 = nor;
 			}
 
+			glm::vec3 col0, col1, col2;
+			if (hasColor)
+			{
+				idx0 = shapes[s].mesh.indices[3 * f + 0].vertex_index;
+				idx1 = shapes[s].mesh.indices[3 * f + 1].vertex_index;
+				idx2 = shapes[s].mesh.indices[3 * f + 2].vertex_index;
+				col0 = glm::vec3(attrib.colors[3 * idx0 + 0], attrib.colors[3 * idx0 + 1], attrib.colors[3 * idx0 + 2]);
+				col1 = glm::vec3(attrib.colors[3 * idx1 + 0], attrib.colors[3 * idx1 + 1], attrib.colors[3 * idx1 + 2]);
+				col2 = glm::vec3(attrib.colors[3 * idx2 + 0], attrib.colors[3 * idx2 + 1], attrib.colors[3 * idx2 + 2]);
+			}
+			else
+			{
+				glm::vec3 col = glm::vec3(1.0f, 0.0f, 0.0f);
+				col0 = col1 = col2 = col;
+			}
+
 			//glm::vec3 col = glm::vec3(0, 0, 1);
 
 			vertexBuffer.push_back(pos0);
 			vertexBuffer.push_back(nor0);
+			vertexBuffer.push_back(col0);
+
 			vertexBuffer.push_back(pos1);
 			vertexBuffer.push_back(nor1);
+			vertexBuffer.push_back(col1);
+
 			vertexBuffer.push_back(pos2);
 			vertexBuffer.push_back(nor2);
+			vertexBuffer.push_back(col2);
 		}
 
 		glBindVertexArray(drawable->VAO);
 
-		// Allocate space and upload the data from CPU to GPU
+		// Allocate space and upload the data from CPU to GPU. (pos, nor, col)
 		glBindBuffer(GL_ARRAY_BUFFER, drawable->VBO);
 		glBufferData(GL_ARRAY_BUFFER, vertexBuffer.size() * sizeof(glm::vec3), vertexBuffer.data(), GL_STATIC_DRAW);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)0);
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)0);
 		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(3 * sizeof(float)));
 		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 9 * sizeof(float), (void*)(6 * sizeof(float)));
+		glEnableVertexAttribArray(2);
 
 		mDrawables.push_back(std::move(drawable));
 	}

@@ -9,9 +9,10 @@ class TestBoundingSphereOperation : public OperationBase
 public:
     using Super = OperationBase;
 
-    TestBoundingSphereOperation(const std::shared_ptr<SolverAbstract<3, LinearRegularizer<3>, ConstraintSet<3>>>& solverShPtr, scalar weight = scalar(1))
+    TestBoundingSphereOperation(const std::shared_ptr<SolverAbstract<3, LinearRegularizer<3>, ConstraintSet<3>>>& solverShPtr, scalar sphereProjectionWeight = scalar(1), scalar LaplacianWeight = scalar(1))
         : Super(solverShPtr)
-        , m_weight(weight) {}
+        , m_sphereProjectionWeight(sphereProjectionWeight)
+        , m_LaplacianWeight(LaplacianWeight){}
 
     virtual ~TestBoundingSphereOperation() {}
 
@@ -21,8 +22,8 @@ public:
 
     virtual MeshDirtyFlag getMeshDirtyFlag() const override;
 
-protected:
-    scalar m_weight;
+    scalar m_sphereProjectionWeight = scalar(1);
+    scalar m_LaplacianWeight = scalar(0.1);
 };
 
 END_NAMESPACE()

@@ -57,8 +57,10 @@ glm::vec3 Camera::getEye()
 void Camera::PolarRotateAboutX(float deg)
 {
 	phi += deg;
+	//phi = std::fmax(phi, -85);
+	//phi = std::fmin(0, phi);
 	phi = std::fmax(phi, -85);
-	phi = std::fmin(0, phi);
+	phi = std::fmin(85, phi);
 
 	PolarRecomputeAttributes();
 }
