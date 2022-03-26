@@ -82,7 +82,7 @@ public:
     USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
 public:
 
-    LaplacianRelativeRegTerm(const std::vector<i32>& indices, scalar weight, const MatrixNX& refPoints);
+    LaplacianRelativeRegTerm(const std::vector<i32>& indices, const std::vector<scalar>& coefs, scalar weight, const MatrixNX& refPoints);
 
     virtual ~LaplacianRelativeRegTerm() {}
 };
