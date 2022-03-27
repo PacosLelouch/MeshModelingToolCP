@@ -2,7 +2,7 @@
 
 int main()
 {
-	MyViewer viewer("viewer");
+	MyViewer viewer("AA Shape-Up Viewer");
 	viewer.mainLoop();
 
 	return 0;
