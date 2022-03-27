@@ -98,9 +98,30 @@ bool PlanarizationOperation::initializeConstraintsAndRegularizations()
 
 std::tuple<MeshDirtyFlag, MeshIndexType> PlanarizationOperation::getOutputErrors(std::vector<scalar>& outErrors) const
 {
-    //TODO: Generate planarity error, per polygon.
-    //return { MeshDirtyFlag::ColorDirty, MeshIndexType::PerPolygon };
-    return { MeshDirtyFlag::None, MeshIndexType::InvalidType };
+    Matrix3X finalPositions;
+    this->m_solverShPtr->getOutput(finalPositions);
+    outErrors.resize(this->m_mesh.m_section.m_numFaceVertices.size());
+
+    auto vIter = this->m_mesh.m_section.m_positionIndices.begin();
+    int n = 0;
+    for (i32 vn : this->m_mesh.m_section.m_numFaceVertices) {
+        Matrix3X facePoints;
+        facePoints.resize(Eigen::NoChange, vn);
+        for (int i = 0; i < vn; i++) {
+            facePoints.col(i) = finalPositions.col(*(vIter + i));
+        }
+        vIter += vn;
+
+        Eigen::JacobiSVD<Matrix3X> jSVD;
+        jSVD.compute(facePoints, Eigen::ComputeFullU);
+        Vector3 bestFitNormal = jSVD.matrixU().col(2).normalized();
+        Matrix3X projectionBlock = facePoints - bestFitNormal * (bestFitNormal.transpose() * facePoints);
+        scalar sqrDist = (facePoints - projectionBlock).squaredNorm();
+        outErrors[n] = sqrDist * 20;
+        n++;
+    }
+
+    return { MeshDirtyFlag::ColorDirty, MeshIndexType::PerPolygon };
 }
 
 MeshDirtyFlag PlanarizationOperation::getMeshDirtyFlag() const
