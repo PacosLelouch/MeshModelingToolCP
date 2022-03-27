@@ -35,17 +35,19 @@ namespace MyViewerSh
 		ModelNormalFlat,
 		ModelWire,
 		ModelWireFront,
+		ModelHeatValue,
 	};
 	
 	const std::vector<const char*> shadingTypeNames =
 	{
-		"Model",
-		"Model Flat",
-		"Model Color",
-		"Model Normal",
-		"Model Normal Flat",
-		"Model Wire",
-		"Model Wire Front",
+		"Full Light",
+		"Flat",
+		"Color",
+		"Normal",
+		"Normal Flat",
+		"Wire",
+		"Wire Front",
+		"Heat Value (Error)",
 	};
 }
 namespace MyViewerDisObj
@@ -118,6 +120,8 @@ void MyViewer::createGUIWindow()
 	//ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
 	ImGui::InputInt("Num Iteration", &mNumIter, 1, 10);
 	mNumIter = glm::max(mNumIter, 0);
+	ImGui::InputFloat("Max Error Visualization", &mMaxError, 1e-6f, 0.1f, "%.6f");
+	mMaxError = glm::max(mMaxError, 1e-6f);
 
 	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::Planarization], &mOperationType, MyViewerOp::Planarization)) { resetOperation(); }
 	ImGui::SameLine();
@@ -251,6 +255,9 @@ void MyViewer::drawScene()
 	case MyViewerSh::ModelWireFront:
 		shaderUsing = mModelWireFrontShader.get();
 		break;
+	case MyViewerSh::ModelHeatValue:
+		shaderUsing = mModelHeatValueShader.get();
+		break;
 	default:
 		break;
 	}
@@ -263,6 +270,7 @@ void MyViewer::drawScene()
 		shaderUsing->setMat4("uModel", model);
 		shaderUsing->setMat3("uModelInvTr", glm::mat3(glm::transpose(glm::inverse(model))));
 		shaderUsing->setVec3("color", glm::vec3(0.8, 0.4, 0.2));
+		shaderUsing->setFloat("uMaxError", mMaxError);
 
 		switch (mDisplayingObject)
 		{
@@ -387,7 +395,7 @@ void MyViewer::executePlanarization()
 		return;
 	}
 
-	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mPlanarizationOperation->visualizeOutputErrors(mesh.m_colors, 1.0f);
+	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mPlanarizationOperation->visualizeOutputErrors(mesh.m_colors, mMaxError, true);
 	AAShapeUp::MeshDirtyFlag normalDirtyFlag = AAShapeUp::regenerateNormals(mesh);
 	if (!mMeshConverter.updateSourceMesh(mPlanarizationOperation->getMeshDirtyFlag() | colorDirtyFlag | normalDirtyFlag, true))
 	{
@@ -430,7 +438,7 @@ void MyViewer::executeTestBoundingSphere()
 		return;
 	}
 
-	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mTestBoudingSphereOperation->visualizeOutputErrors(mesh.m_colors, 1.0f);
+	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mTestBoudingSphereOperation->visualizeOutputErrors(mesh.m_colors, mMaxError, true);
 	AAShapeUp::MeshDirtyFlag normalDirtyFlag = AAShapeUp::regenerateNormals(mesh);
 	if (!mMeshConverter.updateSourceMesh(mTestBoudingSphereOperation->getMeshDirtyFlag() | colorDirtyFlag | normalDirtyFlag, true))
 	{

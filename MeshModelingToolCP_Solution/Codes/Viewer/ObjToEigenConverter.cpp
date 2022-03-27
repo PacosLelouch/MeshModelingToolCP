@@ -98,6 +98,17 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
     }
     if ((dirtyFlag & MeshDirtyFlag::NormalDirty) != MeshDirtyFlag::None)
     {
+        if (m_objModelPtr->attrib.normals.size() != m_outMesh.m_normals.size() * 3)
+        {
+            m_objModelPtr->attrib.normals.resize(m_outMesh.m_normals.size() * 3);
+            for (auto& shape : m_objModelPtr->shapes)
+            {
+                for (auto& index : shape.mesh.indices)
+                {
+                    index.normal_index = index.vertex_index;
+                }
+            }
+        }
         i64 sourceSize = static_cast<i64>(m_objModelPtr->attrib.normals.size() / 3);
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_normals.cols(); ++i)
         {
@@ -108,6 +119,10 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
     }
     if ((dirtyFlag & MeshDirtyFlag::ColorDirty) != MeshDirtyFlag::None)
     {
+        if (m_objModelPtr->attrib.colors.size() != m_outMesh.m_colors.size() * 3)
+        {
+            m_objModelPtr->attrib.colors.resize(m_outMesh.m_colors.size() * 3);
+        }
         i64 sourceSize = static_cast<i64>(m_objModelPtr->attrib.colors.size() / 3);
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_colors.cols(); ++i)
         {
@@ -118,6 +133,17 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
     }
     if ((dirtyFlag & MeshDirtyFlag::TexCoordsDirty) != MeshDirtyFlag::None)
     {
+        if (m_objModelPtr->attrib.texcoords.size() != m_outMesh.m_texCoords.size() * 3)
+        {
+            m_objModelPtr->attrib.texcoords.resize(m_outMesh.m_texCoords.size() * 3);
+            for (auto& shape : m_objModelPtr->shapes)
+            {
+                for (auto& index : shape.mesh.indices)
+                {
+                    index.texcoord_index = index.vertex_index;
+                }
+            }
+        }
         i64 sourceSize = static_cast<i64>(m_objModelPtr->attrib.texcoords.size() / 2);
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_texCoords.cols(); ++i)
         {

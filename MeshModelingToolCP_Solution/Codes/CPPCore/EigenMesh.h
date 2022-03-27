@@ -6,6 +6,14 @@
 
 BEGIN_NAMESPACE(AAShapeUp)
 
+enum class MeshIndexType : ui8
+{
+    InvalidType,
+    PerVertex,
+    PerTriangle,
+    PerPolygon,
+};
+
 enum class MeshDirtyFlag : ui64
 {
     // Single bit.

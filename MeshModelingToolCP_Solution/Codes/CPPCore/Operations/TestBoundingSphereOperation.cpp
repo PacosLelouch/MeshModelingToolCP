@@ -13,21 +13,21 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
     // Constraints.
     std::unordered_set<i32> handleSet(this->m_handleIndices.begin(), this->m_handleIndices.end());
 
-    scalar radius = scalar(0);
+    m_radius = scalar(0);
     scalar invSize = scalar(1) / this->m_initialPositions.cols();
-    Vector3 center = this->m_initialPositions.col(0) * invSize;
-    Vector3 maxCorner = center;
+    m_center = this->m_initialPositions.col(0) * invSize;
+    m_maxCorner = m_center;
 
     for (i64 vidx = 1; vidx < this->m_initialPositions.cols(); ++vidx)
     {
         Vector3 curPos = this->m_initialPositions.col(vidx);
-        center += curPos * invSize;
-        for (i64 i = 0; i < maxCorner.size(); ++i)
+        m_center += curPos * invSize;
+        for (i64 i = 0; i < m_maxCorner.size(); ++i)
         {
-            maxCorner(i) = glm::max(maxCorner(i), curPos(i));
+            m_maxCorner(i) = glm::max(m_maxCorner(i), curPos(i));
         }
     }
-    radius = (maxCorner - center).norm() * scalar(0.5);
+    m_radius = (m_maxCorner - m_center).norm();
 
     for (i64 vidx = 0; vidx < this->m_initialPositions.cols(); ++vidx)
     {
@@ -35,7 +35,7 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
         {
             continue;
         }
-        this->m_solverShPtr->addConstraint(std::make_shared<TestBoundingSphereConstraint<3>>(vidx, this->m_sphereProjectionWeight, center, radius));
+        this->m_solverShPtr->addConstraint(std::make_shared<TestBoundingSphereConstraint<3>>(vidx, this->m_sphereProjectionWeight, m_center, m_radius));
     }
 
     // Regularizations.
@@ -62,11 +62,21 @@ bool TestBoundingSphereOperation::initializeConstraintsAndRegularizations()
     return true;
 }
 
-MeshDirtyFlag TestBoundingSphereOperation::getOutputErrors(std::vector<scalar>& outErrors, scalar maxError) const
+std::tuple<MeshDirtyFlag, MeshIndexType> TestBoundingSphereOperation::getOutputErrors(std::vector<scalar>& outErrors) const
 {
-    //TODO: Generate planarity error as color.
-    return MeshDirtyFlag::None;
-    //return MeshDirtyFlag::ColorDirty;
+    Matrix3X finalPositions;
+    this->m_solverShPtr->getOutput(finalPositions);
+
+    outErrors.resize(finalPositions.cols());
+
+    for (i64 i = 0; i < finalPositions.cols(); ++i)
+    {
+        Vector3 cur = finalPositions.col(i);
+        Vector3 target = m_center + (finalPositions.col(i) - m_center).normalized() * m_radius;
+        outErrors[i] = (cur - target).norm();
+    }
+
+    return { MeshDirtyFlag::ColorDirty, MeshIndexType::PerVertex };
 }
 
 MeshDirtyFlag TestBoundingSphereOperation::getMeshDirtyFlag() const

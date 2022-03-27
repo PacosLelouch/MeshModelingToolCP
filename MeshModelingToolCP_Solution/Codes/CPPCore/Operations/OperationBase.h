@@ -19,9 +19,9 @@ public:
 
     virtual bool solve(Matrix3X& newPositions, i32 nIter = 5);
 
-    MeshDirtyFlag visualizeOutputErrors(Matrix3X& outColors, scalar maxError = 1) const;
+    MeshDirtyFlag visualizeOutputErrors(Matrix3X& outColors, scalar maxError = 1, bool keepHeatValue = false) const;
 
-    virtual MeshDirtyFlag getOutputErrors(std::vector<scalar>& outErrors, scalar maxError = 1) const = 0;
+    virtual std::tuple<MeshDirtyFlag, MeshIndexType> getOutputErrors(std::vector<scalar>& outErrors) const = 0;
 
     virtual MeshDirtyFlag getMeshDirtyFlag() const = 0;
 
@@ -31,6 +31,10 @@ public:
     static void HSV2RGBBatch(Matrix3X& inOutColors);
 
     static Vector3 HSV2RGB(Vector3 inHSV);
+
+protected:
+    void trianglesToVertices(std::vector<scalar>& outValues, const std::vector<scalar>& inValues) const;
+    void polygonsToVertices(std::vector<scalar>& outValues, const std::vector<scalar>& inValues) const;
 
 protected:
     std::shared_ptr<SolverAbstract<3, LinearRegularizer<3>, ConstraintSet<3>>> m_solverShPtr;

@@ -59,8 +59,8 @@ void Camera::PolarRotateAboutX(float deg)
 	phi += deg;
 	//phi = std::fmax(phi, -85);
 	//phi = std::fmin(0, phi);
-	phi = std::fmax(phi, -85);
-	phi = std::fmin(85, phi);
+	phi = std::fmax(phi, -85.0f);
+	phi = std::fmin(85.0f, phi);
 
 	PolarRecomputeAttributes();
 }

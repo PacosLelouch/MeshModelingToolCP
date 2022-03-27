@@ -135,6 +135,7 @@ Viewer::Viewer(const std::string& name) :
 		path + "Codes/shader/modelWire.geom.glsl");
 	mModelWireFrontShader = std::make_unique<Shader>(path + "Codes/shader/modelGeom.vert.glsl", path + "Codes/shader/modelWireFront.frag.glsl",
 		path + "Codes/shader/modelWire.geom.glsl");
+	mModelHeatValueShader = std::make_unique<Shader>(path + "Codes/shader/model.vert.glsl", path + "Codes/shader/modelHeatValue.frag.glsl");
 
 	createGridGround();
 

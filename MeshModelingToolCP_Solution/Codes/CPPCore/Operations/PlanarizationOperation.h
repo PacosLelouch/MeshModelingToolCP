@@ -16,7 +16,7 @@ public:
 
     virtual bool initializeConstraintsAndRegularizations() override;
 
-    virtual MeshDirtyFlag getOutputErrors(std::vector<scalar>& outErrors, scalar maxError = 1) const override;
+    virtual std::tuple<MeshDirtyFlag, MeshIndexType> getOutputErrors(std::vector<scalar>& outErrors) const override;
 
     virtual MeshDirtyFlag getMeshDirtyFlag() const override;
 

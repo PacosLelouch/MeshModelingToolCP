@@ -43,6 +43,7 @@ protected:
 	int mNumIter = 5;
 
 	float mModelScale = 1.0f;
+	float mMaxError = 0.05f;
 
 	float mTimeScale = 1.0f;
 	float mTime = 0;

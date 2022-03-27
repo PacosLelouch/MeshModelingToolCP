@@ -96,10 +96,11 @@ bool PlanarizationOperation::initializeConstraintsAndRegularizations()
     return true;
 }
 
-MeshDirtyFlag PlanarizationOperation::getOutputErrors(std::vector<scalar>& outErrors, scalar maxError) const
+std::tuple<MeshDirtyFlag, MeshIndexType> PlanarizationOperation::getOutputErrors(std::vector<scalar>& outErrors) const
 {
-    //TODO: Generate planarity error as color.
-    return MeshDirtyFlag::ColorDirty;
+    //TODO: Generate planarity error, per polygon.
+    //return { MeshDirtyFlag::ColorDirty, MeshIndexType::PerPolygon };
+    return { MeshDirtyFlag::None, MeshIndexType::InvalidType };
 }
 
 MeshDirtyFlag PlanarizationOperation::getMeshDirtyFlag() const
