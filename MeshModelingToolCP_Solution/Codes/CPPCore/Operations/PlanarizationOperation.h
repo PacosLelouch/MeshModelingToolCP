@@ -22,7 +22,7 @@ public:
 
 
     EigenMesh<3> refMesh;
-    scalar closeness_weight, relative_laplacian_weight, laplacian_weight, planarity_weight;
+    scalar closeness_weight = scalar(1), relative_laplacian_weight = scalar(0.1), laplacian_weight = scalar(0.1), planarity_weight = scalar(1);
 
 protected:
 };

@@ -26,7 +26,7 @@ public:
 protected:
 	void generateDrawables();
 
-	void generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape);
+	void generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape, const std::vector<tinyobj::index_t>* alternateIndices = nullptr);
 	void generateDrawablePolygons(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape);
 
 protected:

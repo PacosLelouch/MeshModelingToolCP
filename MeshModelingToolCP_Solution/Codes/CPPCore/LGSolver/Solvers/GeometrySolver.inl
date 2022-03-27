@@ -148,7 +148,10 @@ inline bool GeometrySolver<Dim, TTimer, TOptimizer, TSPDLinearSolver, TRegulariz
         this->m_elapsedTimes.push_back(this->m_timer.getElapsedTime(tBegin, tIter));
         this->m_funcValues.push_back(this->m_optimizer.getCurrentError());
         // For debugging.
-        std::cout << "Iteration [" << it << "] time = " << this->m_timer.getElapsedTime(tBegin, tIter) << ", error = " << this->m_funcValues.back() << std::endl;
+        std::cout << "Iteration [" << it << "] time = " << this->m_timer.getElapsedTime(tBegin, tIter)
+            << ", error = " << this->m_funcValues.back()
+            << ", ratio = " << (glm::abs<double>(this->m_funcValues[0]) >= glm::epsilon<double>() ? this->m_funcValues.back() / this->m_funcValues[0] : std::numeric_limits<double>::infinity())
+            << std::endl;
     }
 
     TimerUtil::EventID tEnd = this->m_timer.recordTime("GeometrySolver_Solve_End");

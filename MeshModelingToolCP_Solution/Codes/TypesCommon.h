@@ -1,5 +1,7 @@
 #pragma once
 
+#pragma warning( disable : 4244 ) // Implicit conversion loss of precision.
+#pragma warning( disable : 4267 ) // Implicit conversion loss of precision.
 #define _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS
 
 #include "Eigen/Dense"

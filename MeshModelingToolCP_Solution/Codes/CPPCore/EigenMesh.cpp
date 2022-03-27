@@ -196,6 +196,7 @@ bool EigenMeshSection::getFaceVertexIndex(Matrix3Xi& outFaceVertexIdx, bool must
     }
 
     outFaceVertexIdx.resize(Eigen::NoChange, triVertIdxs.size());
+
     for (i64 i = 0; i < i64(triVertIdxs.size()); ++i)
     {
         auto& triTuple = triVertIdxs[i];
@@ -231,10 +232,7 @@ MeshDirtyFlag regenerateNormals(EigenMesh<3>& mesh)
         mesh.m_normals.col(idxs(2)) += normalFlat;
     }
 
-    for (i64 i = 0; i < mesh.m_normals.cols(); ++i)
-    {
-        mesh.m_normals.col(i).normalize();
-    }
+    mesh.m_normals.colwise().normalize();
 
     return MeshDirtyFlag::NormalDirty;
 }

@@ -91,20 +91,22 @@ void ObjModel::generateDrawables()
 	}
 }
 
-void ObjModel::generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape)
+void ObjModel::generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape, const std::vector<tinyobj::index_t>* alternateIndices)
 {
 	bool hasColor = !attrib.colors.empty();
 	bool hasNormal = !attrib.normals.empty();
 
-	drawable->elementCount = shape.mesh.indices.size();
+	const std::vector<tinyobj::index_t>& indices = alternateIndices ? *alternateIndices : shape.mesh.indices;
+
+	drawable->elementCount = static_cast<int>(indices.size());
 	// Construct buffer
 	// Iterate all faces
 	vertexBuffer.reserve(drawable->elementCount * 3);
 	for (size_t f = 0; f < drawable->elementCount / 3; ++f)
 	{
-		int idx0 = shape.mesh.indices[3 * f + 0].vertex_index;
-		int idx1 = shape.mesh.indices[3 * f + 1].vertex_index;
-		int idx2 = shape.mesh.indices[3 * f + 2].vertex_index;
+		int idx0 = indices[3 * f + 0].vertex_index;
+		int idx1 = indices[3 * f + 1].vertex_index;
+		int idx2 = indices[3 * f + 2].vertex_index;
 		glm::vec3 pos0 = glm::vec3(attrib.vertices[3 * idx0 + 0], attrib.vertices[3 * idx0 + 1], attrib.vertices[3 * idx0 + 2]);
 		glm::vec3 pos1 = glm::vec3(attrib.vertices[3 * idx1 + 0], attrib.vertices[3 * idx1 + 1], attrib.vertices[3 * idx1 + 2]);
 		glm::vec3 pos2 = glm::vec3(attrib.vertices[3 * idx2 + 0], attrib.vertices[3 * idx2 + 1], attrib.vertices[3 * idx2 + 2]);
@@ -112,9 +114,9 @@ void ObjModel::generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, st
 		glm::vec3 nor0, nor1, nor2;
 		if (hasNormal)
 		{
-			idx0 = shape.mesh.indices[3 * f + 0].normal_index;
-			idx1 = shape.mesh.indices[3 * f + 1].normal_index;
-			idx2 = shape.mesh.indices[3 * f + 2].normal_index;
+			idx0 = indices[3 * f + 0].normal_index;
+			idx1 = indices[3 * f + 1].normal_index;
+			idx2 = indices[3 * f + 2].normal_index;
 			nor0 = glm::vec3(attrib.normals[3 * idx0 + 0], attrib.normals[3 * idx0 + 1], attrib.normals[3 * idx0 + 2]);
 			nor1 = glm::vec3(attrib.normals[3 * idx1 + 0], attrib.normals[3 * idx1 + 1], attrib.normals[3 * idx1 + 2]);
 			nor2 = glm::vec3(attrib.normals[3 * idx2 + 0], attrib.normals[3 * idx2 + 1], attrib.normals[3 * idx2 + 2]);
@@ -129,9 +131,9 @@ void ObjModel::generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, st
 		glm::vec3 col0, col1, col2;
 		if (hasColor)
 		{
-			idx0 = shape.mesh.indices[3 * f + 0].vertex_index;
-			idx1 = shape.mesh.indices[3 * f + 1].vertex_index;
-			idx2 = shape.mesh.indices[3 * f + 2].vertex_index;
+			idx0 = indices[3 * f + 0].vertex_index;
+			idx1 = indices[3 * f + 1].vertex_index;
+			idx2 = indices[3 * f + 2].vertex_index;
 			col0 = glm::vec3(attrib.colors[3 * idx0 + 0], attrib.colors[3 * idx0 + 1], attrib.colors[3 * idx0 + 2]);
 			col1 = glm::vec3(attrib.colors[3 * idx1 + 0], attrib.colors[3 * idx1 + 1], attrib.colors[3 * idx1 + 2]);
 			col2 = glm::vec3(attrib.colors[3 * idx2 + 0], attrib.colors[3 * idx2 + 1], attrib.colors[3 * idx2 + 2]);
@@ -160,7 +162,27 @@ void ObjModel::generateDrawableTriangles(std::unique_ptr<Drawable>& drawable, st
 
 void ObjModel::generateDrawablePolygons(std::unique_ptr<Drawable>& drawable, std::vector<glm::vec3>& vertexBuffer, const tinyobj::shape_t& shape)
 {
-	bool hasColor = !attrib.colors.empty();
-	bool hasNormal = !attrib.normals.empty();
+	std::vector<tinyobj::index_t> indices;
+	size_t startIdx = 0;
+	for (size_t i = 0; i < shape.mesh.num_face_vertices.size(); ++i)
+	{
+		int numVert = shape.mesh.num_face_vertices[i];
 
+		if (numVert < 3)
+		{
+			continue;
+		}
+		else
+		{
+			for (int j = 1; j + 1 < numVert; ++j)
+			{
+				indices.push_back(shape.mesh.indices[startIdx + 0]);
+				indices.push_back(shape.mesh.indices[startIdx + j]);
+				indices.push_back(shape.mesh.indices[startIdx + j + 1]);
+			}
+		}
+		startIdx += numVert;
+	}
+
+	generateDrawableTriangles(drawable, vertexBuffer, shape, &indices);
 }

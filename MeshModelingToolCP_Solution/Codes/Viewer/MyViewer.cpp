@@ -4,22 +4,38 @@
 #include <nfd.h>
 #include "ObjToEigenConverter.h"
 
+#pragma warning( disable : 26812 ) // Enum type warning.
+
 namespace MyViewerOp
 {
-	constexpr int Planarization = 0;
-	constexpr int WireMeshDesign = Planarization + 1;
-	constexpr int ARAP2D = WireMeshDesign + 1;
-	constexpr int TestBoundingSphere = ARAP2D + 1;
+	enum Op
+	{
+		Planarization,
+		WireMeshDesign,
+		ARAP2D,
+		TestBoundingSphere,
+	};
+
+	const std::vector<const char*> operationTypeNames =
+	{
+		"Planarization",
+		"Wire Mesh Design",
+		"ARAP Deformation",
+		"Test Bounding Sphere",
+	};
 }
 namespace MyViewerSh
 {
-	constexpr int Model = 0;
-	constexpr int ModelFlat = Model + 1;
-	constexpr int ModelColor = ModelFlat + 1;
-	constexpr int ModelNormal = ModelColor + 1;
-	constexpr int ModelNormalFlat = ModelNormal + 1;
-	constexpr int ModelWire = ModelNormalFlat + 1;
-	constexpr int ModelWireFront = ModelWire + 1;
+	enum Sh
+	{
+		Model,
+		ModelFlat,
+		ModelColor,
+		ModelNormal,
+		ModelNormalFlat,
+		ModelWire,
+		ModelWireFront,
+	};
 	
 	const std::vector<const char*> shadingTypeNames =
 	{
@@ -32,13 +48,34 @@ namespace MyViewerSh
 		"Model Wire Front",
 	};
 }
+namespace MyViewerDisObj
+{
+	enum DisObj
+	{
+		ModelProcessed,
+		ModelOrigin,
+		ModelReference,
+	};
+
+	const std::vector<const char*> displayingObjectNames =
+	{
+		"Processed",
+		"Origin",
+		"Reference",
+	};
+}
+
+const std::string MyViewer::noneString = "None";
+const std::string MyViewer::sameAsInputString = "Same As Input";
 
 MyViewer::MyViewer(const std::string& name)
 	: Viewer(name)
+	, mOriginModelText(noneString)
+	, mReferenceModelText(sameAsInputString)
 	, mModelOrigin(std::make_unique<ObjModel>())
 	, mModel(std::make_unique<ObjModel>())
-	, mMeshConverter(mModel.get())
-	, mGeometrySolverShPtr(std::make_shared<MyGeometrySolver>())
+	, mModelReference(std::make_unique<ObjModel>())
+	, mGeometrySolverShPtr(std::make_shared<MyGeometrySolver3D>())
 {
 	//mModelOrigin = std::make_unique<ObjModel>();
 	//mModel = std::make_unique<ObjModel>();
@@ -77,18 +114,30 @@ void MyViewer::createGUIWindow()
 	ImGui::Begin("Editor");
 	//Viewer::createGUIWindow();
 	//ImGui::SliderFloat("Model Scale", &mModelScale, 0.01f, 100.0f);
-	ImGui::InputFloat("Model Scale", &mModelScale, 0.01f, 0.2f);
-	ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
+	ImGui::InputFloat("Model Scale", &mModelScale, 0.01f, 0.2f, "%.3f");
+	//ImGui::SliderInt("Num Iteration", &mNumIter, 0, 20);
+	ImGui::InputInt("Num Iteration", &mNumIter, 1, 10);
+	mNumIter = glm::max(mNumIter, 0);
 
-	if (ImGui::RadioButton("Planarization", &mOperationType, MyViewerOp::Planarization)) { resetOperation(); }
+	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::Planarization], &mOperationType, MyViewerOp::Planarization)) { resetOperation(); }
 	ImGui::SameLine();
-	if (ImGui::RadioButton("Wire Mesh Design", &mOperationType, MyViewerOp::WireMeshDesign)) { resetOperation(); }
+	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::WireMeshDesign], &mOperationType, MyViewerOp::WireMeshDesign)) { resetOperation(); }
 	ImGui::SameLine();
-	if (ImGui::RadioButton("ARAP Deformation", &mOperationType, MyViewerOp::ARAP2D)) { resetOperation(); }
+	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::ARAP2D], &mOperationType, MyViewerOp::ARAP2D)) { resetOperation(); }
 	//ImGui::SameLine();
-	if (ImGui::RadioButton("Test Bounding Sphere", &mOperationType, MyViewerOp::TestBoundingSphere)) { resetOperation(); }
+	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::TestBoundingSphere], &mOperationType, MyViewerOp::TestBoundingSphere)) { resetOperation(); }
 
-	if (ImGui::Button("Load Model")) { loadOBJFile(); }
+	if (ImGui::Button("Load Model")) { loadOBJFileToModel(); }
+	ImGui::SameLine();
+	if (ImGui::Button("Load Reference")) { loadOBJFileToReference(); }
+	ImGui::Text("Origin Model: %s", mOriginModelText.c_str());
+	ImGui::Text("Reference Model: %s", mReferenceModelText.c_str());
+
+	ImGui::RadioButton(MyViewerDisObj::displayingObjectNames[MyViewerDisObj::ModelProcessed], &mDisplayingObject, MyViewerDisObj::ModelProcessed);
+	ImGui::SameLine();
+	ImGui::RadioButton(MyViewerDisObj::displayingObjectNames[MyViewerDisObj::ModelOrigin], &mDisplayingObject, MyViewerDisObj::ModelOrigin);
+	ImGui::SameLine();
+	ImGui::RadioButton(MyViewerDisObj::displayingObjectNames[MyViewerDisObj::ModelReference], &mDisplayingObject, MyViewerDisObj::ModelReference);
 
 	createOperationGUI();
 	
@@ -207,14 +256,41 @@ void MyViewer::drawScene()
 	}
 
 	drawGridGround(projView);
-	if (mLoaded && shaderUsing) {
+	if (shaderUsing) {
 		shaderUsing->use();
 		shaderUsing->setMat4("uProjView", projView);
 		shaderUsing->setVec3("uLightPos", glm::vec3(20, 0, 20));
 		shaderUsing->setMat4("uModel", model);
 		shaderUsing->setMat3("uModelInvTr", glm::mat3(glm::transpose(glm::inverse(model))));
 		shaderUsing->setVec3("color", glm::vec3(0.8, 0.4, 0.2));
-		mModel->drawObj();
+
+		switch (mDisplayingObject)
+		{
+		case MyViewerDisObj::ModelProcessed:
+			if (mModelLoaded)
+			{
+				mModel->drawObj();
+			}
+			break;
+		case MyViewerDisObj::ModelOrigin:
+			if (mModelLoaded)
+			{
+				mModelOrigin->drawObj();
+			}
+			break;
+		case MyViewerDisObj::ModelReference:
+			if (mReferenceLoaded)
+			{
+				mModelReference->drawObj();
+			}
+			else if (mModelLoaded)
+			{
+				mModelOrigin->drawObj();
+			}
+			break;
+		default:
+			break;
+		}
 	}
 }
 
@@ -285,7 +361,39 @@ void MyViewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 void MyViewer::executePlanarization()
 {
-	std::cout << "Apply processing " << "(TODO)" << std::endl;
+	if (!mModelLoaded)
+	{
+		return;
+	}
+
+	mPlanarizationOperation->refMesh = mMeshConverterReference.getEigenMesh();
+	mPlanarizationOperation->closeness_weight = mPlanarizationParameter.mCloseness;
+	mPlanarizationOperation->planarity_weight = mPlanarizationParameter.mPlanarity;
+	mPlanarizationOperation->laplacian_weight = mPlanarizationParameter.mLaplacian;
+	mPlanarizationOperation->relative_laplacian_weight = mPlanarizationParameter.mRelativeLaplacian;
+
+	auto& mesh = mMeshConverter.getEigenMesh();
+	std::cout << "Apply processing " << "\"executePlanarization\"" << "..." << std::endl;
+
+	if (!mPlanarizationOperation->initialize(mesh, {}))
+	{
+		std::cout << "Fail to initialize!" << std::endl;
+		return;
+	}
+
+	if (!mPlanarizationOperation->solve(mesh.m_positions, mNumIter))
+	{
+		std::cout << "Fail to solve!" << std::endl;
+		return;
+	}
+
+	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mPlanarizationOperation->visualizeOutputErrors(mesh.m_colors, 1.0f);
+	AAShapeUp::MeshDirtyFlag normalDirtyFlag = AAShapeUp::regenerateNormals(mesh);
+	if (!mMeshConverter.updateSourceMesh(mPlanarizationOperation->getMeshDirtyFlag() | colorDirtyFlag | normalDirtyFlag, true))
+	{
+		std::cout << "Fail to update source mesh!" << std::endl;
+		return;
+	}
 }
 
 void MyViewer::executeWireMeshDesign()
@@ -300,7 +408,7 @@ void MyViewer::executeARAP2D()
 
 void MyViewer::executeTestBoundingSphere()
 {
-	if (!mLoaded)
+	if (!mModelLoaded)
 	{
 		return;
 	}
@@ -336,10 +444,10 @@ void MyViewer::createOperationGUI()
 	switch (mOperationType)
 	{
 	case MyViewerOp::Planarization:
-		ImGui::SliderFloat("Planar Weight", &mPlanarizationParameter.mWeightPlanar, 0, 1);
-		ImGui::SliderFloat("Ref Weight", &mPlanarizationParameter.mWeightRef, 0, 1);
-		ImGui::SliderFloat("Fair Weight", &mPlanarizationParameter.mWeightFair, 0, 1);
-		ImGui::SliderFloat("2nd Fair Weight", &mPlanarizationParameter.mWeight2nd, 0, 1);
+		ImGui::SliderFloat("Planarity Weight", &mPlanarizationParameter.mPlanarity, 0, 1);
+		ImGui::SliderFloat("Closeness Weight", &mPlanarizationParameter.mCloseness, 0, 1);
+		ImGui::SliderFloat("Fairness Weight", &mPlanarizationParameter.mLaplacian, 0, 1);
+		ImGui::SliderFloat("Relative Fairness Weight", &mPlanarizationParameter.mRelativeLaplacian, 0, 1);
 		break;
 	case MyViewerOp::WireMeshDesign:
 
@@ -348,24 +456,45 @@ void MyViewer::createOperationGUI()
 
 		break;
 	case MyViewerOp::TestBoundingSphere:
-		ImGui::SliderFloat("Sphere Projection", &mTestBoundingSphereParameter.mSphereProjection, 0, 1);
-		ImGui::SliderFloat("Laplacian Weight", &mTestBoundingSphereParameter.mLaplacian, 0, 1);
+		ImGui::SliderFloat("Sphere Projection Weight", &mTestBoundingSphereParameter.mSphereProjection, 0, 1);
+		ImGui::SliderFloat("Fairness Weight", &mTestBoundingSphereParameter.mLaplacian, 0, 1);
 		break;
 	default:
 		break;
 	}
 }
 
-void MyViewer::loadOBJFile()
+void MyViewer::loadOBJFileToModel()
 {
 	std::string path = std::filesystem::current_path().parent_path().parent_path().string();
 	nfdchar_t* outPath = NULL;
 	nfdresult_t result = NFD_OpenDialog("obj", path.c_str(), &outPath);
 
-	if (result == NFD_OKAY) {
-		mModelOrigin->loadObj(std::string(outPath));
+	if (result == NFD_OKAY && mModelOrigin->loadObj(std::string(outPath))) 
+	{
+		mOriginModelText = outPath;
+		mReferenceModelText = sameAsInputString;
 		resetModelToOrigin();
-		mLoaded = true;
+		updateReference(mModelOrigin.get());
+
+		mModelLoaded = true;
+		mReferenceLoaded = false;
+		resetOperation();
+	}
+}
+
+void MyViewer::loadOBJFileToReference()
+{
+	std::string path = std::filesystem::current_path().parent_path().parent_path().string();
+	nfdchar_t* outPath = NULL;
+	nfdresult_t result = NFD_OpenDialog("obj", path.c_str(), &outPath);
+
+	if (result == NFD_OKAY && mModelReference->loadObj(std::string(outPath))) 
+	{
+		mReferenceModelText = outPath;
+		updateReference(mModelReference.get());
+
+		mReferenceLoaded = true;
 		resetOperation();
 	}
 }
@@ -375,7 +504,7 @@ void MyViewer::resetOperation()
 	switch (mOperationType)
 	{
 	case MyViewerOp::Planarization:
-
+		mPlanarizationOperation.reset(new AAShapeUp::PlanarizationOperation(mGeometrySolverShPtr));
 		break;
 	case MyViewerOp::WireMeshDesign:
 
@@ -395,6 +524,13 @@ void MyViewer::resetOperation()
 void MyViewer::resetModelToOrigin()
 {
 	mModel->copyObj(*mModelOrigin);
+	mMeshConverter.setObjModelPtr(mModel.get());
 	mMeshConverter.generateEigenMatrices();
+}
+
+void MyViewer::updateReference(ObjModel* objModelPtr)
+{
+	mMeshConverterReference.setObjModelPtr(objModelPtr);
+	mMeshConverterReference.generateEigenMatrices();
 }
 
