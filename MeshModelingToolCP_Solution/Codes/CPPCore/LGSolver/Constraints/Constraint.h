@@ -22,9 +22,8 @@ template<i32 Dim>
 class ConstraintAbstract
 {
 public:
-
-    using VectorN = MatrixT<Dim, 1>;
-    using MatrixNX = MatrixT<Dim, Eigen::Dynamic>;
+    USING_MATRIX_VECTOR_SHORTNAME(Dim)
+public:
 
     static constexpr i32 getDim() { return Dim; }
 
@@ -128,9 +127,9 @@ template<i32 Dim,
 class ConstraintBase : public ConstraintAbstract<Dim>
 {
 public:
-
-    using typename ConstraintAbstract<Dim>::VectorN;
-    using typename ConstraintAbstract<Dim>::MatrixNX;
+    using Super = ConstraintAbstract<Dim>;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
 
     friend typename TConstraintTripletGenerator;
     friend typename TConstraintProjectionOperator;

@@ -8,6 +8,9 @@ template<i32 Dim, typename TConstraintAbstract = ConstraintAbstract<Dim> >
 class EdgeLengthProjectionOperator : public ConstraintProjectionOperatorAbstract<Dim, TConstraintAbstract>
 {
 public:
+    using Super = ConstraintProjectionOperatorAbstract<Dim, TConstraintAbstract>;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
     scalar project(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& transformedPoints, typename TConstraintAbstract::MatrixNX& projections) const;
 
     scalar m_targetLength;
@@ -24,6 +27,8 @@ public:
         EdgeLengthProjectionOperator<Dim>,
         SubtractFirstWeightTripletGenerator<Dim>,
         SubtractFirstTransformer<Dim> >;
+    USING_SUPER_CLASS_MATRIX_VECTOR_SHORTNAME(Super)
+public:
 
     EdgeLengthConstraint(i32 idx1, i32 idx2, scalar weight, scalar targetLength)
         : Super(std::vector<i32>({idx1, idx2}), weight)
@@ -37,8 +42,6 @@ public:
 template<i32 Dim, typename TConstraintAbstract>
 inline scalar EdgeLengthProjectionOperator<Dim, TConstraintAbstract>::project(TConstraintAbstract& constraint, const typename TConstraintAbstract::MatrixNX& transformedPoints, typename TConstraintAbstract::MatrixNX& projections) const
 {
-    using MatrixNX = typename TConstraintAbstract::MatrixNX;
-
     Eigen::Map<MatrixNX> projectionBlock(&projections(0, constraint.getIdConstraint()), Dim, transformedPoints.cols());
 
     projectionBlock.col(0) = transformedPoints.col(0).normalized() * this->m_targetLength;

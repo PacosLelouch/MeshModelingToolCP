@@ -14,6 +14,7 @@ namespace MyViewerOp
 		WireMeshDesign,
 		ARAP2D,
 		TestBoundingSphere,
+		MinimalSurface,
 	};
 
 	const std::vector<const char*> operationTypeNames =
@@ -22,6 +23,7 @@ namespace MyViewerOp
 		"Wire Mesh Design",
 		"ARAP Deformation",
 		"Test Bounding Sphere",
+		"Minimal Surface",
 	};
 }
 namespace MyViewerSh
@@ -109,10 +111,14 @@ void MyViewer::createGUIWindow()
 	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::ARAP2D], &mOperationType, MyViewerOp::ARAP2D)) { resetOperation(); }
 	//ImGui::SameLine();
 	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::TestBoundingSphere], &mOperationType, MyViewerOp::TestBoundingSphere)) { resetOperation(); }
+	ImGui::SameLine();
+	if (ImGui::RadioButton(MyViewerOp::operationTypeNames[MyViewerOp::MinimalSurface], &mOperationType, MyViewerOp::MinimalSurface)) { resetOperation(); }
 
 	if (ImGui::Button("Load Model")) { loadOBJFileToModel(); }
 	ImGui::SameLine();
 	if (ImGui::Button("Load Reference")) { loadOBJFileToReference(); }
+	ImGui::SameLine();
+	if (ImGui::Button("Reset Camera")) { resetCamera(); }
 	ImGui::Text("Origin Model: %s", mOriginModelText.c_str());
 	ImGui::Text("Reference Model: %s", mReferenceModelText.c_str());
 
@@ -140,6 +146,9 @@ void MyViewer::createGUIWindow()
 			break;
 		case MyViewerOp::TestBoundingSphere:
 			executeTestBoundingSphere();
+			break;
+		case MyViewerOp::MinimalSurface:
+			executeMinimalSurface();
 			break;
 		default:
 			std::cout << "Nothing happened. Not implemented?" << std::endl;
@@ -248,6 +257,11 @@ void MyViewer::cursorPosCallback(GLFWwindow* window, double xpos, double ypos)
 
 }
 
+void MyViewer::resetCamera()
+{
+	mCamera = Camera(windowWidth, windowHeight, glm::vec3(0, 4, 8), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0));
+}
+
 void MyViewer::executePlanarization()
 {
 	if (!mModelLoaded)
@@ -328,6 +342,39 @@ void MyViewer::executeTestBoundingSphere()
 	}
 }
 
+void MyViewer::executeMinimalSurface()
+{
+	if (!mModelLoaded)
+	{
+		return;
+	}
+
+	mMinimalSurfaceOperation->m_LaplacianWeight = mMinimalSurfaceParameter.mLaplacian;
+	mMinimalSurfaceOperation->m_fixBoundaryWeight = mMinimalSurfaceParameter.mFixedBoundary;
+
+	auto& mesh = mMeshConverter.getEigenMesh();
+	std::cout << "Apply processing " << "\"executeMinimalSurface\"" << "..." << std::endl;
+	if (!mMinimalSurfaceOperation->initialize(mesh, {}))
+	{
+		std::cout << "Fail to initialize!" << std::endl;
+		return;
+	}
+
+	if (!mMinimalSurfaceOperation->solve(mesh.m_positions, mNumIter))
+	{
+		std::cout << "Fail to solve!" << std::endl;
+		return;
+	}
+
+	AAShapeUp::MeshDirtyFlag colorDirtyFlag = mMinimalSurfaceOperation->visualizeOutputErrors(mesh.m_colors, mMaxError, true);
+	AAShapeUp::MeshDirtyFlag normalDirtyFlag = AAShapeUp::regenerateNormals(mesh);
+	if (!mMeshConverter.updateSourceMesh(mMinimalSurfaceOperation->getMeshDirtyFlag() | colorDirtyFlag | normalDirtyFlag, true))
+	{
+		std::cout << "Fail to update source mesh!" << std::endl;
+		return;
+	}
+}
+
 void MyViewer::createOperationGUI()
 {
 	switch (mOperationType)
@@ -347,6 +394,10 @@ void MyViewer::createOperationGUI()
 	case MyViewerOp::TestBoundingSphere:
 		ImGui::SliderFloat("Sphere Projection Weight", &mTestBoundingSphereParameter.mSphereProjection, 0, 1);
 		ImGui::SliderFloat("Fairness Weight", &mTestBoundingSphereParameter.mLaplacian, 0, 1);
+		break;
+	case MyViewerOp::MinimalSurface:
+		ImGui::SliderFloat("Fixed Boundary Weight", &mMinimalSurfaceParameter.mFixedBoundary, 0, 1);
+		ImGui::SliderFloat("Fairness Weight", &mMinimalSurfaceParameter.mLaplacian, 0, 1);
 		break;
 	default:
 		break;
@@ -403,6 +454,9 @@ void MyViewer::resetOperation()
 		break;
 	case MyViewerOp::TestBoundingSphere:
 		mTestBoudingSphereOperation.reset(new AAShapeUp::TestBoundingSphereOperation(mGeometrySolverShPtr));
+		break;
+	case MyViewerOp::MinimalSurface:
+		mMinimalSurfaceOperation.reset(new AAShapeUp::MinimalSurfaceOperation(mGeometrySolverShPtr));
 		break;
 	default:
 		std::cout << "Nothing happened. Not implemented?" << std::endl;
