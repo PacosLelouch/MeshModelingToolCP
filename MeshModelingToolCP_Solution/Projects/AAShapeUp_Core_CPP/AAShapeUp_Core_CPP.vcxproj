@@ -185,6 +185,7 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\ConstraintCollection.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PlaneConstraint.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PointConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PointToRefSurfaceConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\TestBoundingSphereConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\LinearSolvers\SPDLinearSolver.h" />
@@ -195,6 +196,7 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\Regularizer.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\MinimalSurfaceOperation.h" />
     <ClInclude Include="..\..\Codes\MeshAABB.h" />
     <ClInclude Include="..\..\Codes\CPPCore\Operations\OperationBase.h" />
     <ClInclude Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.h" />
@@ -226,6 +228,7 @@
     <ClCompile Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\MinimalSurfaceOperation.cpp" />
     <ClCompile Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>

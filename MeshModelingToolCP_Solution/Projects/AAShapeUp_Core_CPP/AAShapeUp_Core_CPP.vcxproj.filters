@@ -114,6 +114,12 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PlaneConstraint.h">
       <Filter>Header Files\Constraints</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\PointConstraint.h">
+      <Filter>Header Files\Constraints</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\MinimalSurfaceOperation.h">
+      <Filter>Header Files\Operations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">
@@ -136,6 +142,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Codes\CPPCore\EigenMesh.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\MinimalSurfaceOperation.cpp">
+      <Filter>Source Files\Operations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -3,6 +3,7 @@
 #include "objmodel.h"
 #include "Operations/PlanarizationOperation.h"
 #include "Operations/TestBoundingSphereOperation.h"
+#include "Operations/MinimalSurfaceOperation.h"
 
 using MyGeometrySolver3D = AAShapeUp::GeometrySolver<3, AAShapeUp::OpenMPTimer, AAShapeUp::AndersonAccelerationOptimizer<3>>;
 
@@ -16,6 +17,11 @@ struct TestBoundingSphereParameter
 	float mSphereProjection = 1.0f, mLaplacian = 0.1f;
 };
 
+struct MinimalSurfaceParameter
+{
+	float mFixedBoundary = 1.0f, mLaplacian = 0.1f;
+};
+
 class MyViewer : public Viewer
 {
 public:
@@ -27,10 +33,13 @@ public:
 	virtual void mouseButtonCallback(GLFWwindow* window, int button, int action, int mods) override;
 	virtual void cursorPosCallback(GLFWwindow* window, double xpos, double ypos) override;
 
+	void resetCamera();
+
 	void executePlanarization();
 	void executeWireMeshDesign();
 	void executeARAP2D();
 	void executeTestBoundingSphere();
+	void executeMinimalSurface();
 
 protected:
 	void createOperationGUI();
@@ -60,7 +69,9 @@ protected:
 	std::unique_ptr<ObjModel> mModelReference;
 
 	PlanarizationParameter mPlanarizationParameter;
+
 	TestBoundingSphereParameter mTestBoundingSphereParameter;
+	MinimalSurfaceParameter mMinimalSurfaceParameter;
 
 
 	void loadOBJFileToModel();
@@ -75,7 +86,9 @@ protected:
 	std::shared_ptr<MyGeometrySolver3D> mGeometrySolverShPtr;
 
 	std::unique_ptr<AAShapeUp::PlanarizationOperation> mPlanarizationOperation;
+
 	std::unique_ptr<AAShapeUp::TestBoundingSphereOperation> mTestBoudingSphereOperation;
+	std::unique_ptr<AAShapeUp::MinimalSurfaceOperation> mMinimalSurfaceOperation;
 
 	AAShapeUp::ObjToEigenConverter mMeshConverter, mMeshConverterReference;
 
