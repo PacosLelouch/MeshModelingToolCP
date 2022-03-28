@@ -110,7 +110,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;WIN32;_COMPUTE_USING_CUDA;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -139,7 +139,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;WIN32;_COMPUTE_USING_CUDA;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -168,7 +168,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;WIN32;_COMPUTE_USING_CUDA;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -197,7 +197,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_COMPUTE_USING_CUDA;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;WIN32;_COMPUTE_USING_CUDA;NDEBUG;_CONSOLE;%(PreprocessorDefinitions);NT_PLUGIN</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(MAYA_LOCATION)\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -223,7 +223,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Codes\HelloMayaCUDA.cpp">
+    <ClCompile Include="..\..\Codes\HelloMaya.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -233,6 +233,8 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.cpp" />
+    <ClCompile Include="..\..\Codes\MayaInterface\PlanarizationNode.cpp" />
     <ClCompile Include="..\..\Codes\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -242,9 +244,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Codes\ExportCommon.h" />
-    <ClInclude Include="..\..\Codes\HelloMayaCUDA.h" />
+    <ClInclude Include="..\..\Codes\HelloMaya.h" />
     <ClInclude Include="..\..\Codes\MayaExport.h" />
-    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AAShapeUp_Extension_CUDA\AAShapeUp_Extension_CUDA.vcxproj">

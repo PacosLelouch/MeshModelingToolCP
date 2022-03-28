@@ -13,23 +13,38 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\OptimizerNodes">
+      <UniqueIdentifier>{08f08c21-d8fb-42c1-9086-0be0413f0f31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\OptimizerNodes">
+      <UniqueIdentifier>{b5e5d139-ce26-403c-88bf-a17da376bd40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Codes\HelloMayaCUDA.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\Codes\CUDAExportCommon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\PlanarizationNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\HelloMaya.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Codes\HelloMayaCUDA.cpp">
+    <ClCompile Include="..\..\Codes\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\Codes\pch.cpp">
+    <ClCompile Include="..\..\Codes\MayaInterface\PlanarizationNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\HelloMaya.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

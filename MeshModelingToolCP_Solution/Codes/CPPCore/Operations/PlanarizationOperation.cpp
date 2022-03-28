@@ -107,6 +107,12 @@ std::tuple<MeshDirtyFlag, MeshIndexType> PlanarizationOperation::getOutputErrors
     auto vIter = this->m_mesh.m_section.m_positionIndices.begin();
     int n = 0;
     for (i32 vn : this->m_mesh.m_section.m_numFaceVertices) {
+        if (vn < 4)
+        {
+            n++;
+            outErrors[n] = 0;
+            continue;
+        }
         Matrix3X facePoints;
         facePoints.resize(Eigen::NoChange, vn);
         for (int i = 0; i < vn; i++) {

@@ -10,20 +10,32 @@
     <Filter Include="Source Files CUDA">
       <UniqueIdentifier>{0501e854-c41b-4502-92c5-1070aa16ac11}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\OptimizerNodes">
+      <UniqueIdentifier>{88370296-6097-4790-abe5-3d25100b0e47}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\Codes\HelloMayaCUDA.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Codes\pch.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\HelloMaya.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\PlanarizationNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Codes\ExportCommon.h" />
-    <ClInclude Include="..\..\Codes\HelloMayaCUDA.h" />
-    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
     <ClInclude Include="..\..\Codes\MayaExport.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\ExportCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\HelloMaya.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

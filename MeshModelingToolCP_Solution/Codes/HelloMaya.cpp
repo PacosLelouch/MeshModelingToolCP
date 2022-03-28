@@ -18,7 +18,8 @@
 ////    printf("Loaded ExampleLibrary from Third Party Plugin sample");
 ////#endif
 //}
-#include "HelloMayaCUDA.h"
+#include "HelloMaya.h"
+#include "MayaInterface/PlanarizationNode.h"
 #include <maya/MFnPlugin.h>
 #include <string>
 
@@ -27,12 +28,12 @@
 #endif // _COMPUTE_USING_CUDA
 
 // Maya Plugin creator function
-void *helloMaya::creator()
+void *HelloMaya::creator()
 {
-    return new helloMaya;
+    return new HelloMaya;
 }
 // Plugin doIt function
-MStatus helloMaya::doIt(const MArgList& argList)
+MStatus HelloMaya::doIt(const MArgList& argList)
 {
     MStatus status;
     MGlobal::displayInfo("Hello World!");
@@ -58,10 +59,15 @@ MStatus helloMaya::doIt(const MArgList& argList)
 MLL_EXPORT MStatus initializePlugin(MObject obj)
 {
     MStatus status;
-    MFnPlugin plugin( obj, "PacosLelouch", "1.0", "Any");
-    status = plugin.registerCommand("helloMayaCUDA", helloMaya::creator );
+    MFnPlugin plugin( obj, "PacosLelouch & cyy0915", "1.0", "Any");
+    status = plugin.registerCommand("helloMaya", HelloMaya::creator );
     if (!status)
-        status.perror( "registerCommand failed" );
+        status.perror( "registerCommand helloMaya failed" );
+    status = plugin.registerNode(
+        MPlanarizationNode::nodeName, MPlanarizationNode::id,
+        MPlanarizationNode::creator, MPlanarizationNode::initialize);
+    if (!status)
+        status.perror( "registerNode " + MPlanarizationNode::nodeName + " failed" );
     return status;
 }
 // Cleanup Plugin upon unloading
@@ -69,9 +75,13 @@ MLL_EXPORT MStatus uninitializePlugin(MObject obj)
 {
     MStatus status;
     MFnPlugin plugin(obj);
-    status = plugin.deregisterCommand("helloMayaCUDA");
+    MGeometryOptimizerNode::initialized = false;
+    status = plugin.deregisterNode(MPlanarizationNode::id);
     if(!status)
-        status.perror( "deregisterCommand failed" );
+        status.perror( "deregisterNode " + MPlanarizationNode::nodeName + " failed" );
+    status = plugin.deregisterCommand("helloMaya");
+    if(!status)
+        status.perror( "deregisterCommand helloMaya failed" );
     return status;
 }
 

@@ -9,10 +9,10 @@
 #include <maya/MGlobal.h>
 #include <maya/MPxCommand.h>
 // custom Maya command
-class helloMaya : public MPxCommand
+class HelloMaya : public MPxCommand
 {
 public:
-    helloMaya () {};
+    HelloMaya () {};
     virtual MStatus doIt(const MArgList& args);
     static void *creator();
 };

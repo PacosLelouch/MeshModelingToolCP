@@ -44,10 +44,11 @@ inline scalar PointToRefSurfaceProjectionOperator::project(ConstraintAbstract<3>
     refMeshTree->getClosestPoint(transformedPoints.col(0), closestPoint);
     projectionBlock.col(0) = closestPoint;
 
+    scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
+
     // Don't forget it!
     projectionBlock *= constraint.getWeight();
 
-    scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
     return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
 }
 
