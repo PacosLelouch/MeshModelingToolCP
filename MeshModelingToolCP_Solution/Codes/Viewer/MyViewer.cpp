@@ -284,6 +284,13 @@ void MyViewer::executePlanarization()
 		return;
 	}
 
+	if (!mPlanarizationOperation->solve(mesh.m_positions, 0) ||
+		!mMeshConverterOrigin.updateSourceMesh(mPlanarizationOperation->visualizeOutputErrors(mMeshConverterOrigin.getEigenMesh().m_colors, mMaxError, true), true))
+	{
+		std::cout << "Fail to get visualized error!" << std::endl;
+		return;
+	}
+
 	if (!mPlanarizationOperation->solve(mesh.m_positions, mNumIter))
 	{
 		std::cout << "Fail to solve!" << std::endl;
@@ -327,6 +334,13 @@ void MyViewer::executeTestBoundingSphere()
 		return;
 	}
 
+	if (!mTestBoudingSphereOperation->solve(mesh.m_positions, 0) || 
+		!mMeshConverterOrigin.updateSourceMesh(mTestBoudingSphereOperation->visualizeOutputErrors(mMeshConverterOrigin.getEigenMesh().m_colors, mMaxError, true), true))
+	{
+		std::cout << "Fail to get visualized error!" << std::endl;
+		return;
+	}
+
 	if (!mTestBoudingSphereOperation->solve(mesh.m_positions, mNumIter))
 	{
 		std::cout << "Fail to solve!" << std::endl;
@@ -360,6 +374,13 @@ void MyViewer::executeMinimalSurface()
 		return;
 	}
 
+	if (!mMinimalSurfaceOperation->solve(mesh.m_positions, 0) || 
+		!mMeshConverterOrigin.updateSourceMesh(mMinimalSurfaceOperation->visualizeOutputErrors(mMeshConverterOrigin.getEigenMesh().m_colors, mMaxError, true), true))
+	{
+		std::cout << "Fail to get visualized error!" << std::endl;
+		return;
+	}
+
 	if (!mMinimalSurfaceOperation->solve(mesh.m_positions, mNumIter))
 	{
 		std::cout << "Fail to solve!" << std::endl;
@@ -380,10 +401,10 @@ void MyViewer::createOperationGUI()
 	switch (mOperationType)
 	{
 	case MyViewerOp::Planarization:
-		ImGui::SliderFloat("Planarity Weight", &mPlanarizationParameter.mPlanarity, 0, 1);
-		ImGui::SliderFloat("Closeness Weight", &mPlanarizationParameter.mCloseness, 0, 1);
-		ImGui::SliderFloat("Fairness Weight", &mPlanarizationParameter.mLaplacian, 0, 1);
-		ImGui::SliderFloat("Relative Fairness Weight", &mPlanarizationParameter.mRelativeLaplacian, 0, 1);
+		ImGui::InputFloat("Planarity Weight", &mPlanarizationParameter.mPlanarity, 0.1f, 10.0f);
+		ImGui::InputFloat("Closeness Weight", &mPlanarizationParameter.mCloseness, 0.1f, 10.0f);
+		ImGui::InputFloat("Fairness Weight", &mPlanarizationParameter.mLaplacian, 0.1f, 10.0f);
+		ImGui::InputFloat("Relative Fairness Weight", &mPlanarizationParameter.mRelativeLaplacian, 0.1f, 10.0f);
 		break;
 	case MyViewerOp::WireMeshDesign:
 
@@ -392,12 +413,12 @@ void MyViewer::createOperationGUI()
 
 		break;
 	case MyViewerOp::TestBoundingSphere:
-		ImGui::SliderFloat("Sphere Projection Weight", &mTestBoundingSphereParameter.mSphereProjection, 0, 1);
-		ImGui::SliderFloat("Fairness Weight", &mTestBoundingSphereParameter.mLaplacian, 0, 1);
+		ImGui::InputFloat("Sphere Projection Weight", &mTestBoundingSphereParameter.mSphereProjection, 0.1f, 10.0f);
+		ImGui::InputFloat("Fairness Weight", &mTestBoundingSphereParameter.mLaplacian, 0.1f, 10.0f);
 		break;
 	case MyViewerOp::MinimalSurface:
-		ImGui::SliderFloat("Fixed Boundary Weight", &mMinimalSurfaceParameter.mFixedBoundary, 0, 1);
-		ImGui::SliderFloat("Fairness Weight", &mMinimalSurfaceParameter.mLaplacian, 0, 1);
+		ImGui::InputFloat("Fixed Boundary Weight", &mMinimalSurfaceParameter.mFixedBoundary, 0.1f, 10.0f);
+		ImGui::InputFloat("Fairness Weight", &mMinimalSurfaceParameter.mLaplacian, 0.1f, 10.0f);
 		break;
 	default:
 		break;
@@ -467,13 +488,23 @@ void MyViewer::resetOperation()
 void MyViewer::resetModelToOrigin()
 {
 	mModel->copyObj(*mModelOrigin);
+
+	mMeshConverterOrigin.setObjModelPtr(mModelOrigin.get());
+	mMeshConverterOrigin.generateEigenMatrices();
+
+	mMeshConverterOrigin.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverterOrigin.getEigenMesh()), true);
+
 	mMeshConverter.setObjModelPtr(mModel.get());
 	mMeshConverter.generateEigenMatrices();
+
+	mMeshConverter.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverter.getEigenMesh()), true);
 }
 
 void MyViewer::updateReference(ObjModel* objModelPtr)
 {
 	mMeshConverterReference.setObjModelPtr(objModelPtr);
 	mMeshConverterReference.generateEigenMatrices();
+
+	mMeshConverterReference.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverterReference.getEigenMesh()), true);
 }
 

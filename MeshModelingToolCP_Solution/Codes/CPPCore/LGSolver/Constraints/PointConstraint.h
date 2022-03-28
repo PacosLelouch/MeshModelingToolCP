@@ -48,6 +48,7 @@ inline scalar PointProjectionOperator<Dim, TConstraintAbstract>::project(TConstr
 
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
+    // Don't forget it!
     projectionBlock *= constraint.getWeight();
 
     return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);

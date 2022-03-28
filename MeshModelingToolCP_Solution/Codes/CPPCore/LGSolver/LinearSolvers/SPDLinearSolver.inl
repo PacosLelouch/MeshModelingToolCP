@@ -80,7 +80,7 @@ inline bool ConjugateGradientLinearSolver<Dim>::initialize(const ColMSMatrix& A)
 template<i32 Dim>
 inline bool ConjugateGradientLinearSolver<Dim>::solve(const VectorX& b, const VectorX& x0, VectorX& x) const
 {
-    m_EigenSolver.solveWithGuess(b, x0);
+    x = m_EigenSolver.solveWithGuess(b, x0);
     return m_EigenSolver.info() == Eigen::Success;
 }
 

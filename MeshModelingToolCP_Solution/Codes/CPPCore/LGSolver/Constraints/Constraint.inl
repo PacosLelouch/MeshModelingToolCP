@@ -271,7 +271,8 @@ inline scalar IdentityProjectionOperator<Dim, TConstraintAbstract>::project(TCon
     projectionBlock = transformedPoints;
 
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
-    
+
+    // Don't forget it!
     projectionBlock *= constraint.getWeight();
 
     return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);

@@ -5,11 +5,11 @@
 #include "Operations/TestBoundingSphereOperation.h"
 #include "Operations/MinimalSurfaceOperation.h"
 
-using MyGeometrySolver3D = AAShapeUp::GeometrySolver<3, AAShapeUp::OpenMPTimer, AAShapeUp::AndersonAccelerationOptimizer<3>>;
+using MyGeometrySolver3D = AAShapeUp::GeometrySolver<3, AAShapeUp::OpenMPTimer, AAShapeUp::AndersonAccelerationOptimizer<3>, AAShapeUp::Simplicial_LDLT_LinearSolver<3>>;
 
 struct PlanarizationParameter
 {
-	float mCloseness = 1.0f, mRelativeLaplacian = 0.1f, mLaplacian = 0.1f, mPlanarity = 1.0f;
+	float mCloseness = 10.0f, mRelativeLaplacian = 10.0f, mLaplacian = 1.0f, mPlanarity = 150.0f;
 };
 
 struct TestBoundingSphereParameter
@@ -49,7 +49,7 @@ protected:
 	int mShadingType = 0;
 	int mDisplayingObject = 0;
 
-	int mNumIter = 5;
+	int mNumIter = 50;
 
 	float mModelScale = 1.0f;
 	float mMaxError = 0.05f;
@@ -90,7 +90,7 @@ protected:
 	std::unique_ptr<AAShapeUp::TestBoundingSphereOperation> mTestBoudingSphereOperation;
 	std::unique_ptr<AAShapeUp::MinimalSurfaceOperation> mMinimalSurfaceOperation;
 
-	AAShapeUp::ObjToEigenConverter mMeshConverter, mMeshConverterReference;
+	AAShapeUp::ObjToEigenConverter mMeshConverter, mMeshConverterOrigin, mMeshConverterReference;
 
 	static const std::string noneString;
 	static const std::string sameAsInputString;

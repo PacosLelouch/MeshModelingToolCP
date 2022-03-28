@@ -88,8 +88,10 @@ bool PlanarizationOperation::initializeConstraintsAndRegularizations()
         for (int vn : meshIndices.m_numFaceVertices) {
             std::vector<i32> indices(vIter, vIter + vn);
             vIter += vn;
-
-            solver->addConstraint(std::make_shared<PlaneConstraint>(indices, planarity_weight));
+            if (indices.size() > 3)
+            {
+                solver->addConstraint(std::make_shared<PlaneConstraint>(indices, planarity_weight));
+            }
         }
     }
   
