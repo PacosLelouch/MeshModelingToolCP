@@ -68,6 +68,28 @@ using MatrixX2i = MatrixTi<Eigen::Dynamic, 2>;
 using VectorXi = MatrixTi<Eigen::Dynamic, 1>;
 using MatrixXXi = MatrixTi<Eigen::Dynamic, Eigen::Dynamic>;
 
+template<i32 Dim, typename TVec>
+inline MatrixT<Dim, 1> toEigenVec(const TVec& vec)
+{
+    MatrixT<Dim, 1> outVec;
+    for (i64 i = 0; i < Dim; ++i)
+    {
+        outVec(i) = vec[i];
+    }
+    return outVec;
+}
+
+template<i32 Dim, typename TVec>
+inline TVec fromEigenVec(const MatrixT<Dim, 1> & vec)
+{
+    TVec outVec;
+    for (i64 i = 0; i < Dim; ++i)
+    {
+        outVec[i] = vec(i);
+    }
+    return outVec;
+}
+
 template<typename TVec>
 inline Vector3 toEigenVec3(const TVec& vec)
 {

@@ -13,6 +13,9 @@
     <Filter Include="Source Files\OptimizerNodes">
       <UniqueIdentifier>{88370296-6097-4790-abe5-3d25100b0e47}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\OptimizerNodes">
+      <UniqueIdentifier>{86b1b94d-7a28-4b4e-94b3-83117e13756f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\pch.cpp">
@@ -27,6 +30,12 @@
     <ClCompile Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.cpp">
       <Filter>Source Files\OptimizerNodes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\MayaToEigenConverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\TestBoundingSphereNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Codes\MayaExport.h">
@@ -37,6 +46,18 @@
     </ClInclude>
     <ClInclude Include="..\..\Codes\HelloMaya.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\PlanarizationNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\MayaToEigenConverter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\TestBoundingSphereNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

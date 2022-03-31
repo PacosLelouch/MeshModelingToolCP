@@ -33,6 +33,12 @@
     <ClInclude Include="..\..\Codes\HelloMaya.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\MayaToEigenConverter.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\TestBoundingSphereNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\pch.cpp">
@@ -46,6 +52,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Codes\HelloMaya.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\MayaToEigenConverter.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\TestBoundingSphereNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

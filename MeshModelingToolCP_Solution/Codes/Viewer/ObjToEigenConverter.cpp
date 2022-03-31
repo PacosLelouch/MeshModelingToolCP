@@ -1,5 +1,6 @@
 #include "ObjToEigenConverter.h"
 #include "objmodel.h"
+#include "OpenMPHelper.h"
 
 BEGIN_NAMESPACE(AAShapeUp)
 
@@ -89,6 +90,8 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
     if ((dirtyFlag & MeshDirtyFlag::PositionDirty) != MeshDirtyFlag::None)
     {
         i64 sourceSize = static_cast<i64>(m_objModelPtr->attrib.vertices.size() / 3);
+
+        OMP_PARALLEL_(for)
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_positions.cols(); ++i)
         {
             m_objModelPtr->attrib.vertices[i * 3 + 0] = m_outMesh.m_positions(0, i);
@@ -110,6 +113,8 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
             }
         }
         i64 sourceSize = static_cast<i64>(m_objModelPtr->attrib.normals.size() / 3);
+
+        OMP_PARALLEL_(for)
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_normals.cols(); ++i)
         {
             m_objModelPtr->attrib.normals[i * 3 + 0] = m_outMesh.m_normals(0, i);
@@ -124,6 +129,8 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
             m_objModelPtr->attrib.colors.resize(m_outMesh.m_colors.size() * 3);
         }
         i64 sourceSize = static_cast<i64>(m_objModelPtr->attrib.colors.size() / 3);
+
+        OMP_PARALLEL_(for)
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_colors.cols(); ++i)
         {
             m_objModelPtr->attrib.colors[i * 3 + 0] = m_outMesh.m_colors(0, i);
@@ -145,6 +152,8 @@ bool ObjToEigenConverter::updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateB
             }
         }
         i64 sourceSize = static_cast<i64>(m_objModelPtr->attrib.texcoords.size() / 2);
+
+        OMP_PARALLEL_(for)
         for (i64 i = 0; i < sourceSize && i < m_outMesh.m_texCoords.cols(); ++i)
         {
             m_objModelPtr->attrib.texcoords[i * 2 + 0] = m_outMesh.m_texCoords(0, i);

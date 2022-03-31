@@ -1,9 +1,9 @@
 #pragma once
 
 #include "GeometryOptimizerNode.h"
-#include "Operations/PlanarizationOperation.h"
+#include "Operations/TestBoundingSphereOperation.h"
 
-class MPlanarizationNode : public MGeometryOptimizerNode
+class MTestBoundingSphereNode : public MGeometryOptimizerNode
 {
 public:
     using Super = MGeometryOptimizerNode;
@@ -15,19 +15,14 @@ public:
 
 public:
 
-    std::shared_ptr<AAShapeUp::MayaToEigenConverter> m_meshConverterReferenceShPtr;
-    std::shared_ptr<AAShapeUp::PlanarizationOperation> m_operationShPtr;
+    std::shared_ptr<AAShapeUp::TestBoundingSphereOperation> m_operationShPtr;
 
 public:
     static const MTypeId id;
     static const MString nodeName;
 
     static MObject aNumIter;
-    static MObject aPlanarityWeight;
-    static MObject aClosenessWeight;
+    static MObject aSphereProjectionWeight;
     static MObject aFairnessWeight;
-    static MObject aRelativeFairnessWeight;
-
-    static MObject aReferenceMesh;
 };
 
