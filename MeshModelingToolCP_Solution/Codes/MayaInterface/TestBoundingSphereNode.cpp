@@ -3,6 +3,7 @@
 #include <maya/MItGeometry.h>
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MFnTypedAttribute.h>
+#include <maya/MFloatPointArray.h>
 #include <maya/MPointArray.h>
 
 const MTypeId MTestBoundingSphereNode::id = 0x01000004;
@@ -52,8 +53,10 @@ MStatus MTestBoundingSphereNode::initialize()
     return MStatus::kSuccess;
 }
 
-MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix& mat, unsigned int multiIndex)
+MStatus MTestBoundingSphereNode::compute(const MPlug& plug, MDataBlock& block)
 {
+    return MPxDeformerNode::compute(plug, block);
+
     if (!m_geometrySolverShPtr)
     {
         m_geometrySolverShPtr.reset(new MyGeometrySolver3D);
@@ -73,11 +76,94 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
     CHECK_MSTATUS_AND_RETURN_IT(status);
     double fairnessWeight = hFairnessWeight.asDouble();
 
-    MObject inputMeshObj = getMeshObjectFromInput(block);
+    MObject outputMeshObj = getMeshObjectFromOutput(block, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    MObject inputMeshObj = getMeshObjectFromInput(block, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
     m_meshConverterShPtr.reset(new AAShapeUp::MayaToEigenConverter(inputMeshObj));
 
-    if (m_meshConverterShPtr->generateEigenMatrices())
+    if (!m_meshConverterShPtr->generateEigenMatrices())
+    {
+        MGlobal::displayError("Fail to generate eigen matrices [input]!");
+        return MStatus::kFailure;
+    }
+
+    m_operationShPtr.reset(new AAShapeUp::TestBoundingSphereOperation(m_geometrySolverShPtr));
+
+    m_operationShPtr->m_sphereProjectionWeight = sphereProjectionWeight;
+    m_operationShPtr->m_LaplacianWeight = fairnessWeight;
+
+    if (!m_operationShPtr->initialize(m_meshConverterShPtr->getEigenMesh(), {}))
+    {
+        MGlobal::displayError("Fail to initialize!");
+        return MStatus::kFailure;
+    }
+
+    if (!m_operationShPtr->solve(m_meshConverterShPtr->getEigenMesh().m_positions, numIter))
+    {
+        MGlobal::displayError("Fail to solve!");
+        return MStatus::kFailure;
+    }
+
+    auto& finalPositions = m_meshConverterShPtr->getEigenMesh().m_positions;
+    MFloatPointArray finalPositionsMaya;
+    finalPositionsMaya.setLength(finalPositions.cols());
+    for (AAShapeUp::i64 i = 0; i < finalPositions.cols(); ++i)
+    {
+        finalPositionsMaya[i] = AAShapeUp::fromEigenVec3<MFloatPoint>(finalPositions.col(i));
+    }
+
+    MFnMesh outFnMesh(outputMeshObj);
+    status = outFnMesh.copyInPlace(inputMeshObj);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = outFnMesh.setPoints(finalPositionsMaya);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    return MStatus::kSuccess;
+}
+
+MObject& MTestBoundingSphereNode::accessoryAttribute() const
+{
+    // TODO: insert return statement here
+    return Super::accessoryAttribute();
+}
+
+MStatus MTestBoundingSphereNode::accessoryNodeSetup(MDagModifier& cmd)
+{
+    return Super::accessoryNodeSetup(cmd);
+}
+
+MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix& mat, unsigned int multiIndex)
+{
+    //return Super::deform(block, iter, mat, multiIndex);
+
+    if (!m_geometrySolverShPtr)
+    {
+        m_geometrySolverShPtr.reset(new MyGeometrySolver3D);
+    }
+
+    MStatus status = MStatus::kSuccess;
+
+    MDataHandle hNumIter = block.inputValue(aNumIter, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    int numIter = hNumIter.asInt();
+
+    MDataHandle hSphereProjectionWeight = block.inputValue(aSphereProjectionWeight, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    double sphereProjectionWeight = hSphereProjectionWeight.asDouble();
+
+    MDataHandle hFairnessWeight = block.inputValue(aFairnessWeight, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    double fairnessWeight = hFairnessWeight.asDouble();
+
+    MObject inputMeshObj = getMeshObjectFromInput(block, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    m_meshConverterShPtr.reset(new AAShapeUp::MayaToEigenConverter(inputMeshObj));
+
+    if (!m_meshConverterShPtr->generateEigenMatrices())
     {
         MGlobal::displayError("Fail to generate eigen matrices [input]!");
         return MStatus::kFailure;
@@ -102,9 +188,10 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
 
     auto& finalPositions = m_meshConverterShPtr->getEigenMesh().m_positions;
     MPointArray finalPositionsMaya;
+    finalPositionsMaya.setLength(finalPositions.cols());
     for (AAShapeUp::i64 i = 0; i < finalPositions.cols(); ++i)
     {
-        finalPositionsMaya.append(AAShapeUp::fromEigenVec3<MPoint>(finalPositions.col(i)));
+        finalPositionsMaya[i] = AAShapeUp::fromEigenVec3<MPoint>(finalPositions.col(i));
     }
 
     status = iter.setAllPositions(finalPositionsMaya);

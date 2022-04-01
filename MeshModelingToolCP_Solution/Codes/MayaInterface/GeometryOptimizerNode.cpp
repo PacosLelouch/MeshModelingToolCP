@@ -4,6 +4,13 @@
 #include <maya/MFnUnitAttribute.h>
 #include <maya/MArrayDataBuilder.h>
 
+#define CHECK_MSTATUS_ASSIGN_AND_RETURN(_status,_targetPtr,_retVal) \
+    if((_targetPtr)) \
+    { \
+        *(_targetPtr) = _status; \
+    } \
+    CHECK_MSTATUS_AND_RETURN(_status, _retVal)
+
 //MObject MGeometryOptimizerNode::aTime;
 //MObject MGeometryOptimizerNode::aNumIter;
 //bool MGeometryOptimizerNode::initialized = false;
@@ -59,12 +66,46 @@ MStatus MGeometryOptimizerNode::jumpToElement(MArrayDataHandle& hArray, unsigned
     return status;
 }
 
-MObject MGeometryOptimizerNode::getMeshObjectFromInput(MDataBlock& block)
+MObject MGeometryOptimizerNode::getMeshObjectFromInput(MDataBlock& block, MStatus* statusPtr)
 {
+    MStatus status = MStatus::kSuccess;
     // Get the geometry.
-    MArrayDataHandle hInput = block.inputArrayValue(input);
+    MArrayDataHandle hInput = block.inputArrayValue(input, &status);
+    CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
     jumpToElement(hInput, 0);
     MDataHandle hInputGeom = hInput.inputValue().child(inputGeom);
     MObject inMesh = hInputGeom.asMesh();
+
+    //MDataHandle hInputGeom = block.inputValue(inputGeom, &status);
+    //CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
+    //MObject inMesh = hInputGeom.asMesh();
+
+    //MArrayDataHandle hInputGeoms = block.inputArrayValue(inputGeom, &status);
+    //jumpToElement(hInputGeoms, 0);
+    //MDataHandle hInputGeom = hInputGeoms.inputValue(&status);
+    //MObject inMesh = hInputGeom.asMesh();
+
     return inMesh;
+}
+
+MObject MGeometryOptimizerNode::getMeshObjectFromOutput(MDataBlock& block, MStatus* statusPtr)
+{
+    MStatus status = MStatus::kSuccess;
+    // Get the geometry.
+    MArrayDataHandle hOutput = block.outputArrayValue(input, &status);
+    CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
+    jumpToElement(hOutput, 0);
+    MDataHandle hOutputGeom = hOutput.outputValue().child(inputGeom);
+    MObject outMesh = hOutputGeom.asMesh();
+
+    //MDataHandle hOutputGeom = block.outputValue(outputGeom, &status);
+    //CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
+    //MObject outMesh = hOutputGeom.asMesh();
+
+    //MArrayDataHandle hOutputGeoms = block.outputArrayValue(inputGeom, &status);
+    //jumpToElement(hOutputGeoms, 0);
+    //MDataHandle hOutputGeom = hOutputGeoms.outputValue(&status);
+    //MObject outMesh = hOutputGeom.asMesh();
+
+    return outMesh;
 }

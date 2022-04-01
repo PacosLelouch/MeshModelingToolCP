@@ -20,7 +20,8 @@ void MayaToEigenConverter::setMayaMeshObj(MObject inMayaMeshObj)
 
 bool MayaToEigenConverter::generateEigenMatrices()
 {
-    if (!m_inMayaMeshObj.isNull())
+    MStatus status = MStatus::kSuccess;
+    if (m_inMayaMeshObj.isNull())
     {
         return false;
     }
@@ -32,7 +33,7 @@ bool MayaToEigenConverter::generateEigenMatrices()
     // If a non-api operation happens that many have changed the underlying Maya object wrapped by this api object, make sure that the api object references a valid maya object.
     // In particular this call should be used if you are calling mel commands from your plugin. Note that this only applies for mesh shapes: in a plugin node where the dataMesh is being accessed directly this is not necessary.
     // So is it necessary?
-    MStatus status = fnMesh.syncObject();
+    status = fnMesh.syncObject();
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     m_outMesh.m_section.clear();
@@ -40,23 +41,41 @@ bool MayaToEigenConverter::generateEigenMatrices()
     MFloatPointArray positions;
     status = fnMesh.getPoints(positions);
     CHECK_MSTATUS_AND_RETURN_IT(status);
+    ui32 positionLength = positions.length();
 
     MFloatVectorArray normals;
     status = fnMesh.getVertexNormals(true, normals);
     CHECK_MSTATUS_AND_RETURN_IT(status);
+    ui32 normalLength = normals.length();
+
+    MStringArray colorSetNames;
+    status = fnMesh.getColorSetNames(colorSetNames);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MColorArray colors;
-    status = fnMesh.getColors(colors);
+    if (colorSetNames.length() > 0)
+    {
+        status = fnMesh.getColors(colors, &colorSetNames[0]);
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+    }
+    ui32 colorLength = colors.length();
+
+    MStringArray uvSetNames;
+    status = fnMesh.getUVSetNames(uvSetNames);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MFloatArray us, vs;
-    status = fnMesh.getUVs(us, vs);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
+    if (uvSetNames.length() > 0)
+    {
+        status = fnMesh.getUVs(us, vs);
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+    }
+    ui32 uvLength = us.length();
 
-    m_outMesh.m_positions.resize(Eigen::NoChange, positions.length());
-    m_outMesh.m_normals.resize(Eigen::NoChange, normals.length());
-    m_outMesh.m_colors.resize(Eigen::NoChange, colors.length());
-    m_outMesh.m_texCoords.resize(Eigen::NoChange, us.length());
+    m_outMesh.m_positions.resize(Eigen::NoChange, positionLength);
+    m_outMesh.m_normals.resize(Eigen::NoChange, normalLength);
+    m_outMesh.m_colors.resize(Eigen::NoChange, colorLength);
+    m_outMesh.m_texCoords.resize(Eigen::NoChange, uvLength);
 
     for (i64 i = 0; i < m_outMesh.m_positions.cols(); ++i)
     {

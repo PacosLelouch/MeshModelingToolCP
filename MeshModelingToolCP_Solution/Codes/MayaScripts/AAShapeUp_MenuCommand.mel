@@ -91,21 +91,23 @@ global proc AAShapeUp_createPlanarizationNode()
     if(size($selectedObjNames) == 1)
     {
         print ("selected objects " + (string)size($selectedObjNames) + " == 1\n");
-        string $nodeName = `createNode planarizationNode`;
-        AAShapeUp_makeConnectionsWithReference(
-            $nodeName, 
-            $selectedObjNames[0], 
-            $selectedObjNames[0]);
+        string $nodeNames[] = `deformer -type planarizationNode`;
+        //string $nodeName = `createNode planarizationNode`;
+        //AAShapeUp_makeConnectionsWithReference(
+        //    $nodeName, 
+        //    $selectedObjNames[0], 
+        //    $selectedObjNames[0]);
         return;
     }
     else if(size($selectedObjNames) == 2)
     {
         print ("selected objects " + (string)size($selectedObjNames) + " == 2\n");
-        string $nodeName = `createNode planarizationNode`;
-        AAShapeUp_makeConnectionsWithReference(
-            $nodeName, 
-            $selectedObjNames[0], 
-            $selectedObjNames[1]);
+        string $nodeNames[] = `deformer -type planarizationNode`;
+        //string $nodeName = `createNode planarizationNode`;
+        //AAShapeUp_makeConnectionsWithReference(
+        //    $nodeName, 
+        //    $selectedObjNames[0], 
+        //    $selectedObjNames[1]);
         return;
     }
     
@@ -119,10 +121,11 @@ global proc AAShapeUp_createTestBoundingSphereNode()
     if(size($selectedObjNames) == 1)
     {
         print ("selected objects " + (string)size($selectedObjNames) + " == 1\n");
-        string $nodeName = `createNode testBoundingSphereNode`;
-        AAShapeUp_makeConnections(
-            $nodeName, 
-            $selectedObjNames[0]);
+        string $nodeNames[] = `deformer -type testBoundingSphereNode`;
+        //string $nodeName = `createNode testBoundingSphereNode`;
+        //AAShapeUp_makeConnections(
+        //    $nodeName, 
+        //    $selectedObjNames[0]);
         return;
     }
     

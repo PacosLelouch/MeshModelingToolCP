@@ -113,19 +113,20 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     MDataHandle hRefMeshData = block.inputValue(aReferenceMesh, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    MObject inputMeshObj = getMeshObjectFromInput(block);
+    MObject inputMeshObj = getMeshObjectFromInput(block, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MObject refMeshObj = hRefMeshData.asMesh();
     bool referenceSameAsInput = refMeshObj.isNull();
     if (referenceSameAsInput)
     {
-        refMeshObj = getMeshObjectFromInput(block);
+        refMeshObj = getMeshObjectFromInput(block, &status);
     }
     
     m_meshConverterShPtr.reset(new AAShapeUp::MayaToEigenConverter(inputMeshObj));
     m_meshConverterReferenceShPtr.reset(new AAShapeUp::MayaToEigenConverter(refMeshObj));
 
-    if (m_meshConverterShPtr->generateEigenMatrices())
+    if (!m_meshConverterShPtr->generateEigenMatrices())
     {
         MGlobal::displayError("Fail to generate eigen matrices [input]!");
         return MStatus::kFailure;

@@ -28,7 +28,8 @@ public:
     static MStatus jumpToElement(MArrayDataHandle& hArray, unsigned int index);
 
 public:
-    MObject getMeshObjectFromInput(MDataBlock& block);
+    MObject getMeshObjectFromInput(MDataBlock& block, MStatus* statusPtr = nullptr);
+    MObject getMeshObjectFromOutput(MDataBlock& block, MStatus* statusPtr = nullptr);
 
 //public:
 //    static MObject aTime;
