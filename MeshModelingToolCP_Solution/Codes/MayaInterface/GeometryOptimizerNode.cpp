@@ -66,13 +66,13 @@ MStatus MGeometryOptimizerNode::jumpToElement(MArrayDataHandle& hArray, unsigned
     return status;
 }
 
-MObject MGeometryOptimizerNode::getMeshObjectFromInput(MDataBlock& block, MStatus* statusPtr)
+MObject MGeometryOptimizerNode::getMeshObjectFromInput(MDataBlock& block, unsigned int index, MStatus* statusPtr)
 {
     MStatus status = MStatus::kSuccess;
     // Get the geometry.
     MArrayDataHandle hInput = block.inputArrayValue(input, &status);
     CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
-    jumpToElement(hInput, 0);
+    jumpToElement(hInput, index);
     MDataHandle hInputGeom = hInput.inputValue().child(inputGeom);
     MObject inMesh = hInputGeom.asMesh();
 
@@ -88,13 +88,13 @@ MObject MGeometryOptimizerNode::getMeshObjectFromInput(MDataBlock& block, MStatu
     return inMesh;
 }
 
-MObject MGeometryOptimizerNode::getMeshObjectFromOutput(MDataBlock& block, MStatus* statusPtr)
+MObject MGeometryOptimizerNode::getMeshObjectFromOutput(MDataBlock& block, unsigned int index, MStatus* statusPtr)
 {
     MStatus status = MStatus::kSuccess;
     // Get the geometry.
     MArrayDataHandle hOutput = block.outputArrayValue(input, &status);
     CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
-    jumpToElement(hOutput, 0);
+    jumpToElement(hOutput, index);
     MDataHandle hOutputGeom = hOutput.outputValue().child(inputGeom);
     MObject outMesh = hOutputGeom.asMesh();
 

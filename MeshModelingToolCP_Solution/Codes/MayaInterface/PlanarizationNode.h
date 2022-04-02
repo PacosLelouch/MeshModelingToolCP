@@ -3,6 +3,17 @@
 #include "GeometryOptimizerNode.h"
 #include "Operations/PlanarizationOperation.h"
 
+struct PlanarizationCache
+{
+    int numIter = -1;
+    double planarityWeight = -1.0;
+    double closenessWeight = -1.0;
+    double fairnessWeight = -1.0;
+    double relativeFairnessWeight = -1.0;
+    MObject inputMeshObj = MObject::kNullObj;
+    MObject referenceMeshObj = MObject::kNullObj;
+};
+
 class MPlanarizationNode : public MGeometryOptimizerNode
 {
 public:
@@ -17,6 +28,8 @@ public:
 
     std::shared_ptr<AAShapeUp::MayaToEigenConverter> m_meshConverterReferenceShPtr;
     std::shared_ptr<AAShapeUp::PlanarizationOperation> m_operationShPtr;
+
+    PlanarizationCache m_cache;
 
 public:
     static const MTypeId id;

@@ -19,6 +19,37 @@
     (attr).setReadable(true); \
     (attr).setWritable(false); 
 
+enum class InputChangedFlag : AAShapeUp::ui8
+{
+    None = 0,
+    Parameter,
+    InputMesh,
+    ReferenceMesh,
+};
+
+
+inline InputChangedFlag operator&(const InputChangedFlag f1, const InputChangedFlag f2)
+{
+    return InputChangedFlag(AAShapeUp::ui8(f1) & AAShapeUp::ui8(f2));
+}
+
+inline InputChangedFlag& operator&=(InputChangedFlag& f1, const InputChangedFlag f2)
+{
+    f1 = (f1 & f2);
+    return f1;
+}
+
+inline InputChangedFlag operator|(const InputChangedFlag f1, const InputChangedFlag f2)
+{
+    return InputChangedFlag(AAShapeUp::ui8(f1) | AAShapeUp::ui8(f2));
+}
+
+inline InputChangedFlag& operator|=(InputChangedFlag& f1, const InputChangedFlag f2)
+{
+    f1 = (f1 | f2);
+    return f1;
+}
+
 // The abstract class of the geometry optimizer node. Don't create creator!
 class MGeometryOptimizerNode : public MPxDeformerNode
 {
@@ -28,8 +59,8 @@ public:
     static MStatus jumpToElement(MArrayDataHandle& hArray, unsigned int index);
 
 public:
-    MObject getMeshObjectFromInput(MDataBlock& block, MStatus* statusPtr = nullptr);
-    MObject getMeshObjectFromOutput(MDataBlock& block, MStatus* statusPtr = nullptr);
+    MObject getMeshObjectFromInput(MDataBlock& block, unsigned int index, MStatus* statusPtr = nullptr);
+    MObject getMeshObjectFromOutput(MDataBlock& block, unsigned int index, MStatus* statusPtr = nullptr);
 
 //public:
 //    static MObject aTime;

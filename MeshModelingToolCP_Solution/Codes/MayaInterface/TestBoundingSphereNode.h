@@ -3,6 +3,14 @@
 #include "GeometryOptimizerNode.h"
 #include "Operations/TestBoundingSphereOperation.h"
 
+struct TestBoundingSphereCache
+{
+    int numIter = -1;
+    double sphereProjectionWeight = -1.0;
+    double fairnessWeight = -1.0;
+    MObject inputMeshObj = MObject::kNullObj;
+};
+
 class MTestBoundingSphereNode : public MGeometryOptimizerNode
 {
 public:
@@ -25,6 +33,7 @@ public:
 public:
 
     std::shared_ptr<AAShapeUp::TestBoundingSphereOperation> m_operationShPtr;
+    TestBoundingSphereCache m_cache;
 
 public:
     static const MTypeId id;
