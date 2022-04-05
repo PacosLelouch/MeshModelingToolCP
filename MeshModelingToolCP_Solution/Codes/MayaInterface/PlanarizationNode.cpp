@@ -143,7 +143,7 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
         MGlobal::displayInfo("[PlanarizationNode] Change [parameter].");
     }
     //if (m_cache.inputMeshObj != inputMeshObj)
-    if (m_cache.inputMeshObj.isNull() || m_cache.inputMeshObj.hasFn(MFn::kMesh))
+    if (m_cache.inputMeshObj.isNull() || !m_cache.inputMeshObj.hasFn(MFn::kMesh))
     {
         inputChangedFlag |= InputChangedFlag::InputMesh;
         MGlobal::displayInfo("[PlanarizationNode] Change [input mesh].");

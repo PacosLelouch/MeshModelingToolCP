@@ -176,7 +176,7 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
         MGlobal::displayInfo("[TestBoundingSphereNode] Change [parameter].");
     }
     //if (m_cache.inputMeshObj != inputMeshObj)
-    if (m_cache.inputMeshObj.isNull() || m_cache.inputMeshObj.hasFn(MFn::kMesh))
+    if (m_cache.inputMeshObj.isNull() || !m_cache.inputMeshObj.hasFn(MFn::kMesh))
     {
         inputChangedFlag |= InputChangedFlag::InputMesh;
         MGlobal::displayInfo("[TestBoundingSphereNode] Change [input mesh].");
