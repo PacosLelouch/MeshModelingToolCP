@@ -44,7 +44,8 @@ inline scalar PlaneProjectionOperator::project(ConstraintAbstract<3>& constraint
     //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
     projectionBlock *= constraint.getWeight();
-    return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
+    return sqrDist * (constraint.getWeight()) * static_cast<scalar>(0.5);
+    //return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
 }
 
 END_NAMESPACE()

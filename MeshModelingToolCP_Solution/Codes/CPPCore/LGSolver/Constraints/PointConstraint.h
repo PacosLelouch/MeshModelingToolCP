@@ -51,7 +51,8 @@ inline scalar PointProjectionOperator<Dim, TConstraintAbstract>::project(TConstr
     // Don't forget it!
     projectionBlock *= constraint.getWeight();
 
-    return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
+    return sqrDist * (constraint.getWeight()) * static_cast<scalar>(0.5);
+    //return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
 }
 
 using PointConstraint2D = PointConstraint<2>;

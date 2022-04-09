@@ -36,9 +36,21 @@ inline MeshDirtyFlag operator&(const MeshDirtyFlag f1, const MeshDirtyFlag f2)
     return MeshDirtyFlag(ui64(f1) & ui64(f2));
 }
 
+inline MeshDirtyFlag& operator&=(MeshDirtyFlag& f1, const MeshDirtyFlag f2)
+{
+    f1 = (f1 & f2);
+    return f1;
+}
+
 inline MeshDirtyFlag operator|(const MeshDirtyFlag f1, const MeshDirtyFlag f2)
 {
     return MeshDirtyFlag(ui64(f1) | ui64(f2));
+}
+
+inline MeshDirtyFlag& operator|=(MeshDirtyFlag& f1, const MeshDirtyFlag f2)
+{
+    f1 = (f1 | f2);
+    return f1;
 }
 
 struct EigenEdge

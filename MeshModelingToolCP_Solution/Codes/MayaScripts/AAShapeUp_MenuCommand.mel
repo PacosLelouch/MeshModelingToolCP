@@ -1,0 +1,191 @@
+global proc string AAShapeUp_getGeometryChildOfTransform(string $inputTransformName)
+{
+    string $childrenMeshes[] = `listRelatives -c -type mesh $inputTransformName`;
+    
+    print("children of " + $inputTransformName + " contains " + (string)size($childrenMeshes) + "\n");
+    
+    //if(size($childrenMeshes) != 1)
+    //{
+    //    print ("children meshes num " + (string)size($childrenMeshes) + " != 1\n");
+    //    return "";
+    //}
+    
+    return $childrenMeshes[size($childrenMeshes) - 1];
+}
+
+////////////////
+//global proc int AAShapeUp_makeNodesForConnections(string $nodeName, string $inputTransformName, string $inputGeomName)
+//{
+//    string $connFromStart[] = `listConnections -p true $inputGeomName`;
+//    int $size_connFromStart = size($connFromStart);
+//    if($size_connFromStart == 0)
+//    {
+//        print ("Input of " + $inputGeomName + " == 0\n");
+//        return false;
+//    }
+//    
+//    string $startNode = "";
+//    
+//    for($i = 0; $i < $size_connFromStart; ++$i)
+//    {
+//        string $conn = $connFromStart[$i];
+//        string $buff[];
+//        tokenize($conn, ".", $buff);
+//        if(size($buff) > 1 && $buff[1] == "output")
+//        {
+//            $startNode = $buff[0];
+//            break;
+//        }
+//    }
+//    
+//    if($startNode == "")
+//    {
+//        print ("Cannot find input\n");
+//        return false;
+//    }
+//    
+//    //string $oriGeomName = `createNode mesh -n ($inputGeomName + "Orig") -p $inputTransformName`;
+//    string $oriGeomName = `createNode mesh -n ($inputGeomName + "Orig") -p $inputTransformName -ss`;
+//    setAttr ($oriGeomName + ".intermediateObject") true;
+//    
+//    disconnectAttr ($startNode + ".output") ($inputGeomName + ".inMesh");
+//    
+//    connectAttr ($startNode + ".output") ($oriGeomName + ".inMesh");
+//    connectAttr ($oriGeomName + ".outMesh") ($nodeName + ".originalGeometry[0]");
+//    connectAttr ($nodeName + ".outputGeometry[0]") ($inputGeomName + ".inMesh");
+//    
+//    return true;
+//}
+//
+//global proc AAShapeUp_makeConnections(string $nodeName, string $inputTransformName)
+//{
+//    string $inputGeomName = AAShapeUp_getGeometryChildOfTransform($inputTransformName);
+//    
+//    if(!AAShapeUp_makeNodesForConnections(
+//        $nodeName, 
+//        $inputTransformName, 
+//        $inputGeomName))
+//    {
+//        print ("make connection failed for " + $inputTransformName + "\n");
+//        return;
+//    }
+//}
+//
+////////////////
+
+global proc AAShapeUp_makeConnectionsWithReference(string $nodeName, string $inputTransformName, string $refTransformName)
+{
+    string $inputGeomName = AAShapeUp_getGeometryChildOfTransform($inputTransformName);
+    
+    //if(!AAShapeUp_makeNodesForConnections(
+    //    $nodeName, 
+    //    $inputTransformName, 
+    //    $inputGeomName))
+    //{
+    //    print ("make connection failed for " + $inputTransformName + "\n");
+    //    return;
+    //}
+    
+    string $refGeomName = AAShapeUp_getGeometryChildOfTransform($refTransformName);
+    print("connectAttr " + $refGeomName + ".outMesh " + $nodeName + ".referenceMesh\n");
+    connectAttr ($refGeomName + ".outMesh") ($nodeName + ".referenceMesh");
+}
+
+global proc AAShapeUp_createNodeWithReference(string $nodeTypeName)
+{
+    string $selectedObjNames[] = `ls -selection -type transform`;
+    int $sizeSelectedObjNames = size($selectedObjNames);
+    if($sizeSelectedObjNames < 1)
+    {
+        print ("selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        return;
+    }
+    
+    string $refTransformName = $selectedObjNames[$sizeSelectedObjNames - 1];
+    print("reference " + $refTransformName + "\n");
+    
+    int $loopUpper = $sizeSelectedObjNames;
+    //int $loopUpper = $sizeSelectedObjNames - 1;
+    if($sizeSelectedObjNames > 1)
+    {
+        $loopUpper = $sizeSelectedObjNames - 1;
+        select -tgl $refTransformName;
+    }
+    
+    string $nodeNames[] = `deformer -type $nodeTypeName`;
+    if(size($nodeNames) < 1)
+    {
+        print ("failed to create planarizationNode\n");
+        return;
+    }
+    
+    for($i = 0; $i < $loopUpper; ++$i)
+    {
+        AAShapeUp_makeConnectionsWithReference(
+            $nodeNames[0],
+            $selectedObjNames[$i],
+            $refTransformName);
+    }
+    return;
+}
+
+global proc AAShapeUp_createPlanarizationNode()
+{
+    AAShapeUp_createNodeWithReference("planarizationNode");
+    return;
+    ////////////////////
+    
+    //if(size($selectedObjNames) == 1)
+    //{
+    //    print ("selected objects " + (string)size($selectedObjNames) + " == 1\n");
+    //    string $nodeNames[] = `deformer -type planarizationNode`;
+    //    //string $nodeName = `createNode planarizationNode`;
+    //    //AAShapeUp_makeConnectionsWithReference(
+    //    //    $nodeName, 
+    //    //    $selectedObjNames[0], 
+    //    //    $selectedObjNames[0]);
+    //    return;
+    //}
+    //else if(size($selectedObjNames) == 2)
+    //{
+    //    print ("selected objects " + (string)size($selectedObjNames) + " == 2\n");
+    //    string $nodeNames[] = `deformer -type planarizationNode`;
+    //    //string $nodeName = `createNode planarizationNode`;
+    //    //AAShapeUp_makeConnectionsWithReference(
+    //    //    $nodeName, 
+    //    //    $selectedObjNames[0], 
+    //    //    $selectedObjNames[1]);
+    //    return;
+    //}
+    //
+    //print ("selected objects " + (string)size($selectedObjNames) + " != 1 or 2\n");
+    //return;
+}
+
+global proc AAShapeUp_createTestBoundingSphereNode()
+{
+    string $selectedObjNames[] = `ls -selection -type transform`;
+    int $sizeSelectedObjNames = size($selectedObjNames);
+    if($sizeSelectedObjNames < 1)
+    {
+        print ("selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        return;
+    }
+    
+    string $nodeNames[] = `deformer -type testBoundingSphereNode`;
+    //string $selectedObjNames[] = `ls -selection -type transform`;
+    //if(size($selectedObjNames) == 1)
+    //{
+    //    print ("selected objects " + (string)size($selectedObjNames) + " == 1\n");
+    //    string $nodeNames[] = `deformer -type testBoundingSphereNode`;
+    //    //string $nodeName = `createNode testBoundingSphereNode`;
+    //    //AAShapeUp_makeConnections(
+    //    //    $nodeName, 
+    //    //    $selectedObjNames[0]);
+    //    return;
+    //}
+    //
+    //print ("selected objects " + (string)size($selectedObjNames) + " != 1\n");
+    return;
+}
+

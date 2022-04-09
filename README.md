@@ -27,13 +27,13 @@ A Maya mesh modeling tool with constraint projection. (CIS-660 Authoring Tool Pr
 
 1. `AAShapeUp_Maya_CPP`->`AAShapeUp_Extension_NoCUDAExport`->`AAShapeUp_Core_CPP`
 2. `AAShapeUp_Maya_CUDA`->`AAShapeUp_Extension_CUDA`->`AAShapeUp_Core_CPP`
-3. `AAShapeUp_OpenGL_CPP` (TODO)
+3. `AAShapeUp_Viewer_CPP`->`AAShapeUp_Extension_NoCUDAExport`->`AAShapeUp_Core_CPP`
 
 
 
 ### Attention
 
-1. 
+1. Copy the reference in `AAShapeUp_Maya_CUDA` project if you create new files in `AAShapeUp_Maya_CPP`.
 
 
 
