@@ -33,7 +33,6 @@ public:
 inline scalar PlaneProjectionOperator::project(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& transformedPoints, typename ConstraintAbstract<3>::MatrixNX& projections) const
 {
     using MatrixNX = typename ConstraintAbstract<3>::MatrixNX;
-
     Eigen::Map<MatrixNX> projectionBlock(&projections(0, constraint.getIdConstraint()), 3, transformedPoints.cols());
 
     Eigen::JacobiSVD<Matrix3X> jSVD;
@@ -42,10 +41,9 @@ inline scalar PlaneProjectionOperator::project(ConstraintAbstract<3>& constraint
     projectionBlock = transformedPoints
         - bestFitNormal * (bestFitNormal.transpose() * transformedPoints);
 
-    // Don't forget it!
-    projectionBlock *= constraint.getWeight();
-
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
+    projectionBlock *= constraint.getWeight();
     return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
 }
 
