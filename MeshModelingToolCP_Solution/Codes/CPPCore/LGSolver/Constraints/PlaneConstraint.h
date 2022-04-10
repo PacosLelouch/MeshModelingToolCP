@@ -42,10 +42,11 @@ inline scalar PlaneProjectionOperator::project(ConstraintAbstract<3>& constraint
     projectionBlock = transformedPoints
         - bestFitNormal * (bestFitNormal.transpose() * transformedPoints);
 
-    // Don't forget it!
-    projectionBlock *= constraint.getWeight();
-
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
+
+    // Don't forget it!
+    scalar sqrtWeight = constraint.getSqrtWeight();//glm::sqrt(constraint.getWeight());
+    projectionBlock *= sqrtWeight;
 
     return sqrDist * (constraint.getWeight()) * static_cast<scalar>(0.5);
     //return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
