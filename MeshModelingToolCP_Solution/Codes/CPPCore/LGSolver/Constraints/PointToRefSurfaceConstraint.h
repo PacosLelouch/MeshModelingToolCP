@@ -37,13 +37,13 @@ public:
 inline scalar PointToRefSurfaceProjectionOperator::project(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& transformedPoints, typename ConstraintAbstract<3>::MatrixNX& projections) const
 {
     using MatrixNX = typename ConstraintAbstract<3>::MatrixNX;
-
     Eigen::Map<MatrixNX> projectionBlock(&projections(0, constraint.getIdConstraint()), 3, transformedPoints.cols());
 
     Vector3 closestPoint;
     refMeshTree->getClosestPoint(transformedPoints.col(0), closestPoint);
     projectionBlock.col(0) = closestPoint;
 
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
     // Don't forget it!

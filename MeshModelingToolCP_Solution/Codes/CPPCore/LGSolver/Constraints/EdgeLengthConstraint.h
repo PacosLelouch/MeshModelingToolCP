@@ -46,6 +46,7 @@ inline scalar EdgeLengthProjectionOperator<Dim, TConstraintAbstract>::project(TC
 
     projectionBlock.col(0) = transformedPoints.col(0).normalized() * this->m_targetLength;
 
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
     // Don't forget it!

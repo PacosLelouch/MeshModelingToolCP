@@ -294,6 +294,7 @@ inline scalar IdentityProjectionOperator<Dim, TConstraintAbstract>::project(TCon
 
     projectionBlock = transformedPoints;
 
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
     // Don't forget it!

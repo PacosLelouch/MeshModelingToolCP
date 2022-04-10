@@ -50,6 +50,7 @@ inline scalar TestBoundingSphereProjectionOperator<Dim, TConstraintAbstract>::pr
 
     projectionBlock.col(0) = this->m_center + diff.normalized() * this->m_radius;
 
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
     // Don't forget it!

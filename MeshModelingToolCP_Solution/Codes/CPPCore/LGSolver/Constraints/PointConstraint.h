@@ -46,6 +46,7 @@ inline scalar PointProjectionOperator<Dim, TConstraintAbstract>::project(TConstr
 
     projectionBlock.col(0) = this->m_targetPosition;
 
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
     // Don't forget it!
