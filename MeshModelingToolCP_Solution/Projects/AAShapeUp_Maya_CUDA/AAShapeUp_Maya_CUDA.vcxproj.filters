@@ -36,6 +36,9 @@
     <ClCompile Include="..\..\Codes\MayaInterface\TestBoundingSphereNode.cpp">
       <Filter>Source Files\OptimizerNodes</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\ARAP3DNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Codes\MayaExport.h">
@@ -57,6 +60,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\Codes\MayaInterface\TestBoundingSphereNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\ARAP3DNode.h">
       <Filter>Header Files\OptimizerNodes</Filter>
     </ClInclude>
   </ItemGroup>

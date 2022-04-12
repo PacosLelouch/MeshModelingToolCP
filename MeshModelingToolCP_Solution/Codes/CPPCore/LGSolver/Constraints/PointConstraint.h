@@ -46,10 +46,12 @@ inline scalar PointProjectionOperator<Dim, TConstraintAbstract>::project(TConstr
 
     projectionBlock.col(0) = this->m_targetPosition;
 
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
     // Don't forget it!
-    projectionBlock *= constraint.getWeight();
+    scalar sqrtWeight = constraint.getSqrtWeight();//glm::sqrt(constraint.getWeight());
+    projectionBlock *= sqrtWeight;
 
     return sqrDist * (constraint.getWeight()) * static_cast<scalar>(0.5);
     //return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);

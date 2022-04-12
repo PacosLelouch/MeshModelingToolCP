@@ -239,6 +239,7 @@
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|x64'">pch.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\ARAP3DNode.cpp" />
     <ClCompile Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.cpp" />
     <ClCompile Include="..\..\Codes\MayaInterface\MayaToEigenConverter.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
@@ -259,6 +260,7 @@
     <ClInclude Include="..\..\Codes\ExportCommon.h" />
     <ClInclude Include="..\..\Codes\HelloMaya.h" />
     <ClInclude Include="..\..\Codes\MayaExport.h" />
+    <ClInclude Include="..\..\Codes\MayaInterface\ARAP3DNode.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\MayaToEigenConverter.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\PlanarizationNode.h" />

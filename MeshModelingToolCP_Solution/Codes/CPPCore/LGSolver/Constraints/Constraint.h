@@ -39,7 +39,15 @@ public:
 
     const VectorXi& getIdIncidentPoints() const;
 
+    // Set constraint weight, and also update sqrtWeight.
+    void setWeight(scalar newWeight);
+
+    // Set constraint sqrtWeight, and also update weight.
+    void setSqrtWeight(scalar newSqrtWeight);
+
     scalar getWeight() const;
+
+    scalar getSqrtWeight() const;
 
     // Number of IDs of incident points.
     i32 numIndices() const;
@@ -62,9 +70,14 @@ protected:
 
     // IDs of incident points of the constraint.
     VectorXi m_idIncidentPoints;
+    
+private: // Update weight by functions because it should also update the sqrtWeight.
 
     // The weigth of the constraint.
     scalar m_weight;
+
+    // The square root of the weigth of the constraint.
+    scalar m_sqrtWeight;
 
 protected: // Temporal variables
 

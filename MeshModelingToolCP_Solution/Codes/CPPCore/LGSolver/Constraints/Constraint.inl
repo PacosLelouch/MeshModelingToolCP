@@ -10,6 +10,7 @@ template<i32 Dim>
 inline ConstraintAbstract<Dim>::ConstraintAbstract(const std::vector<i32>& idIncidentPoints, scalar weight)
     : m_idIncidentPoints(Eigen::Map<const VectorXi>(idIncidentPoints.data(), idIncidentPoints.size()))
     , m_weight(weight)
+    , m_sqrtWeight(glm::sqrt(weight))
     , m_idConstraint(INVALID_INT)
 {
     assert(m_idIncidentPoints.size() > 0);
@@ -39,9 +40,29 @@ inline const VectorXi& ConstraintAbstract<Dim>::getIdIncidentPoints() const
 }
 
 template<i32 Dim>
+inline void ConstraintAbstract<Dim>::setWeight(scalar newWeight)
+{
+    m_weight = newWeight;
+    m_sqrtWeight = glm::sqrt(newWeight);
+}
+
+template<i32 Dim>
+inline void ConstraintAbstract<Dim>::setSqrtWeight(scalar newSqrtWeight)
+{
+    m_sqrtWeight = newSqrtWeight;
+    m_weight = newSqrtWeight * newSqrtWeight;
+}
+
+template<i32 Dim>
 inline scalar ConstraintAbstract<Dim>::getWeight() const
 {
     return m_weight;
+}
+
+template<i32 Dim>
+inline scalar ConstraintAbstract<Dim>::getSqrtWeight() const
+{
+    return m_sqrtWeight;
 }
 
 template<i32 Dim>
@@ -214,9 +235,10 @@ template<i32 Dim, typename TConstraintAbstract>
 inline void IdentityWeightTripletGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
 {
     i64 nIdx = constraint.getIdIncidentPoints().size();
+    scalar sqrtWeight = constraint.getSqrtWeight();//glm::sqrt(constraint.getWeight());
     for (i64 i = 0; i < nIdx; ++i)
     {
-        triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[i], constraint.getWeight()));
+        triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[i], sqrtWeight));
         ++inOutConstraintId;
     }
 }
@@ -229,13 +251,14 @@ template<i32 Dim, typename TConstraintAbstract>
 inline void MeanCenteringWeightTripletGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
 {
     i64 nIdx = constraint.getIdIncidentPoints().size();
-    scalar coefDiff = -constraint.getWeight() / nIdx;
-    scalar coefCenter = constraint.getWeight() + coefDiff;
+    scalar sqrtWeight = constraint.getSqrtWeight();//glm::sqrt(constraint.getWeight());
+    scalar coefDiff = -sqrtWeight / nIdx;
+    scalar coefCenter = sqrtWeight + coefDiff;
     for (i64 i = 0; i < nIdx; ++i)
     {
         for (i64 j = 0; j < nIdx; ++j)
         {
-            triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[0], i == j ? coefCenter : coefDiff));
+            triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[j], i == j ? coefCenter : coefDiff));
         }
         ++inOutConstraintId;
     }
@@ -249,10 +272,11 @@ template<i32 Dim, typename TConstraintAbstract>
 inline void SubtractFirstWeightTripletGenerator<Dim, TConstraintAbstract>::generateTriplets(TConstraintAbstract& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const
 {
     i64 nIdx = constraint.getIdIncidentPoints().size();
+    scalar sqrtWeight = constraint.getSqrtWeight();//glm::sqrt(constraint.getWeight());
     for (i64 i = 1; i < nIdx; ++i)
     {
-        triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[0], -constraint.getWeight()));
-        triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[i], constraint.getWeight()));
+        triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[0], -sqrtWeight));
+        triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[i], sqrtWeight));
         ++inOutConstraintId;
     }
 }
@@ -270,10 +294,12 @@ inline scalar IdentityProjectionOperator<Dim, TConstraintAbstract>::project(TCon
 
     projectionBlock = transformedPoints;
 
+    //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
 
     // Don't forget it!
-    projectionBlock *= constraint.getWeight();
+    scalar sqrtWeight = constraint.getSqrtWeight();//glm::sqrt(constraint.getWeight());
+    projectionBlock *= sqrtWeight;
 
     return sqrDist * (constraint.getWeight()) * static_cast<scalar>(0.5);
     //return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
