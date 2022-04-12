@@ -4,7 +4,7 @@
 #include <maya/MPxLocatorNode.h>
 // Viewport 2.0 includes
 #include <maya/MDrawRegistry.h>
-#include <maya/MPxDrawOverride.h>
+//#include <maya/MPxDrawOverride.h>
 #include <maya/MPxGeometryOverride.h>
 #include <maya/MUserData.h>
 #include <maya/MDrawContext.h>
@@ -66,22 +66,22 @@ protected:
     MARAP3DHandleLocatorGeometryOverride(const MObject& obj);
 };
 
+////
+//// Custom MUserData to cache the data used.
+////
+//class MARAP3DHandleLocatorDrawOverrideData : public MUserData
+//{
+//public:
+//    MARAP3DHandleLocatorDrawOverrideData() : MUserData(false) {} // don't delete after draw
+//    virtual ~MARAP3DHandleLocatorDrawOverrideData() override {}
 //
-// Custom MUserData to cache the data used.
-//
-class MARAP3DHandleLocatorDrawOverrideData : public MUserData
-{
-public:
-    MARAP3DHandleLocatorDrawOverrideData() : MUserData(false) {} // don't delete after draw
-    virtual ~MARAP3DHandleLocatorDrawOverrideData() override {}
-
-    bool enableDrawing = true;
-    MPoint localPosition = MPoint(0.0, 0.0, 0.0, 1.0);
-    MMatrix worldSpace = MMatrix::identity;
-    float pointSize = 10.0f;
-    unsigned int depthPriority = 0;
-    MColor solidColor, wireColor;
-};
+//    bool enableDrawing = true;
+//    MPoint localPosition = MPoint(0.0, 0.0, 0.0, 1.0);
+//    MMatrix worldSpace = MMatrix::identity;
+//    float pointSize = 10.0f;
+//    unsigned int depthPriority = 0;
+//    MColor solidColor, wireColor;
+//};
 ////
 //// Implementation of custom MPxDrawOverride to draw in the Viewport 2.0.
 ////

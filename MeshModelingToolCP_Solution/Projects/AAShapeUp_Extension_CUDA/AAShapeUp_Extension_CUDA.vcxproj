@@ -88,14 +88,14 @@
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
     <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
     <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -103,14 +103,14 @@
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
     <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
     <ExcludePath>$(SolutionDir)Codes\CPPOnly;$(ExcludePath)</ExcludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "EigenMesh.h"
+#include <tetgen.h>
 
 BEGIN_NAMESPACE(AAShapeUp)
 
@@ -216,7 +217,7 @@ void EigenMesh<3>::toTetgenio(tetgenio& result) const {
     // All indices start from 1.
     result.firstnumber = 1;
 
-    result.numberofpoints = m_positions.size();
+    result.numberofpoints = m_positions.cols();
     result.pointlist = new REAL[result.numberofpoints * 3];
     for (int i = 0; i < result.numberofpoints; i++) {
         result.pointlist[i * 3] = m_positions(0, i);

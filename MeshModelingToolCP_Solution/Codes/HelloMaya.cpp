@@ -28,7 +28,7 @@
 #include <string>
 // Viewport 2.0 includes
 #include <maya/MDrawRegistry.h>
-#include <maya/MPxDrawOverride.h>
+//#include <maya/MPxDrawOverride.h>
 #include <maya/MUserData.h>
 #include <maya/MDrawContext.h>
 #include <maya/MHWGeometryUtilities.h>

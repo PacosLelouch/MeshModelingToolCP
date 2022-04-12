@@ -156,19 +156,20 @@ bool MARAP3DHandleLocatorGeometryOverride::hasUIDrawables() const
 void MARAP3DHandleLocatorGeometryOverride::addUIDrawables(const MDagPath& objPath, MHWRender::MUIDrawManager& drawManager, const MHWRender::MFrameContext& frameContext)
 {
     MStatus status = MStatus::kSuccess;
-
-    // Retrieve data cache (create if does not exist)
-    MARAP3DHandleLocatorDrawOverrideData newData;
-    MARAP3DHandleLocatorDrawOverrideData* overrideData = &newData;
-
-    // Retrieve data cache (create if does not exist)
     
     MObject locatorNode = objPath.node();
+
+    float pointSize = 10.0f;
+    MColor solidColor(1.0f, 1.0f, 1.0f, 1.0f), wireColor(1.0f, 1.0f, 1.0f, 1.0f);
+    unsigned int depthPriority = -1;
+    MPoint localPosition = MPoint(0.0f, 0.0f, 0.0f);
+    MMatrix worldSpace = MMatrix::identity;
+
     ////
     //// Get the pointSize attribute value
     ////
     //MPlug pointSizePlug(locatorNode, MARAP3DHandleLocatorNode::aPointSize);
-    //status = pointSizePlug.getValue(overrideData->pointSize);
+    //status = pointSizePlug.getValue(pointSize);
     //if (!status) {
     //    status.perror("MARAP3DHandleLocatorDrawOverride::prepareForDraw get pointSize failed !");
     //}
@@ -182,7 +183,7 @@ void MARAP3DHandleLocatorGeometryOverride::addUIDrawables(const MDagPath& objPat
         status.perror("MARAP3DHandleLocatorDrawOverride::prepareForDraw  get localPositionDataHandle failed !");
     }
     double3& localPositionDouble3 = localPositionDataHandle.asDouble3();
-    overrideData->localPosition = MPoint(localPositionDouble3[0], localPositionDouble3[1], localPositionDouble3[2]);
+    localPosition = MPoint(localPositionDouble3[0], localPositionDouble3[1], localPositionDouble3[2]);
     if (!status) {
         status.perror("MARAP3DHandleLocatorDrawOverride::prepareForDraw  get localPosition failed !");
     }
@@ -208,7 +209,7 @@ void MARAP3DHandleLocatorGeometryOverride::addUIDrawables(const MDagPath& objPat
     if (!status) {
         status.perror("MARAP3DHandleLocatorDrawOverride::prepareForDraw get world matrix data failed !");
     }
-    overrideData->worldSpace = matrixData.matrix(&status);
+    worldSpace = matrixData.matrix(&status);
     if (!status) {
         status.perror("MARAP3DHandleLocatorDrawOverride::prepareForDraw get world matrix failed !");
     }
@@ -219,32 +220,32 @@ void MARAP3DHandleLocatorGeometryOverride::addUIDrawables(const MDagPath& objPat
     switch (displayStatus)
     {
     case MHWRender::kLead:
-        overrideData->solidColor = MColor(0.26f, 1.0f, 0.64f, alpha);
-        overrideData->wireColor = MColor(0.26f, 1.0f, 0.64f, 1.0f);
-        overrideData->depthPriority = MHWRender::MRenderItem::sSelectionDepthPriority;
+        solidColor = MColor(0.26f, 1.0f, 0.64f, alpha);
+        wireColor = MColor(0.26f, 1.0f, 0.64f, 1.0f);
+        depthPriority = MHWRender::MRenderItem::sSelectionDepthPriority;
         break;
     case MHWRender::kActive:
-        overrideData->solidColor = MColor(1.0f, 1.0f, 1.0f, alpha);
-        overrideData->wireColor = MColor(1.0f, 1.0f, 1.0f, 1.0f);
-        overrideData->depthPriority = MHWRender::MRenderItem::sActivePointDepthPriority;
+        solidColor = MColor(1.0f, 1.0f, 1.0f, alpha);
+        wireColor = MColor(1.0f, 1.0f, 1.0f, 1.0f);
+        depthPriority = MHWRender::MRenderItem::sActivePointDepthPriority;
         break;
     default:
-        overrideData->solidColor = MColor(1.0f, 1.0f, 0.0f, alpha);
-        overrideData->wireColor = MColor(1.0f, 1.0f, 0.0f, 1.0f);
-        overrideData->depthPriority = MHWRender::MRenderItem::sDormantPointDepthPriority;
+        solidColor = MColor(1.0f, 1.0f, 0.0f, alpha);
+        wireColor = MColor(1.0f, 1.0f, 0.0f, 1.0f);
+        depthPriority = MHWRender::MRenderItem::sDormantPointDepthPriority;
         break;
     }
 
     unsigned int previousDepthPriority = drawManager.depthPriority();
 
-    drawManager.setDepthPriority(overrideData->depthPriority);
+    drawManager.setDepthPriority(depthPriority);
 
     drawManager.beginDrawable(MHWRender::MUIDrawManager::kSelectable, 20);
-    drawManager.setColor(overrideData->solidColor);
-    drawManager.setPointSize(overrideData->pointSize);
+    drawManager.setColor(solidColor);
+    drawManager.setPointSize(pointSize);
 
-    drawManager.point(overrideData->localPosition);
-    //drawManager.point(overrideData->localPosition * overrideData->worldSpace);
+    drawManager.point(localPosition);
+    //drawManager.point(localPosition * worldSpace);
     drawManager.endDrawable();
 
     drawManager.setDepthPriority(previousDepthPriority);

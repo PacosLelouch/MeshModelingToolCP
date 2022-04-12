@@ -123,6 +123,7 @@ inline void ARAP3DTetTripletGenerator::generateTriplets(ConstraintAbstract<3>& c
 
 inline void ARAP3DTetTransformer::generateTransformPoints(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& points) {
     Matrix3X tmp;
+    tmp.resize(3, 4);
     for (i64 i = 0; i < constraint.getIdIncidentPoints().size(); ++i) //NOTICE: = 4
     {
         tmp.col(i) = points.col(constraint.getIdIncidentPoints()[i]);

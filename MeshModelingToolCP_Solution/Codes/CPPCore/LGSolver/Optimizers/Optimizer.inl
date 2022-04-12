@@ -195,7 +195,7 @@ inline bool AndersonAccelerationOptimizer<Dim>::initialize(i32 nPoints, Constrai
         ColMSMatrix varToFull = this->m_varSelection.transpose();
         ColMSMatrix handleToFull = this->m_handleSelection.transpose();
 
-        this->m_rhsHandleContribution = -this->m_handleSelection * globalMat * handleToFull;
+        this->m_rhsHandleContribution = -this->m_varSelection * globalMat * handleToFull;
         globalMat = this->m_varSelection * (globalMat * varToFull);
         this->m_rhsFixed = (this->m_varSelection * fullRhsFixed).transpose();
         AT_Reduced = this->m_varSelection * AT;

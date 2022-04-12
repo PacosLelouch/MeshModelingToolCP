@@ -18,9 +18,20 @@ bool ARAP3DOperation::initializeConstraintsAndRegularizations()
     m_initialPositions = tmp.m_positions;
 
     auto& solver = this->m_solverShPtr;
-    
+
+    //std::vector<int> temp_tetrahedronlist;
+    //for (int i = 0; i < output.numberoftetrahedra; i++) {
+    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4]);
+    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4 + 1]);
+    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4 + 2]);
+    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4 + 3]);
+    //    std::cout << output.tetrahedronlist[i * 4] << ' ' << output.tetrahedronlist[i * 4 + 1] << ' ' << output.tetrahedronlist[i * 4 + 2] << ' ' << output.tetrahedronlist[i * 4 + 3] << std::endl;
+    //}
+
     for (int i = 0; i < output.numberoftetrahedra; i++) {
-        std::vector<i32> indices(output.tetrahedronlist[i * 4], output.tetrahedronlist[i * 4 + 4]);
+
+        //std::vector<i32> indices(&output.tetrahedronlist[i * 4], &output.tetrahedronlist[i * 4 + 4]);
+        std::vector<i32> indices{ output.tetrahedronlist[i * 4], output.tetrahedronlist[i * 4 + 1], output.tetrahedronlist[i * 4 + 2], output.tetrahedronlist[i * 4 + 3] };
         for (auto& n : indices) {
             n -= 1;
         }

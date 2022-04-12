@@ -75,7 +75,7 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.mll</TargetExt>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
@@ -85,7 +85,7 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.mll</TargetExt>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x86);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x86);$(SystemRoot)</ExcludePath>
@@ -95,7 +95,7 @@
     <LinkIncremental>true</LinkIncremental>
     <TargetExt>.mll</TargetExt>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>
@@ -105,7 +105,7 @@
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.mll</TargetExt>
     <IncludePath>$(SolutionDir)Codes\include;$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
-    <SourcePath>$(SolutionDir)Codes\;$(SolutionDir)Codes\CPPCore;$(VC_SourcePath)</SourcePath>
+    <SourcePath>$(VC_SourcePath);</SourcePath>
     <OutDir>$(ProjectDir)Out\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(ProjectDir)Intermediate\$(Platform)\$(Configuration)\</IntDir>
     <ExcludePath>$(SolutionDir)Codes\CUDACore;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(VC_ExecutablePath_x64);$(WindowsSDK_ExecutablePath);$(VS_ExecutablePath);$(FxCopDir);$(MSBuild_ExecutablePath);$(VC_LibraryPath_x64);$(SystemRoot)</ExcludePath>

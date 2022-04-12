@@ -66,6 +66,11 @@
 //                                                                            //
 //============================================================================//
 
+#pragma warning(disable:4477)
+#pragma warning(disable:4244)
+#pragma warning(disable:4703)
+#pragma warning(disable:4996)
+
 bool tetgenio::load_node_call(FILE* infile, int markers, int uvflag, 
                               char* infilename)
 {

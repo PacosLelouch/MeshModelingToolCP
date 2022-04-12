@@ -3,7 +3,8 @@
 #include "TypesCommon.h"
 #include <unordered_set>
 #include <type_traits>
-#include <tetgen.h>
+
+class tetgenio;
 
 BEGIN_NAMESPACE(AAShapeUp)
 
