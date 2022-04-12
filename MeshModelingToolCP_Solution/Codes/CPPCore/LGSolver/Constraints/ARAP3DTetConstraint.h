@@ -21,7 +21,7 @@ public:
 
 class ARAP3DTetTransformer : public InvariantTransformerAbstract<3, ConstraintAbstract<3>> {
 public:
-    inline constexpr i32 numTransformedPointsToCreate(const i32 numIndices) const { return numIndices; }; //TODO may be -1
+    inline constexpr i32 numTransformedPointsToCreate(const i32 numIndices) const { return numIndices - 1; }; // NOTICE: may be -1 or not
 
     void generateTransformPoints(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& points);
 };
@@ -52,7 +52,7 @@ public:
         }
 
         volume_ = std::fabs(edge_vecs.determinant()) / 6.0;
-        m_weight *= std::sqrt(volume_); //TODO
+        setWeight(getWeight() * volume_); //NOTICE
 
         // Transformation matrix
         transform_ = points.transpose().jacobiSvd(
@@ -102,19 +102,14 @@ inline scalar ARAP3DTetProjectionOperator::project(ConstraintAbstract<3>& constr
         P = jSVD.matrixU() * I * jSVD.matrixV().transpose();
     }*/
 
-    //scalar weighted_dist = (M - P).squaredNorm() * constraint.getWeight() * scalar(0.5);
-    //projections.block(0, constraint.getIdConstraint(), 3, 3) = constraint.getWeight() * projectionBlock;
-    //return weighted_dist;
-
     //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
-    projectionBlock *= constraint.getWeight(); //TODO
+    projectionBlock *= constraint.getSqrtWeight(); //NOTICE
     return sqrDist * (constraint.getWeight()) * static_cast<scalar>(0.5);
-    //return sqrDist * (constraint.getWeight() * constraint.getWeight()) * static_cast<scalar>(0.5);
 }
 
 inline void ARAP3DTetTripletGenerator::generateTriplets(ConstraintAbstract<3>& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const {
-    //constraint.m_idConstraint = inOutConstraintId;  TODO
+    //constraint.m_idConstraint = inOutConstraintId;  NOTICE
 
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 4; ++j) {
@@ -127,11 +122,12 @@ inline void ARAP3DTetTripletGenerator::generateTriplets(ConstraintAbstract<3>& c
 }
 
 inline void ARAP3DTetTransformer::generateTransformPoints(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& points) {
-    for (i64 i = 0; i < constraint.getIdIncidentPoints().size(); ++i) //TODO = 4
+    Matrix3X tmp;
+    for (i64 i = 0; i < constraint.getIdIncidentPoints().size(); ++i) //NOTICE: = 4
     {
-        this->m_transformedPoints.col(i) = points.col(constraint.getIdIncidentPoints()[i]);
+        tmp.col(i) = points.col(constraint.getIdIncidentPoints()[i]);
     }
-    this->m_transformedPoints = this->m_transformedPoints * dynamic_cast<ARAP3DTetConstraint*>(&constraint)->transform_;
+    this->m_transformedPoints = tmp * dynamic_cast<ARAP3DTetConstraint*>(&constraint)->transform_;
 }
 
 

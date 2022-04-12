@@ -262,7 +262,7 @@ void EigenMesh<3>::fromTetgenio(tetgenio& input) {
         m_section.m_positionIndices[i] = input.trifacelist[i] - 1;
     }
 
-    //TODO clear other member
+    //NOTICE: may need to clear other member
 }
 
 template<>
