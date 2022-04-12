@@ -163,7 +163,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;NDEBUG;_LIB;TETLIBRARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -181,6 +181,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\Codes\CPPCore\Dummy.h" />
     <ClInclude Include="..\..\Codes\CPPCore\EigenMesh.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\ARAP3DTetConstraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\ConstraintCollection.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\EdgeLengthConstraint.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Regularizations\Regularizer.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\ARAP3DOperation.h" />
     <ClInclude Include="..\..\Codes\CPPCore\Operations\MinimalSurfaceOperation.h" />
     <ClInclude Include="..\..\Codes\MeshAABB.h" />
     <ClInclude Include="..\..\Codes\CPPCore\Operations\OperationBase.h" />
@@ -223,6 +225,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\ARAP3DOperation.cpp" />
     <ClCompile Include="..\..\Codes\CPPCore\Operations\OperationBase.cpp" />
     <ClCompile Include="..\..\Codes\CPPCore\Operations\PlanarizationOperation.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
@@ -231,6 +234,8 @@
     <ClCompile Include="..\..\Codes\CPPCore\Operations\TestBoundingSphereOperation.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\predicates.cxx" />
+    <ClCompile Include="..\..\Codes\CPPCore\tetgen.cxx" />
     <ClCompile Include="..\..\Codes\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>

@@ -205,6 +205,66 @@ bool EigenMeshSection::getFaceVertexIndex(Matrix3Xi& outFaceVertexIdx, bool must
     return true;
 }
 
+void EigenMesh<2>::toTetgenio(tetgenio& result) const {
+    return;
+}
+
+void EigenMesh<3>::toTetgenio(tetgenio& result) const {
+    tetgenio::facet* f;
+    tetgenio::polygon* p;
+
+    // All indices start from 1.
+    result.firstnumber = 1;
+
+    result.numberofpoints = m_positions.size();
+    result.pointlist = new REAL[result.numberofpoints * 3];
+    for (int i = 0; i < result.numberofpoints; i++) {
+        result.pointlist[i * 3] = m_positions(0, i);
+        result.pointlist[i * 3 + 1] = m_positions(1, i);
+        result.pointlist[i * 3 + 2] = m_positions(2, i);
+    }
+
+    result.numberoffacets = m_section.m_numFaceVertices.size();
+    result.facetlist = new tetgenio::facet[result.numberoffacets];
+    result.facetmarkerlist = new int[result.numberoffacets];
+    auto indicesIter = m_section.m_positionIndices.begin();
+    for (int i = 0; i < result.numberoffacets; i++) {
+        f = &result.facetlist[i];
+        f->numberofpolygons = 1;
+        f->polygonlist = new tetgenio::polygon[f->numberofpolygons];
+        f->numberofholes = 0;
+        f->holelist = NULL;
+        p = &f->polygonlist[0];
+        p->numberofvertices = m_section.m_numFaceVertices[i];
+        p->vertexlist = new int[p->numberofvertices];
+        for (int j = 0; j < p->numberofvertices; j++) {
+            p->vertexlist[j] = (*indicesIter) + 1;
+            indicesIter++;
+        }
+        result.facetmarkerlist[i] = 0;
+    }
+}
+
+void EigenMesh<2>::fromTetgenio(tetgenio& input) {
+    return;
+}
+
+void EigenMesh<3>::fromTetgenio(tetgenio& input) {
+    m_positions.resize(3, input.numberofpoints);
+    for (int i = 0; i < input.numberofpoints; i++) {
+        m_positions(0, i) = input.pointlist[i * 3];
+        m_positions(1, i) = input.pointlist[i * 3 + 1];
+        m_positions(2, i) = input.pointlist[i * 3 + 2];
+    }
+    m_section.m_numFaceVertices.resize(input.numberoftrifaces, 3);
+    m_section.m_positionIndices.resize(input.numberoftrifaces * 3);
+    for (int i = 0; i < input.numberoftrifaces * 3; i++) {
+        m_section.m_positionIndices[i] = input.trifacelist[i] - 1;
+    }
+
+    //TODO clear other member
+}
+
 template<>
 MeshDirtyFlag regenerateNormals(EigenMesh<3>& mesh)
 {
