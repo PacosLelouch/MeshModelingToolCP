@@ -3,12 +3,20 @@
 #include <maya/MItGeometry.h>
 #include <maya/MFnNumericAttribute.h>
 #include <maya/MFnTypedAttribute.h>
+#include <maya/MFnMatrixAttribute.h>
 #include <maya/MPointArray.h>
+#include <maya/MArrayDataHandle.h>
+#include <maya/MArrayDataBuilder.h>
+#include <maya/MPlug.h>
 
 const MTypeId MARAP3DNode::id = 0x01000003;
 const MString MARAP3DNode::nodeName = "ARAP3DNode";
 
 MObject MARAP3DNode::aNumIter;
+MObject MARAP3DNode::aMaxDisplacementVisualization;
+MObject MARAP3DNode::aDeformationWeight;
+MObject MARAP3DNode::aHandlePositions;
+MObject MARAP3DNode::aHandleIndices;
 
 void* MARAP3DNode::creator()
 {
@@ -21,6 +29,7 @@ MStatus MARAP3DNode::initialize()
 
     MFnNumericAttribute nAttr;
     MFnTypedAttribute tAttr;
+    MFnMatrixAttribute mAttr;
 
     aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 50, &status);
     MAYA_ATTR_INPUT(nAttr);
@@ -28,13 +37,78 @@ MStatus MARAP3DNode::initialize()
     status = addAttribute(aNumIter);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    status = MGlobal::executeCommand("makePaintable -attrType multiFloat -sm deformer " + MARAP3DNode::nodeName + " weights;");
+    aMaxDisplacementVisualization = nAttr.create("maxDisplacementVisualization", "maxDispVis", MFnNumericData::kDouble, 0.0, &status);
+    MAYA_ATTR_INPUT(nAttr);
+    nAttr.setMin(0.0);
+    status = addAttribute(aMaxDisplacementVisualization);
     CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    aDeformationWeight = nAttr.create("deformationWeight", "wd", MFnNumericData::kDouble, 1.0, &status);
+    MAYA_ATTR_INPUT(nAttr);
+    nAttr.setMin(0.0);
+    status = addAttribute(aDeformationWeight);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    aHandlePositions = nAttr.create("handlePositions", "hdlPts", MFnNumericData::k3Double, 0.0, &status);
+    MAYA_ATTR_INPUT(nAttr);
+    //nAttr.setWritable(false);
+    nAttr.setArray(true);
+    //nAttr.setHidden(true);
+    nAttr.setDisconnectBehavior(MFnAttribute::kDelete);
+    //mAttr.setDefault(MMatrix::identity);
+    status = addAttribute(aHandlePositions);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    aHandleIndices = nAttr.create("handleIndices", "hdlIdxs", MFnNumericData::kInt, -1, &status);
+    MAYA_ATTR_INPUT(nAttr);
+    //nAttr.setWritable(false);
+    nAttr.setArray(true);
+    //nAttr.setHidden(true);
+    nAttr.setDisconnectBehavior(MFnAttribute::kDelete);
+    status = addAttribute(aHandleIndices);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    //status = MGlobal::executeCommand("makePaintable -attrType multiFloat -sm deformer " + MARAP3DNode::nodeName + " weights;");
+    //CHECK_MSTATUS_AND_RETURN_IT(status);
 
     status = attributeAffects(aNumIter, outputGeom);
     CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = attributeAffects(aMaxDisplacementVisualization, outputGeom);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = attributeAffects(aHandlePositions, outputGeom);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = attributeAffects(aHandleIndices, outputGeom);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
     return MStatus::kSuccess;
+}
+
+void MARAP3DNode::postConstructor()
+{
+    Super::postConstructor();
+    MStatus status = MStatus::kSuccess;
+    MObject thisNode = thisMObject();
+    MPlug plugHandlePositions(thisNode, aHandlePositions);
+    MPlug plugHandleIndices(thisNode, aHandleIndices);
+
+    MDataBlock block = forceCache();
+    MDataHandle hHandlePositions = plugHandlePositions.constructHandle(block);
+    MDataHandle hHandleIndices = plugHandleIndices.constructHandle(block);
+
+    MGlobal::displayInfo(nodeName + plugHandlePositions.name() + " has " + plugHandlePositions.evaluateNumElements() + " elements." + (plugHandlePositions.isArray() ? " IsArray." : " NotArray."));
+    MGlobal::displayInfo(nodeName + plugHandleIndices.name() + " has " + plugHandleIndices.evaluateNumElements() + " elements." + (plugHandleIndices.isArray() ? " IsArray." : " NotArray."));
+
+    //MArrayDataHandle ahHandlePositions(hHandlePositions, &status);
+    //MArrayDataHandle ahHandleIndices(hHandleIndices, &status);
+
+    //MArrayDataBuilder abHandlePositions = ahHandlePositions.builder(&status);
+    //MArrayDataBuilder abHandleIndices = ahHandleIndices.builder(&status);
+
+    //ahHandlePositions.set(abHandlePositions);
+    //ahHandleIndices.set(abHandleIndices);
+
+    //plugHandlePositions.setValue(hHandlePositions);
+    //plugHandleIndices.setValue(hHandleIndices);
 }
 
 MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix& mat, unsigned int multiIndex)
@@ -45,6 +119,7 @@ MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix&
     }
 
     MStatus status = MStatus::kSuccess;
+    MMatrix worldToLocal = mat.inverse();
 
     MDataHandle hEnvelope = block.inputValue(envelope, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -54,26 +129,69 @@ MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix&
     CHECK_MSTATUS_AND_RETURN_IT(status);
     int numIter = hNumIter.asInt();
 
-    MObject inputMeshObj = getMeshObjectFromInput(block, multiIndex, &status);
+    MDataHandle hMaxDisplacementVisualization = block.inputValue(aMaxDisplacementVisualization, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    double maxDisplacementVisualization = hMaxDisplacementVisualization.asDouble();
+
+    MDataHandle hDeformationWeight = block.inputValue(aDeformationWeight, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    double deformationWeight = hDeformationWeight.asDouble();
+
+    MArrayDataHandle hHandlePositions = block.inputArrayValue(aHandlePositions, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    unsigned int numHandlePositions = hHandlePositions.elementCount(&status);
+    std::vector<MPoint> handlePositions;
+    handlePositions.resize(numHandlePositions);
+    for (unsigned int i = 0; i < numHandlePositions; ++i)
+    {
+        hHandlePositions.jumpToElement(i);
+        double3& handlePositionDouble3 = hHandlePositions.inputValue().asDouble3();
+        handlePositions[i] = MPoint(handlePositionDouble3[0], handlePositionDouble3[1], handlePositionDouble3[2]);
+    }
+
+    MArrayDataHandle hHandleIndices = block.inputArrayValue(aHandleIndices, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    unsigned int numHandleIndices = hHandleIndices.elementCount(&status);
+    std::vector<int> handleIndices;
+    handleIndices.resize(numHandleIndices);
+    for (unsigned int i = 0; i < numHandleIndices; ++i)
+    {
+        hHandleIndices.jumpToElement(i);
+        int index = hHandleIndices.inputValue().asInt();
+        handleIndices[i] = index;
+    }
+
+    MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     // Start check cache.
     InputChangedFlag inputChangedFlag = InputChangedFlag::None;
-    if (m_cache.numIter != numIter)
+    if (m_cache.maxDisplacementVisualization != maxDisplacementVisualization)
+    {
+        inputChangedFlag |= InputChangedFlag::Visualization;
+        MGlobal::displayInfo("[" + nodeName + "] Change [visualization].");
+    }
+    if (m_cache.numIter != numIter ||
+        m_cache.handleIndices != handleIndices ||
+        m_cache.handlePositions != handlePositions)
     {
         inputChangedFlag |= InputChangedFlag::Parameter;
-        MGlobal::displayInfo("[ARAP3DNode] Change [parameter].");
+        MGlobal::displayInfo("[" + nodeName + "] Change [parameter].");
     }
-    if (m_cache.inputMeshObj.isNull() || !m_cache.inputMeshObj.hasFn(MFn::kMesh))
+    if (isMeshNotAssigned(m_cache.inputMeshObj, inputMeshObj))
     {
         inputChangedFlag |= InputChangedFlag::InputMesh;
-        MGlobal::displayInfo("[ARAP3DNode] Change [input mesh].");
+        MGlobal::displayInfo("[" + nodeName + "] Change [input mesh].");
     }
     m_cache.numIter = numIter;
+    m_cache.maxDisplacementVisualization = maxDisplacementVisualization;
     m_cache.inputMeshObj = inputMeshObj;
+    m_cache.handleIndices = handleIndices;
+    m_cache.handlePositions = handlePositions;
     // End check cache.
 
-    if (inputChangedFlag != InputChangedFlag::None)
+
+    if (inputChangedFlag > InputChangedFlag::Visualization)
     {
         if ((inputChangedFlag & InputChangedFlag::InputMesh) != InputChangedFlag::None)
         {
@@ -84,24 +202,39 @@ MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix&
                 MGlobal::displayError("Fail to generate eigen matrices [input]!");
                 return MStatus::kFailure;
             }
+            for (size_t i = 0; i < handleIndices.size(); ++i)
+            {
+                int idx = handleIndices[i];
+                m_meshConverterShPtr->getEigenMesh().m_positions.col(idx) = AAShapeUp::toEigenVec3(handlePositions[i] * worldToLocal);
+            }
         }
 
-        //// TODO
-        //m_operationShPtr.reset(new AAShapeUp::PlanarizationOperation(m_geometrySolverShPtr)); 
+        m_operationShPtr.reset(new AAShapeUp::ARAP3DOperation(m_geometrySolverShPtr)); 
+        m_operationShPtr->m_deformationWeight = deformationWeight;
 
-        //m_operationShPtr->refMesh = m_meshConverterReferenceShPtr->getEigenMesh();
+        if (!m_operationShPtr->initialize(m_meshConverterShPtr->getEigenMesh(), handleIndices))
+        {
+            MGlobal::displayError("Fail to initialize!");
+            return MStatus::kFailure;
+        }
 
-        //if (!m_operationShPtr->initialize(m_meshConverterShPtr->getEigenMesh(), {}))
-        //{
-        //    MGlobal::displayError("Fail to initialize!");
-        //    return MStatus::kFailure;
-        //}
+        if (!m_operationShPtr->solve(m_meshConverterShPtr->getEigenMesh().m_positions, numIter))
+        {
+            MGlobal::displayError("Fail to solve!");
+            return MStatus::kFailure;
+        }
+    }
 
-        //if (!m_operationShPtr->solve(m_meshConverterShPtr->getEigenMesh().m_positions, numIter))
-        //{
-        //    MGlobal::displayError("Fail to solve!");
-        //    return MStatus::kFailure;
-        //}
+    if ((inputChangedFlag & InputChangedFlag::Visualization) != InputChangedFlag::None)
+    {
+        if (maxDisplacementVisualization != 0.0)
+        {
+            AAShapeUp::MeshDirtyFlag colorDirtyFlag = m_operationShPtr->visualizeDisplacements(m_meshConverterShPtr->getEigenMesh().m_colors, true);
+
+            MObject outputMeshObj = getMeshObjectFromOutput(block, multiIndex, &status);
+            status = m_meshConverterShPtr->updateTargetMesh(colorDirtyFlag, outputMeshObj, false);
+            CHECK_MSTATUS_AND_RETURN_IT(status);
+        }
     }
 
     // Start write output.

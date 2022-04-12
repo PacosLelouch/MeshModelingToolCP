@@ -6,6 +6,7 @@
 struct TestBoundingSphereCache
 {
     int numIter = -1;
+    double maxDisplacementVisualization = -1.0;
     double sphereProjectionWeight = -1.0;
     double fairnessWeight = -1.0;
     MObject inputMeshObj = MObject::kNullObj;
@@ -40,6 +41,7 @@ public:
     static const MString nodeName;
 
     static MObject aNumIter;
+    static MObject aMaxDisplacementVisualization;
     static MObject aSphereProjectionWeight;
     static MObject aFairnessWeight;
 };

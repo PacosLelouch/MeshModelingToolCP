@@ -6,6 +6,7 @@
 struct PlanarizationCache
 {
     int numIter = -1;
+    double maxDisplacementVisualization = -1.0;
     double planarityWeight = -1.0;
     double closenessWeight = -1.0;
     double fairnessWeight = -1.0;
@@ -36,6 +37,7 @@ public:
     static const MString nodeName;
 
     static MObject aNumIter;
+    static MObject aMaxDisplacementVisualization;
     static MObject aPlanarityWeight;
     static MObject aClosenessWeight;
     static MObject aFairnessWeight;

@@ -16,6 +16,18 @@
     <Filter Include="Header Files\OptimizerNodes">
       <UniqueIdentifier>{86b1b94d-7a28-4b4e-94b3-83117e13756f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\LocatorNodes">
+      <UniqueIdentifier>{f20d68a1-70e4-4c0c-9d9c-d60e13c6849d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\LocatorNodes">
+      <UniqueIdentifier>{c2b74dbe-19bd-4b6b-9266-6c7e5e8da904}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Commands">
+      <UniqueIdentifier>{e663c8da-1523-48cb-8cfb-1dca6456ed40}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Commands">
+      <UniqueIdentifier>{c2151325-7110-4646-a07c-5aa0ff7e661a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\pch.cpp">
@@ -38,6 +50,12 @@
     </ClCompile>
     <ClCompile Include="..\..\Codes\MayaInterface\ARAP3DNode.cpp">
       <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\ARAP3DHandleLocator.cpp">
+      <Filter>Source Files\LocatorNodes</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\CreateARAP3DHandleLocatorCommand.cpp">
+      <Filter>Source Files\Commands</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -64,6 +82,15 @@
     </ClInclude>
     <ClInclude Include="..\..\Codes\MayaInterface\ARAP3DNode.h">
       <Filter>Header Files\OptimizerNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\MayaNodeCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\ARAP3DHandleLocator.h">
+      <Filter>Header Files\LocatorNodes</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\CreateARAP3DHandleLocatorCommand.h">
+      <Filter>Header Files\Commands</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

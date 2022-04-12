@@ -26,6 +26,7 @@ public:
     //EigenMesh<3> refMesh;
     //scalar closeness_weight = scalar(1), relative_laplacian_weight = scalar(0.1), laplacian_weight = scalar(0.1), planarity_weight = scalar(1);
 
+    scalar m_deformationWeight = scalar(1);
 protected:
 };
 

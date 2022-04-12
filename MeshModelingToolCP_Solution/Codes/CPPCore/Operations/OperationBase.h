@@ -23,6 +23,10 @@ public:
 
     virtual std::tuple<MeshDirtyFlag, MeshIndexType> getOutputErrors(std::vector<scalar>& outErrors) const = 0;
 
+    MeshDirtyFlag visualizeDisplacements(Matrix3X& outColors, scalar maxDisplacement = 1, bool keepHeatValue = false) const;
+
+    void getDisplacements(Matrix3X& displacements) const;
+
     virtual MeshDirtyFlag getMeshDirtyFlag() const = 0;
 
     // HDR, useless?

@@ -81,6 +81,51 @@ MeshDirtyFlag OperationBase::visualizeOutputErrors(Matrix3X& outColors, scalar m
 	return dirtyFlag;
 }
 
+MeshDirtyFlag OperationBase::visualizeDisplacements(Matrix3X& outColors, scalar maxDisplacement, bool keepHeatValue) const
+{
+	MeshDirtyFlag dirtyFlag = MeshDirtyFlag::ColorDirty;
+
+	Matrix3X displacements;
+	getDisplacements(displacements);
+
+	outColors.resize(Eigen::NoChange, displacements.cols());
+
+	if (keepHeatValue)
+	{
+		OMP_PARALLEL_(for)
+		for (i64 col = 0; col < outColors.cols(); ++col)
+		{
+			scalar displacementMagnitude = displacements.col(col).norm();
+			Vector3 heatValue = Vector3(displacementMagnitude, maxDisplacement, scalar(1));
+			outColors.col(col) = heatValue;
+		}
+	}
+	else
+	{
+		OMP_PARALLEL_(for)
+		for (i64 col = 0; col < outColors.cols(); ++col)
+		{
+			scalar displacementMagnitude = displacements.col(col).norm();
+			Vector3 colorHSV = Vector3(scalar(240) * glm::max(scalar(1) - glm::abs(displacementMagnitude) / glm::abs(maxDisplacement), scalar(0)), scalar(1), scalar(1));
+			outColors.col(col) = HSV2RGB(colorHSV);
+		}
+	}
+
+	return dirtyFlag;
+}
+
+void OperationBase::getDisplacements(Matrix3X& displacements) const
+{
+	if (!m_solverShPtr)
+	{
+		displacements.setZero(m_mesh.m_positions.rows(), m_mesh.m_positions.cols());
+		return;
+	}
+
+	m_solverShPtr->getOutput(displacements);
+	displacements -= m_mesh.m_positions;
+}
+
 void OperationBase::ReinhardOperatorBatch(Matrix3X& inOutColors)
 {
     OMP_PARALLEL_(for)

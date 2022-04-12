@@ -66,6 +66,35 @@ MStatus MGeometryOptimizerNode::jumpToElement(MArrayDataHandle& hArray, unsigned
     return status;
 }
 
+bool MGeometryOptimizerNode::isMeshNotAssigned(const MObject& meshToAssign, const MObject& meshInput)
+{
+    return meshToAssign.isNull() || !meshToAssign.hasFn(MFn::kMesh);
+}
+
+bool MGeometryOptimizerNode::isMeshDirty(const MObject& meshToCompare, const MObject& meshInput)
+{
+    return meshToCompare != meshInput;
+}
+
+void MGeometryOptimizerNode::postConstructor()
+{
+    MPxDeformerNode::postConstructor();
+    m_geometrySolverShPtr.reset(new MyGeometrySolver3D);
+}
+
+MObject MGeometryOptimizerNode::getMeshObjectFromInputWithoutEval(MDataBlock& block, unsigned int index, MStatus* statusPtr)
+{
+    MStatus status = MStatus::kSuccess;
+    // Get the geometry.
+    MArrayDataHandle hInput = block.outputArrayValue(input, &status);
+    CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
+    jumpToElement(hInput, index);
+    MDataHandle hInputGeom = hInput.outputValue().child(inputGeom);
+    MObject inMesh = hInputGeom.asMesh();
+
+    return inMesh;
+}
+
 MObject MGeometryOptimizerNode::getMeshObjectFromInput(MDataBlock& block, unsigned int index, MStatus* statusPtr)
 {
     MStatus status = MStatus::kSuccess;
@@ -92,10 +121,10 @@ MObject MGeometryOptimizerNode::getMeshObjectFromOutput(MDataBlock& block, unsig
 {
     MStatus status = MStatus::kSuccess;
     // Get the geometry.
-    MArrayDataHandle hOutput = block.outputArrayValue(input, &status);
+    MArrayDataHandle hOutput = block.outputArrayValue(outputGeom, &status);
     CHECK_MSTATUS_ASSIGN_AND_RETURN(status, statusPtr, MObject::kNullObj);
     jumpToElement(hOutput, index);
-    MDataHandle hOutputGeom = hOutput.outputValue().child(inputGeom);
+    MDataHandle hOutputGeom = hOutput.outputValue();
     MObject outMesh = hOutputGeom.asMesh();
 
     //MDataHandle hOutputGeom = block.outputValue(outputGeom, &status);
