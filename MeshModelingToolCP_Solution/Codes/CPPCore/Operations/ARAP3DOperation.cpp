@@ -24,7 +24,7 @@ bool ARAP3DOperation::initializeConstraintsAndRegularizations()
         for (auto& n : indices) {
             n -= 1;
         }
-        solver->addConstraint(std::make_shared<ARAP3DTetConstraint>(indices, 1.0, m_mesh.m_positions, true));
+        solver->addConstraint(std::make_shared<ARAP3DTetConstraint>(indices, m_deformationWeight, m_initialPositions, true));
     }
 
     return true;
@@ -49,8 +49,9 @@ bool ARAP3DOperation::solve(Matrix3X& newPositions, i32 nIter)
         return false;
     }
 
+    i64 cols = m_mesh.m_positions.cols(); // In case of newPositions is the same as m_mesh.m_positions.
     m_solverShPtr->getOutput(newPositions);
-    newPositions.resize(3, m_mesh.m_positions.cols());
+    newPositions.resize(3, cols);
     return true;
 }
 

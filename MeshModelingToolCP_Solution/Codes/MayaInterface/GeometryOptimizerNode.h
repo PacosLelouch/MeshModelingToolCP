@@ -1,54 +1,11 @@
 #pragma once
 
+#include "MayaNodeCommon.h"
 #include <maya/MPxDeformerNode.h>
 #include <maya/MMatrix.h>
 #include <maya/MFnMesh.h>
-#include <maya/MGlobal.h>
 #include "LGSolver/Solvers/GeometrySolver.h"
 #include "MayaToEigenConverter.h"
-
-#define MAYA_ATTR_INPUT(attr) \
-    (attr).setKeyable(true); \
-    (attr).setStorable(true); \
-    (attr).setReadable(true); \
-    (attr).setWritable(true); 
-
-#define MAYA_ATTR_OUTPUT(attr) \
-    (attr).setKeyable(false); \
-    (attr).setStorable(false); \
-    (attr).setReadable(true); \
-    (attr).setWritable(false); 
-
-enum class InputChangedFlag : AAShapeUp::ui8
-{
-    None = 0,
-    Parameter,
-    InputMesh,
-    ReferenceMesh,
-};
-
-
-inline InputChangedFlag operator&(const InputChangedFlag f1, const InputChangedFlag f2)
-{
-    return InputChangedFlag(AAShapeUp::ui8(f1) & AAShapeUp::ui8(f2));
-}
-
-inline InputChangedFlag& operator&=(InputChangedFlag& f1, const InputChangedFlag f2)
-{
-    f1 = (f1 & f2);
-    return f1;
-}
-
-inline InputChangedFlag operator|(const InputChangedFlag f1, const InputChangedFlag f2)
-{
-    return InputChangedFlag(AAShapeUp::ui8(f1) | AAShapeUp::ui8(f2));
-}
-
-inline InputChangedFlag& operator|=(InputChangedFlag& f1, const InputChangedFlag f2)
-{
-    f1 = (f1 | f2);
-    return f1;
-}
 
 // The abstract class of the geometry optimizer node. Don't create creator!
 class MGeometryOptimizerNode : public MPxDeformerNode
@@ -58,7 +15,13 @@ public:
 
     static MStatus jumpToElement(MArrayDataHandle& hArray, unsigned int index);
 
+    static bool isMeshNotAssigned(const MObject& meshToAssign, const MObject& meshInput);
+    static bool isMeshDirty(const MObject& meshToCompare, const MObject& meshInput);
+
 public:
+    virtual void postConstructor() override;
+
+    MObject getMeshObjectFromInputWithoutEval(MDataBlock& block, unsigned int index, MStatus* statusPtr = nullptr);
     MObject getMeshObjectFromInput(MDataBlock& block, unsigned int index, MStatus* statusPtr = nullptr);
     MObject getMeshObjectFromOutput(MDataBlock& block, unsigned int index, MStatus* statusPtr = nullptr);
 

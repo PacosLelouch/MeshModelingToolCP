@@ -1,3 +1,27 @@
+global proc int AAShapeUp_getIndexFromSelectedComponent(string $selectedComponent)
+{
+    string $buff0[];
+    tokenize($selectedComponent, "[", $buff0);
+    int $buff0Size = size($buff0);
+    if($buff0Size < 2)
+    {
+        print($selectedComponent + " does not contain index!");
+        return -1;
+    }
+    
+    string $buff1[];
+    tokenize($buff0[$buff0Size - 1], "]", $buff1);
+    int $buff1Size = size($buff1);
+    
+    if($buff1Size < 1)
+    {
+        print($selectedComponent + " does not contain index!");
+        return -1;
+    }
+    
+    return (int)$buff1[$buff1Size - 1];
+}
+
 global proc string AAShapeUp_getGeometryChildOfTransform(string $inputTransformName)
 {
     string $childrenMeshes[] = `listRelatives -c -type mesh $inputTransformName`;
@@ -162,6 +186,20 @@ global proc AAShapeUp_createPlanarizationNode()
     //return;
 }
 
+global proc AAShapeUp_createARAP3DNode()
+{
+    string $selectedObjNames[] = `ls -selection -type transform`;
+    int $sizeSelectedObjNames = size($selectedObjNames);
+    if($sizeSelectedObjNames < 1)
+    {
+        print ("selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        return;
+    }
+    
+    string $nodeNames[] = `deformer -type ARAP3DNode`;
+    return;
+}
+
 global proc AAShapeUp_createTestBoundingSphereNode()
 {
     string $selectedObjNames[] = `ls -selection -type transform`;
@@ -187,5 +225,11 @@ global proc AAShapeUp_createTestBoundingSphereNode()
     //
     //print ("selected objects " + (string)size($selectedObjNames) + " != 1\n");
     return;
+}
+
+global proc AAShapeUp_createARAP3DHandleLocator()
+{
+    createARAP3DHandleLocatorInternal -d true;
+    
 }
 

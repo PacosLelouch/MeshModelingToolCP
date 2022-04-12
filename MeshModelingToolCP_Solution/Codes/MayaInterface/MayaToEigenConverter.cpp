@@ -116,18 +116,19 @@ bool MayaToEigenConverter::generateEigenMatrices()
     return true;
 }
 
-bool MayaToEigenConverter::updateTargetMesh(MeshDirtyFlag dirtyFlag, MObject outMeshObj, bool updateSurfaceNow)
+MStatus MayaToEigenConverter::updateTargetMesh(MeshDirtyFlag dirtyFlag, MObject outMeshObj, bool updateSurfaceNow, const MString* colorSet, const MString* uvSet)
 {
+    MStatus status = MStatus::kSuccess;
+
     if (!outMeshObj.isNull())
     {
-        return false;
+        return MStatus::kFailure;
     }
     MFnMesh outFnMesh(outMeshObj);
     if (!outFnMesh.isValid(MFn::kMesh))
     {
-        return false;
+        return MStatus::kFailure;
     }
-    MStatus status;
 
     i64 targetSize = static_cast<i64>(outFnMesh.numVertices(&status));
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -158,7 +159,7 @@ bool MayaToEigenConverter::updateTargetMesh(MeshDirtyFlag dirtyFlag, MObject out
         for (i64 i = 0; i < targetSize && i < m_outMesh.m_colors.cols(); ++i)
         {
             MColor inColor = fromEigenVec3<MColor>(m_outMesh.m_colors.col(i));
-            outFnMesh.setColor(i, inColor);
+            outFnMesh.setColor(i, inColor, colorSet);
         }
     }
 
@@ -167,15 +168,15 @@ bool MayaToEigenConverter::updateTargetMesh(MeshDirtyFlag dirtyFlag, MObject out
         OMP_PARALLEL_(for)
         for (i64 i = 0; i < targetSize && i < m_outMesh.m_texCoords.cols(); ++i)
         {
-            outFnMesh.setUV(i, m_outMesh.m_texCoords(0, i), m_outMesh.m_texCoords(1, i));
+            outFnMesh.setUV(i, m_outMesh.m_texCoords(0, i), m_outMesh.m_texCoords(1, i), uvSet);
         }
     }
 
     if (updateSurfaceNow && !updateSurface(outFnMesh))
     {
-        return false;
+        return MStatus::kFailure;
     }
-    return true;
+    return status;
 }
 
 bool MayaToEigenConverter::updateSurface(MFnMesh& outFnMesh)

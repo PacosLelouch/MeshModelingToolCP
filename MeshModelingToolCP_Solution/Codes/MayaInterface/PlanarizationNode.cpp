@@ -9,6 +9,7 @@ const MTypeId MPlanarizationNode::id = 0x01000001;
 const MString MPlanarizationNode::nodeName = "planarizationNode";
 
 MObject MPlanarizationNode::aNumIter;
+MObject MPlanarizationNode::aMaxDisplacementVisualization;
 MObject MPlanarizationNode::aPlanarityWeight;
 MObject MPlanarizationNode::aClosenessWeight;
 MObject MPlanarizationNode::aFairnessWeight;
@@ -33,6 +34,12 @@ MStatus MPlanarizationNode::initialize()
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0);
     status = addAttribute(aNumIter);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
+    aMaxDisplacementVisualization = nAttr.create("maxDisplacementVisualization", "maxDispVis", MFnNumericData::kDouble, 0.0, &status);
+    MAYA_ATTR_INPUT(nAttr);
+    nAttr.setMin(0.0);
+    status = addAttribute(aMaxDisplacementVisualization);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     aPlanarityWeight = nAttr.create("planarityWeight", "wpl", MFnNumericData::kDouble, 150.0, &status);
@@ -67,6 +74,8 @@ MStatus MPlanarizationNode::initialize()
 
     status = attributeAffects(aNumIter, outputGeom);
     CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = attributeAffects(aMaxDisplacementVisualization, outputGeom);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
     status = attributeAffects(aPlanarityWeight, outputGeom);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     status = attributeAffects(aClosenessWeight, outputGeom);
@@ -98,6 +107,10 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     CHECK_MSTATUS_AND_RETURN_IT(status);
     int numIter = hNumIter.asInt();
 
+    MDataHandle hMaxDisplacementVisualization = block.inputValue(aMaxDisplacementVisualization, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    double maxDisplacementVisualization = hMaxDisplacementVisualization.asDouble();
+
     MDataHandle hClosenessWeight = block.inputValue(aClosenessWeight, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     double closenessWeight = hClosenessWeight.asDouble();
@@ -117,7 +130,7 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     MDataHandle hReferenceMeshData = block.inputValue(aReferenceMesh, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    MObject inputMeshObj = getMeshObjectFromInput(block, multiIndex, &status);
+    MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MObject referenceMeshObj = hReferenceMeshData.asMesh();
@@ -128,11 +141,16 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     //bool referenceSameAsInput = referenceMeshObj.isNull();
     //if (referenceSameAsInput)
     //{
-    //    referenceMeshObj = inputMeshObj;//getMeshObjectFromInput(block, multiIndex, &status);
+    //    referenceMeshObj = inputMeshObj;//getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
     //}
 
     // Start check cache.
     InputChangedFlag inputChangedFlag = InputChangedFlag::None;
+    if (m_cache.maxDisplacementVisualization != maxDisplacementVisualization)
+    {
+        inputChangedFlag |= InputChangedFlag::Visualization;
+        MGlobal::displayInfo("[" + nodeName + "] Change [visualization].");
+    }
     if (m_cache.numIter != numIter ||
         m_cache.planarityWeight != planarityWeight ||
         m_cache.closenessWeight != closenessWeight ||
@@ -140,20 +158,20 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
         m_cache.relativeFairnessWeight != relativeFairnessWeight)
     {
         inputChangedFlag |= InputChangedFlag::Parameter;
-        MGlobal::displayInfo("[PlanarizationNode] Change [parameter].");
+        MGlobal::displayInfo("[" + nodeName + "] Change [parameter].");
     }
-    //if (m_cache.inputMeshObj != inputMeshObj)
-    if (m_cache.inputMeshObj.isNull() || !m_cache.inputMeshObj.hasFn(MFn::kMesh))
+    if (isMeshNotAssigned(m_cache.inputMeshObj, inputMeshObj))
     {
         inputChangedFlag |= InputChangedFlag::InputMesh;
-        MGlobal::displayInfo("[PlanarizationNode] Change [input mesh].");
+        MGlobal::displayInfo("[" + nodeName + "] Change [input mesh].");
     }
     if (m_cache.referenceMeshObj != referenceMeshObj)
     {
         inputChangedFlag |= InputChangedFlag::ReferenceMesh;
-        MGlobal::displayInfo("[PlanarizationNode] Change [reference mesh].");
+        MGlobal::displayInfo("[" + nodeName + "] Change [reference mesh].");
     }
     m_cache.numIter = numIter;
+    m_cache.maxDisplacementVisualization = maxDisplacementVisualization;
     m_cache.planarityWeight = planarityWeight;
     m_cache.closenessWeight = closenessWeight;
     m_cache.fairnessWeight = fairnessWeight;
@@ -162,7 +180,7 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     m_cache.referenceMeshObj = referenceMeshObj;
     // End check cache.
     
-    if (inputChangedFlag != InputChangedFlag::None)
+    if (inputChangedFlag > InputChangedFlag::Visualization)
     {
         if ((inputChangedFlag & InputChangedFlag::InputMesh) != InputChangedFlag::None)
         {
@@ -204,6 +222,18 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
         {
             MGlobal::displayError("Fail to solve!");
             return MStatus::kFailure;
+        }
+    }
+
+    if ((inputChangedFlag & InputChangedFlag::Visualization) != InputChangedFlag::None)
+    {
+        if (maxDisplacementVisualization != 0.0)
+        {
+            AAShapeUp::MeshDirtyFlag colorDirtyFlag = m_operationShPtr->visualizeDisplacements(m_meshConverterShPtr->getEigenMesh().m_colors, true);
+
+            MObject outputMeshObj = getMeshObjectFromOutput(block, multiIndex, &status);
+            status = m_meshConverterShPtr->updateTargetMesh(colorDirtyFlag, outputMeshObj, false);
+            CHECK_MSTATUS_AND_RETURN_IT(status);
         }
     }
     

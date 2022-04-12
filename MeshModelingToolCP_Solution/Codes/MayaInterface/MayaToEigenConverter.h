@@ -15,7 +15,7 @@ public:
 
     bool generateEigenMatrices();
 
-    bool updateTargetMesh(MeshDirtyFlag dirtyFlag, MObject outMeshObj, bool updateSurfaceNow = false);
+    MStatus updateTargetMesh(MeshDirtyFlag dirtyFlag, MObject outMeshObj, bool updateSurfaceNow = false, const MString* colorSet = nullptr, const MString* uvSet = nullptr);
 
     bool updateSurface(MFnMesh& outFnMesh);
 

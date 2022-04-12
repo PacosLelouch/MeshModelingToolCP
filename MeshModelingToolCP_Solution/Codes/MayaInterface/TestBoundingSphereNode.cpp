@@ -11,6 +11,7 @@ const MTypeId MTestBoundingSphereNode::id = 0x01000004;
 const MString MTestBoundingSphereNode::nodeName = "testBoundingSphereNode";
 
 MObject MTestBoundingSphereNode::aNumIter;
+MObject MTestBoundingSphereNode::aMaxDisplacementVisualization;
 MObject MTestBoundingSphereNode::aSphereProjectionWeight;
 MObject MTestBoundingSphereNode::aFairnessWeight;
 
@@ -31,6 +32,12 @@ MStatus MTestBoundingSphereNode::initialize()
     status = addAttribute(aNumIter);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
+    aMaxDisplacementVisualization = nAttr.create("maxDisplacementVisualization", "maxDispVis", MFnNumericData::kDouble, 0.0, &status);
+    MAYA_ATTR_INPUT(nAttr);
+    nAttr.setMin(0.0);
+    status = addAttribute(aMaxDisplacementVisualization);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+
     aSphereProjectionWeight = nAttr.create("sphereProjectionWeight", "wsp", MFnNumericData::kDouble, 1.0, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0.0);
@@ -45,6 +52,8 @@ MStatus MTestBoundingSphereNode::initialize()
 
 
     status = attributeAffects(aNumIter, outputGeom);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    status = attributeAffects(aMaxDisplacementVisualization, outputGeom);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     status = attributeAffects(aSphereProjectionWeight, outputGeom);
     CHECK_MSTATUS_AND_RETURN_IT(status);
@@ -80,7 +89,7 @@ MStatus MTestBoundingSphereNode::compute(const MPlug& plug, MDataBlock& block)
     //MObject outputMeshObj = getMeshObjectFromOutput(block, multiIndex, &status);
     //CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    //MObject inputMeshObj = getMeshObjectFromInput(block, multiIndex, &status);
+    //MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
     //CHECK_MSTATUS_AND_RETURN_IT(status);
 
     //m_meshConverterShPtr.reset(new AAShapeUp::MayaToEigenConverter(inputMeshObj));
@@ -155,6 +164,10 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
     CHECK_MSTATUS_AND_RETURN_IT(status);
     int numIter = hNumIter.asInt();
 
+    MDataHandle hMaxDisplacementVisualization = block.inputValue(aMaxDisplacementVisualization, &status);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    double maxDisplacementVisualization = hMaxDisplacementVisualization.asDouble();
+
     MDataHandle hSphereProjectionWeight = block.inputValue(aSphereProjectionWeight, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
     double sphereProjectionWeight = hSphereProjectionWeight.asDouble();
@@ -163,31 +176,36 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
     CHECK_MSTATUS_AND_RETURN_IT(status);
     double fairnessWeight = hFairnessWeight.asDouble();
 
-    MObject inputMeshObj = getMeshObjectFromInput(block, multiIndex, &status);
+    MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     // Start check cache.
     InputChangedFlag inputChangedFlag = InputChangedFlag::None;
+    if (m_cache.maxDisplacementVisualization != maxDisplacementVisualization)
+    {
+        inputChangedFlag |= InputChangedFlag::Visualization;
+        MGlobal::displayInfo("[" + nodeName + "] Change [visualization].");
+    }
     if (m_cache.numIter != numIter ||
         m_cache.fairnessWeight != fairnessWeight ||
         m_cache.sphereProjectionWeight != sphereProjectionWeight)
     {
         inputChangedFlag |= InputChangedFlag::Parameter;
-        MGlobal::displayInfo("[TestBoundingSphereNode] Change [parameter].");
+        MGlobal::displayInfo("[" + nodeName + "] Change [parameter].");
     }
-    //if (m_cache.inputMeshObj != inputMeshObj)
-    if (m_cache.inputMeshObj.isNull() || !m_cache.inputMeshObj.hasFn(MFn::kMesh))
+    if (isMeshNotAssigned(m_cache.inputMeshObj, inputMeshObj))
     {
         inputChangedFlag |= InputChangedFlag::InputMesh;
-        MGlobal::displayInfo("[TestBoundingSphereNode] Change [input mesh].");
+        MGlobal::displayInfo("[" + nodeName + "] Change [input mesh].");
     }
     m_cache.numIter = numIter;
+    m_cache.maxDisplacementVisualization = maxDisplacementVisualization;
     m_cache.fairnessWeight = fairnessWeight;
     m_cache.sphereProjectionWeight = sphereProjectionWeight;
     m_cache.inputMeshObj = inputMeshObj;
     // End check cache.
 
-    if (inputChangedFlag != InputChangedFlag::None)
+    if (inputChangedFlag > InputChangedFlag::Visualization)
     {
         if ((inputChangedFlag & InputChangedFlag::InputMesh) != InputChangedFlag::None)
         {
@@ -215,6 +233,18 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
         {
             MGlobal::displayError("Fail to solve!");
             return MStatus::kFailure;
+        }
+    }
+
+    if ((inputChangedFlag & InputChangedFlag::Visualization) != InputChangedFlag::None)
+    {
+        if (maxDisplacementVisualization != 0.0)
+        {
+            AAShapeUp::MeshDirtyFlag colorDirtyFlag = m_operationShPtr->visualizeDisplacements(m_meshConverterShPtr->getEigenMesh().m_colors, true);
+
+            MObject outputMeshObj = getMeshObjectFromOutput(block, multiIndex, &status);
+            status = m_meshConverterShPtr->updateTargetMesh(colorDirtyFlag, outputMeshObj, false);
+            CHECK_MSTATUS_AND_RETURN_IT(status);
         }
     }
 
