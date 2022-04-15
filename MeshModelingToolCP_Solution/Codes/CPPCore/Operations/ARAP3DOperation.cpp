@@ -62,7 +62,7 @@ bool ARAP3DOperation::solve(Matrix3X& newPositions, i32 nIter)
 
     i64 cols = m_mesh.m_positions.cols(); // In case of newPositions is the same as m_mesh.m_positions.
     m_solverShPtr->getOutput(newPositions);
-    newPositions.resize(3, cols);
+    newPositions.conservativeResize(3, cols);
     return true;
 }
 
