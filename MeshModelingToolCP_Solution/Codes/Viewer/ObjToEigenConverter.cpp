@@ -14,7 +14,12 @@ void ObjToEigenConverter::setObjModelPtr(ObjModel* objModelPtr)
     m_objModelPtr = objModelPtr;
 }
 
-bool ObjToEigenConverter::generateEigenMatrices()
+void ObjToEigenConverter::resetOutputEigenMeshToInitial()
+{
+    m_outMesh = m_initialMesh;
+}
+
+bool ObjToEigenConverter::generateEigenMesh()
 {
     if (!m_objModelPtr)
     {
@@ -77,6 +82,7 @@ bool ObjToEigenConverter::generateEigenMatrices()
             m_outMesh.m_section.m_numFaceVertices.push_back(numVertexIndices);
         }
     }
+    m_initialMesh = m_outMesh;
     return true;
 }
 

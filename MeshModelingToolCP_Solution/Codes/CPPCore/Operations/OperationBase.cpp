@@ -3,11 +3,11 @@
 
 BEGIN_NAMESPACE(AAShapeUp)
 
-bool OperationBase::initialize(const EigenMesh<3>& mesh, const std::vector<i32>& handleIndices)
+bool OperationBase::initialize(const EigenMesh<3>& mesh, const std::vector<i32>& handleIndices, const Matrix3X* alternateInitialPositionsPtr)
 {
     //m_vertexIndices = vertexIndices;
     //m_numFaceVertices = numFaceVertices;
-    m_initialPositions = mesh.m_positions;
+    m_initialPositions = alternateInitialPositionsPtr ? *alternateInitialPositionsPtr : mesh.m_positions;
 	m_mesh = mesh;
     m_handleIndices = handleIndices;
 

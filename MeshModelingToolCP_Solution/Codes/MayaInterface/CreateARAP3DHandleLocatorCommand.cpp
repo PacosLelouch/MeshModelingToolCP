@@ -20,11 +20,21 @@ void* MCreateARAP3DHandleLocatorCommand::creator()
 MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
 {
     MStatus status = MStatus::kSuccess;
+
+    //MString mayaVersion = MGlobal::mayaVersion();
+    //int apiVersion = MGlobal::apiVersion();
+
     bool displayExecution = false;
     parseMayaCommandArg(displayExecution, args, "-d", "-displayExecution", true);
 
     char commandBuffer[2048] { 0 };
     char outputBuffer[2048]{ 0 };
+
+    //if (displayExecution)
+    //{
+    //    sprintf_s(outputBuffer, "mayaVersion = \"%s\", apiVersion = \"%d\".", mayaVersion.asChar(), apiVersion);
+    //    MGlobal::displayInfo(outputBuffer);
+    //}
 
     MSelectionList selectionList;
     
@@ -34,8 +44,8 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
     unsigned int selectionListLength = selectionList.length();
     MDagModifier dagm;
     
-    sprintf_s(commandBuffer, "MCreateARAP3DHandleLocatorCommand::doIt(), selected %d objects.", selectionListLength);
-    MGlobal::displayInfo(commandBuffer);
+    sprintf_s(outputBuffer, "MCreateARAP3DHandleLocatorCommand::doIt(), selected %d objects.", selectionListLength);
+    MGlobal::displayInfo(outputBuffer);
 
     MDagPath meshNodePath;
     MObject meshComponent;
@@ -272,18 +282,38 @@ MStatus MCreateARAP3DHandleLocatorCommand::findDeformerNodeNamesFromSelectedShap
 
     char buffer[2048]{ 0 };
 
-    MStringArray connectedObjectSetsResultArray;
-    sprintf_s(buffer, "listConnections -type objectSet %s", shapeName.asChar());
+    // Connection changes in Maya 2022.
+    bool beforeMaya2022 = MGlobal::apiVersion() < 20220000;
 
-    status = MGlobal::executeCommand(buffer, connectedObjectSetsResultArray, displayExecution);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    MStringArray connectedDeformersResultArray;
-    for (const MString& connectedObjectSet : connectedObjectSetsResultArray)
+    if (beforeMaya2022)
     {
-        sprintf_s(buffer, "listConnections -type %s %s", deformerType.asChar(), connectedObjectSet.asChar());
+        MStringArray connectedObjectSetsResultArray;
+        sprintf_s(buffer, "listConnections -type objectSet %s", shapeName.asChar());
+
+        status = MGlobal::executeCommand(buffer, connectedObjectSetsResultArray, displayExecution);
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+
+        MStringArray connectedDeformersResultArray;
+        for (const MString& connectedObjectSet : connectedObjectSetsResultArray)
+        {
+            sprintf_s(buffer, "listConnections -type %s %s", deformerType.asChar(), connectedObjectSet.asChar());
+            status = MGlobal::executeCommand(buffer, connectedDeformersResultArray, displayExecution);
+            CHECK_MSTATUS_AND_RETURN_IT(status);
+
+            if (connectedDeformersResultArray.length() > 0)
+            {
+                deformerNodeNames = connectedDeformersResultArray;
+                return status;
+            }
+        }
+    }
+    else
+    {
+        MStringArray connectedDeformersResultArray;
+        sprintf_s(buffer, "listConnections -type %s %s", deformerType.asChar(), shapeName.asChar());
+
         status = MGlobal::executeCommand(buffer, connectedDeformersResultArray, displayExecution);
         CHECK_MSTATUS_AND_RETURN_IT(status);
 

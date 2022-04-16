@@ -269,23 +269,23 @@ void MyViewer::executePlanarization()
 		return;
 	}
 
-	mPlanarizationOperation->refMesh = mMeshConverterReference.getEigenMesh();
+	mPlanarizationOperation->refMesh = mMeshConverterReference.getInitialEigenMesh();
 	mPlanarizationOperation->closeness_weight = mPlanarizationParameter.mCloseness;
 	mPlanarizationOperation->planarity_weight = mPlanarizationParameter.mPlanarity;
 	mPlanarizationOperation->laplacian_weight = mPlanarizationParameter.mLaplacian;
 	mPlanarizationOperation->relative_laplacian_weight = mPlanarizationParameter.mRelativeLaplacian;
 
-	auto& mesh = mMeshConverter.getEigenMesh();
+	auto& mesh = mMeshConverter.getOutputEigenMesh();
 	std::cout << "Apply processing " << "\"executePlanarization\"" << "..." << std::endl;
 
-	if (!mPlanarizationOperation->initialize(mesh, {}))
+	if (!mPlanarizationOperation->initialize(mMeshConverter.getInitialEigenMesh(), {}))
 	{
 		std::cout << "Fail to initialize!" << std::endl;
 		return;
 	}
 
 	if (!mPlanarizationOperation->solve(mesh.m_positions, 0) ||
-		!mMeshConverterOrigin.updateSourceMesh(mPlanarizationOperation->visualizeOutputErrors(mMeshConverterOrigin.getEigenMesh().m_colors, mMaxError, true), true))
+		!mMeshConverterOrigin.updateSourceMesh(mPlanarizationOperation->visualizeOutputErrors(mMeshConverterOrigin.getOutputEigenMesh().m_colors, mMaxError, true), true))
 	{
 		std::cout << "Fail to get visualized error!" << std::endl;
 		return;
@@ -326,16 +326,16 @@ void MyViewer::executeTestBoundingSphere()
 	mTestBoudingSphereOperation->m_LaplacianWeight = mTestBoundingSphereParameter.mLaplacian;
 	mTestBoudingSphereOperation->m_sphereProjectionWeight = mTestBoundingSphereParameter.mSphereProjection;
 
-	auto& mesh = mMeshConverter.getEigenMesh();
+	auto& mesh = mMeshConverter.getOutputEigenMesh();
 	std::cout << "Apply processing " << "\"executeTestBoundingSphere\"" << "..." << std::endl;
-	if (!mTestBoudingSphereOperation->initialize(mesh, {}))
+	if (!mTestBoudingSphereOperation->initialize(mMeshConverter.getInitialEigenMesh(), {}))
 	{
 		std::cout << "Fail to initialize!" << std::endl;
 		return;
 	}
 
 	if (!mTestBoudingSphereOperation->solve(mesh.m_positions, 0) || 
-		!mMeshConverterOrigin.updateSourceMesh(mTestBoudingSphereOperation->visualizeOutputErrors(mMeshConverterOrigin.getEigenMesh().m_colors, mMaxError, true), true))
+		!mMeshConverterOrigin.updateSourceMesh(mTestBoudingSphereOperation->visualizeOutputErrors(mMeshConverterOrigin.getOutputEigenMesh().m_colors, mMaxError, true), true))
 	{
 		std::cout << "Fail to get visualized error!" << std::endl;
 		return;
@@ -366,16 +366,16 @@ void MyViewer::executeMinimalSurface()
 	mMinimalSurfaceOperation->m_LaplacianWeight = mMinimalSurfaceParameter.mLaplacian;
 	mMinimalSurfaceOperation->m_fixBoundaryWeight = mMinimalSurfaceParameter.mFixedBoundary;
 
-	auto& mesh = mMeshConverter.getEigenMesh();
+	auto& mesh = mMeshConverter.getOutputEigenMesh();
 	std::cout << "Apply processing " << "\"executeMinimalSurface\"" << "..." << std::endl;
-	if (!mMinimalSurfaceOperation->initialize(mesh, {}))
+	if (!mMinimalSurfaceOperation->initialize(mMeshConverter.getInitialEigenMesh(), {}))
 	{
 		std::cout << "Fail to initialize!" << std::endl;
 		return;
 	}
 
 	if (!mMinimalSurfaceOperation->solve(mesh.m_positions, 0) || 
-		!mMeshConverterOrigin.updateSourceMesh(mMinimalSurfaceOperation->visualizeOutputErrors(mMeshConverterOrigin.getEigenMesh().m_colors, mMaxError, true), true))
+		!mMeshConverterOrigin.updateSourceMesh(mMinimalSurfaceOperation->visualizeOutputErrors(mMeshConverterOrigin.getOutputEigenMesh().m_colors, mMaxError, true), true))
 	{
 		std::cout << "Fail to get visualized error!" << std::endl;
 		return;
@@ -490,21 +490,21 @@ void MyViewer::resetModelToOrigin()
 	mModel->copyObj(*mModelOrigin);
 
 	mMeshConverterOrigin.setObjModelPtr(mModelOrigin.get());
-	mMeshConverterOrigin.generateEigenMatrices();
+	mMeshConverterOrigin.generateEigenMesh();
 
-	mMeshConverterOrigin.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverterOrigin.getEigenMesh()), true);
+	mMeshConverterOrigin.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverterOrigin.getOutputEigenMesh()), true);
 
 	mMeshConverter.setObjModelPtr(mModel.get());
-	mMeshConverter.generateEigenMatrices();
+	mMeshConverter.generateEigenMesh();
 
-	mMeshConverter.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverter.getEigenMesh()), true);
+	mMeshConverter.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverter.getOutputEigenMesh()), true);
 }
 
 void MyViewer::updateReference(ObjModel* objModelPtr)
 {
 	mMeshConverterReference.setObjModelPtr(objModelPtr);
-	mMeshConverterReference.generateEigenMatrices();
+	mMeshConverterReference.generateEigenMesh();
 
-	mMeshConverterReference.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverterReference.getEigenMesh()), true);
+	mMeshConverterReference.updateSourceMesh(AAShapeUp::regenerateNormals(mMeshConverterReference.getOutputEigenMesh()), true);
 }
 

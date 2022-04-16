@@ -17,6 +17,10 @@ class ARAP3DTetTripletGenerator : public ConstraintTripletGeneratorAbstract<3, C
 {
 public:
     void generateTriplets(ConstraintAbstract<3>& constraint, std::vector<SMatrixTriplet>& triplets, i32& inOutConstraintId) const;
+
+public:
+    typedef Eigen::Matrix<scalar, 4, 3, Eigen::ColMajor | Eigen::DontAlign> UnAlignedMatrix43;
+    UnAlignedMatrix43 transform_;
 };
 
 class ARAP3DTetTransformer : public InvariantTransformerAbstract<3, ConstraintAbstract<3>> {
@@ -24,6 +28,9 @@ public:
     inline constexpr i32 numTransformedPointsToCreate(const i32 numIndices) const { return numIndices - 1; }; // NOTICE: may be -1 or not
 
     void generateTransformPoints(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& points);
+public:
+    typedef Eigen::Matrix<scalar, 4, 3, Eigen::ColMajor | Eigen::DontAlign> UnAlignedMatrix43;
+    UnAlignedMatrix43 transform_;
 };
 
 class ARAP3DTetConstraint : public ConstraintBase<3,
@@ -40,6 +47,7 @@ public:
     ARAP3DTetConstraint(const std::vector<i32> &idI, scalar weight, const Matrix3X& positions, bool fast_svd)
         : Super(idI, weight), use_fast_svd_(fast_svd)
     {
+        assert(idI.size() == 4);
         Matrix34 points;
         for (int i = 0; i < 4; ++i) {
             points.col(i) = positions.col(idI[i]);
@@ -52,12 +60,15 @@ public:
         }
 
         volume_ = std::fabs(edge_vecs.determinant()) / 6.0;
+        //std::cout << "constraints: [" << idI[0] << ", " << idI[1] << ", " << idI[2] << ", " << idI[3] << "] volume = " << volume_ << std::endl;
         setWeight(getWeight() * volume_); //NOTICE
 
         // Transformation matrix
         transform_ = points.transpose().jacobiSvd(
             Eigen::ComputeFullU | Eigen::ComputeFullV).solve(
                 Matrix44::Identity() - Matrix44::Constant(scalar(1) / 4.0)).transpose();
+        this->m_tripletGenerator.transform_ = transform_;
+        this->m_invariantTransformer.transform_ = transform_;
     }
 
     virtual ~ARAP3DTetConstraint() {}
@@ -114,7 +125,7 @@ inline void ARAP3DTetTripletGenerator::generateTriplets(ConstraintAbstract<3>& c
     for (int i = 0; i < 3; ++i) {
         for (int j = 0; j < 4; ++j) {
             triplets.push_back(SMatrixTriplet(inOutConstraintId, constraint.getIdIncidentPoints()[j], 
-                sqrt(constraint.getWeight()) * dynamic_cast<ARAP3DTetConstraint*>(&constraint)->transform_(j, i)));
+                constraint.getSqrtWeight() * this->transform_(j, i)));
         }
 
         inOutConstraintId++;
@@ -128,7 +139,7 @@ inline void ARAP3DTetTransformer::generateTransformPoints(ConstraintAbstract<3>&
     {
         tmp.col(i) = points.col(constraint.getIdIncidentPoints()[i]);
     }
-    this->m_transformedPoints = tmp * dynamic_cast<ARAP3DTetConstraint*>(&constraint)->transform_;
+    this->m_transformedPoints = tmp * this->transform_;
 }
 
 
