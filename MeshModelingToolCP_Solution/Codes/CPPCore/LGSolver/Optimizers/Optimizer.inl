@@ -276,6 +276,14 @@ inline bool AndersonAccelerationOptimizer<Dim>::preBeginOptimization(i32 nIter, 
     this->m_theta.resize(m);
     this->m_dF_scale.resize(m);
 
+    //// Begin TEST
+    //std::cout << "[Debug] PreBeginOptimize " << std::endl;
+    //for (i64 i = 0; i < this->m_fullCoordsPtr->cols(); ++i)
+    //{
+    //    std::cout << "[Debug] points[" << i << "] = <" << (*this->m_fullCoordsPtr)(0, i) << ", " << (*this->m_fullCoordsPtr)(1, i) << ", " << (*this->m_fullCoordsPtr)(2, i) << ">" << std::endl;
+    //}
+    //// End TEST
+
     return true;
 }
 
@@ -297,7 +305,7 @@ inline bool AndersonAccelerationOptimizer<Dim>::optimize(ErrorEvaluatorAbstract<
     i32 nColumns = Dim;
     i32 nPointsVar = i32(this->m_varPointIndices.size());
 
-    i32 nFixedCoords = hasHandles ? nPointsVar : 0;
+    i32 nWriteBackCoords = hasHandles ? nPointsVar : 0;
 
     i32 it = this->m_accumulateIter;
 
@@ -308,7 +316,7 @@ inline bool AndersonAccelerationOptimizer<Dim>::optimize(ErrorEvaluatorAbstract<
         // Compute full coordinates and error. (Error as a function or a class?)
         //OMP_FOR
         OMP_PARALLEL_(for)
-        for (i32 i = 0; i < nFixedCoords; ++i)
+        for (i32 i = 0; i < nWriteBackCoords; ++i)
         {
             this->m_fullCoordsPtr->col(this->m_varPointIndices(i)) = this->m_curPointsVarPtr->col(i);
         }
@@ -333,7 +341,7 @@ inline bool AndersonAccelerationOptimizer<Dim>::optimize(ErrorEvaluatorAbstract<
                 // Else, skip this step. (Move to optimizer.)
                 //OMP_FOR
                 OMP_PARALLEL_(for)
-                for (i32 i = 0; i < nFixedCoords; ++i)
+                for (i32 i = 0; i < nWriteBackCoords; ++i)
                 {
                     this->m_fullCoordsPtr->col(this->m_varPointIndices(i)) = this->m_curPointsVarPtr->col(i);
                 }
@@ -400,6 +408,14 @@ inline bool AndersonAccelerationOptimizer<Dim>::optimize(ErrorEvaluatorAbstract<
         {
             this->m_fullCoordsPtr = this->m_curPointsVarPtr;
         }
+
+        //// Begin TEST
+        //std::cout << "[Debug] Iter " << it << std::endl;
+        //for (i64 i = 0; i < this->m_fullCoordsPtr->cols(); ++i)
+        //{
+        //    std::cout << "[Debug] points[" << i << "] = <" << (*this->m_fullCoordsPtr)(0, i) << ", " << (*this->m_fullCoordsPtr)(1, i) << ", " << (*this->m_fullCoordsPtr)(2, i) << ">" << std::endl;
+        //}
+        //// End TEST
     }
     return true;
 }

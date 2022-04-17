@@ -15,7 +15,16 @@ bool ARAP3DOperation::initializeConstraintsAndRegularizations()
     tetrahedralize(options, &input, &output);
     EigenMesh<3> tmp;
     tmp.fromTetgenio(output);
-    m_initialPositions = tmp.m_positions;
+    
+    std::unordered_set<i32> handleIndiceSet(m_handleIndices.begin(), m_handleIndices.end());
+    for (i64 i = 0; i < tmp.m_positions.cols(); ++i)
+    {
+        if (handleIndiceSet.find(i) != handleIndiceSet.end())
+        {
+            continue;
+        }
+        m_initialPositions.col(i) = tmp.m_positions.col(i);
+    }
 
     auto& solver = this->m_solverShPtr;
 
@@ -35,7 +44,7 @@ bool ARAP3DOperation::initializeConstraintsAndRegularizations()
         for (auto& n : indices) {
             n -= 1;
         }
-        solver->addConstraint(std::make_shared<ARAP3DTetConstraint>(indices, m_deformationWeight, m_initialPositions, true));
+        solver->addConstraint(std::make_shared<ARAP3DTetConstraint>(indices, m_deformationWeight, tmp.m_positions, true));
     }
 
     return true;

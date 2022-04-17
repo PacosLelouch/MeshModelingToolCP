@@ -31,7 +31,7 @@ MStatus MARAP3DNode::initialize()
     MFnTypedAttribute tAttr;
     MFnMatrixAttribute mAttr;
 
-    aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 5, &status);
+    aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 20, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0);
     status = addAttribute(aNumIter);
@@ -207,11 +207,23 @@ MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix&
             }
         }
         //m_meshConverterShPtr->resetOutputEigenMeshToInitial();
+        m_meshConverterShPtr->getOutputEigenMesh().m_positions = m_meshConverterShPtr->getInitialEigenMesh().m_positions;
         for (size_t i = 0; i < handleIndices.size(); ++i)
         {
             int idx = handleIndices[i];
-            m_meshConverterShPtr->getOutputEigenMesh().m_positions.col(idx) = AAShapeUp::toEigenVec3(handlePositions[i] * worldToLocal);
+            MPoint handlePosLocal = handlePositions[i] * worldToLocal;
+            m_meshConverterShPtr->getOutputEigenMesh().m_positions.col(idx) = AAShapeUp::toEigenVec3(handlePosLocal);
+            //// Begin TEST
+            //std::cout << "[Debug] handles(" << i << ")[" << idx << "] = <" << handlePosLocal.x << ", " << handlePosLocal.y << ", " << handlePosLocal.z << ">" << std::endl;
+            //// End TEST
         }
+        //// Begin TEST
+        //std::cout << "[Debug] Update node " << std::endl;
+        //for (Eigen::Index i = 0; i < m_meshConverterShPtr->getOutputEigenMesh().m_positions.cols(); ++i)
+        //{
+        //    std::cout << "[Debug] points[" << i << "] = <" << m_meshConverterShPtr->getOutputEigenMesh().m_positions(0, i) << ", " << m_meshConverterShPtr->getOutputEigenMesh().m_positions(1, i) << ", " << m_meshConverterShPtr->getOutputEigenMesh().m_positions(2, i) << ">" << std::endl;
+        //}
+        //// End TEST
 
         m_operationShPtr.reset(new AAShapeUp::ARAP3DOperation(m_geometrySolverShPtr)); 
         m_operationShPtr->m_deformationWeight = deformationWeight;
