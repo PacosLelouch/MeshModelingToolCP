@@ -8,6 +8,14 @@
 #include <maya/MPxCommand.h>
 #include <maya/MStringArray.h>
 
+#define CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status,tipFlag,tip) \
+    if ((tipFlag) && (status) != MStatus::kSuccess) \
+    { \
+        MGlobal::executeCommand(MString("AAShapeUp_displayTips (\"") + MString(tip) + "\")"); \
+    } \
+    CHECK_MSTATUS_AND_RETURN_IT(status);
+    
+
 class MCreateARAP3DHandleLocatorCommand : public MPxCommand
 {
 public:

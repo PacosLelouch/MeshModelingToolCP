@@ -17,6 +17,7 @@ bool ARAP3DOperation::initializeConstraintsAndRegularizations()
     tmp.fromTetgenio(output);
     
     std::unordered_set<i32> handleIndiceSet(m_handleIndices.begin(), m_handleIndices.end());
+    m_initialPositions.conservativeResize(Eigen::NoChange, glm::max(m_initialPositions.cols(), tmp.m_positions.cols()));
     for (i64 i = 0; i < tmp.m_positions.cols(); ++i)
     {
         if (handleIndiceSet.find(i) != handleIndiceSet.end())

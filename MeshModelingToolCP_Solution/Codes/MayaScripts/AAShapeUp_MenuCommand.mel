@@ -1,3 +1,9 @@
+global proc string AAShapeUp_displayTips(string $text)
+{
+    string $filename = `confirmDialog -title "Info" -message $text`;
+    return $filename;
+}
+
 global proc int AAShapeUp_getIndexFromSelectedComponent(string $selectedComponent)
 {
     string $buff0[];
@@ -121,7 +127,9 @@ global proc AAShapeUp_createNodeWithReference(string $nodeTypeName)
     int $sizeSelectedObjNames = size($selectedObjNames);
     if($sizeSelectedObjNames < 1)
     {
-        print ("selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        string $output = ("Failed to create deformer with selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        print $output;
+        AAShapeUp_displayTips($output);
         return;
     }
     
@@ -139,7 +147,9 @@ global proc AAShapeUp_createNodeWithReference(string $nodeTypeName)
     string $nodeNames[] = `deformer -type $nodeTypeName`;
     if(size($nodeNames) < 1)
     {
-        print ("failed to create planarizationNode\n");
+        string $output = ("Failed to create deformer with selected nodes " + (string)size($nodeNames) + " < 1\n");
+        print $output;
+        AAShapeUp_displayTips($output);
         return;
     }
     
@@ -192,7 +202,9 @@ global proc AAShapeUp_createARAP3DNode()
     int $sizeSelectedObjNames = size($selectedObjNames);
     if($sizeSelectedObjNames < 1)
     {
-        print ("selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        string $output = ("Failed to create deformer with selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        print $output;
+        AAShapeUp_displayTips($output);
         return;
     }
     
@@ -206,7 +218,9 @@ global proc AAShapeUp_createTestBoundingSphereNode()
     int $sizeSelectedObjNames = size($selectedObjNames);
     if($sizeSelectedObjNames < 1)
     {
-        print ("selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        string $output = ("Failed to create deformer with selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        print $output;
+        AAShapeUp_displayTips($output);
         return;
     }
     
@@ -229,7 +243,7 @@ global proc AAShapeUp_createTestBoundingSphereNode()
 
 global proc AAShapeUp_createARAP3DHandleLocator()
 {
-    createARAP3DHandleLocatorInternal -d true;
+    createARAP3DHandleLocatorInternal -tip true -d true;
     
 }
 
