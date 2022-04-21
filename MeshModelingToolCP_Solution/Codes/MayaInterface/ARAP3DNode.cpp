@@ -31,7 +31,7 @@ MStatus MARAP3DNode::initialize()
     MFnTypedAttribute tAttr;
     MFnMatrixAttribute mAttr;
 
-    aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 20, &status);
+    aNumIter = nAttr.create("numIteration", "nIter", MFnNumericData::kInt, 20, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0);
     status = addAttribute(aNumIter);

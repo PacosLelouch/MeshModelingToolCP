@@ -299,6 +299,7 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
     return status;
 }
 
+// MEL: findRelatedDeformer (strnig $obj) ?
 MStatus MCreateARAP3DHandleLocatorCommand::findDeformerNodeNamesFromSelectedShape(MStringArray& deformerNodeNames, const MString& shapeName, const MString& deformerType, bool displayExecution)
 {
     MStatus status = deformerNodeNames.clear();

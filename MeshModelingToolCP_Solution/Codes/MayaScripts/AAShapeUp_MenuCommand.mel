@@ -1,7 +1,7 @@
 global proc string AAShapeUp_displayTips(string $text)
 {
-    string $filename = `confirmDialog -title "Info" -message $text`;
-    return $filename;
+    string $windowName = `confirmDialog -title "Info" -message $text`;
+    return $windowName;
 }
 
 global proc int AAShapeUp_getIndexFromSelectedComponent(string $selectedComponent)
@@ -121,8 +121,10 @@ global proc AAShapeUp_makeConnectionsWithReference(string $nodeName, string $inp
     connectAttr ($refGeomName + ".outMesh") ($nodeName + ".referenceMesh");
 }
 
-global proc AAShapeUp_createNodeWithReference(string $nodeTypeName)
+global proc string[] AAShapeUp_createNodeWithReference(string $nodeTypeName)
 {
+    string $results[];
+    
     string $selectedObjNames[] = `ls -selection -type transform`;
     int $sizeSelectedObjNames = size($selectedObjNames);
     if($sizeSelectedObjNames < 1)
@@ -130,7 +132,7 @@ global proc AAShapeUp_createNodeWithReference(string $nodeTypeName)
         string $output = ("Failed to create deformer with selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
         print $output;
         AAShapeUp_displayTips($output);
-        return;
+        return $results;
     }
     
     string $refTransformName = $selectedObjNames[$sizeSelectedObjNames - 1];
@@ -150,7 +152,7 @@ global proc AAShapeUp_createNodeWithReference(string $nodeTypeName)
         string $output = ("Failed to create deformer with selected nodes " + (string)size($nodeNames) + " < 1\n");
         print $output;
         AAShapeUp_displayTips($output);
-        return;
+        return $results;
     }
     
     for($i = 0; $i < $loopUpper; ++$i)
@@ -160,13 +162,12 @@ global proc AAShapeUp_createNodeWithReference(string $nodeTypeName)
             $selectedObjNames[$i],
             $refTransformName);
     }
-    return;
+    return $nodeNames;
 }
 
-global proc AAShapeUp_createPlanarizationNode()
+global proc string[] AAShapeUp_createPlanarizationNode()
 {
-    AAShapeUp_createNodeWithReference("planarizationNode");
-    return;
+    return AAShapeUp_createNodeWithReference("planarizationNode");
     ////////////////////
     
     //if(size($selectedObjNames) == 1)
@@ -196,8 +197,10 @@ global proc AAShapeUp_createPlanarizationNode()
     //return;
 }
 
-global proc AAShapeUp_createARAP3DNode()
+global proc string[] AAShapeUp_createARAP3DNode()
 {
+    string $results[];
+    
     string $selectedObjNames[] = `ls -selection -type transform`;
     int $sizeSelectedObjNames = size($selectedObjNames);
     if($sizeSelectedObjNames < 1)
@@ -205,15 +208,17 @@ global proc AAShapeUp_createARAP3DNode()
         string $output = ("Failed to create deformer with selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
         print $output;
         AAShapeUp_displayTips($output);
-        return;
+        return $results;
     }
     
     string $nodeNames[] = `deformer -type ARAP3DNode`;
-    return;
+    return $nodeNames;
 }
 
-global proc AAShapeUp_createTestBoundingSphereNode()
+global proc string[] AAShapeUp_createTestBoundingSphereNode()
 {
+    string $results[];
+    
     string $selectedObjNames[] = `ls -selection -type transform`;
     int $sizeSelectedObjNames = size($selectedObjNames);
     if($sizeSelectedObjNames < 1)
@@ -221,7 +226,7 @@ global proc AAShapeUp_createTestBoundingSphereNode()
         string $output = ("Failed to create deformer with selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
         print $output;
         AAShapeUp_displayTips($output);
-        return;
+        return $results;
     }
     
     string $nodeNames[] = `deformer -type testBoundingSphereNode`;
@@ -238,7 +243,7 @@ global proc AAShapeUp_createTestBoundingSphereNode()
     //}
     //
     //print ("selected objects " + (string)size($selectedObjNames) + " != 1\n");
-    return;
+    return $nodeNames;
 }
 
 global proc AAShapeUp_createARAP3DHandleLocator()

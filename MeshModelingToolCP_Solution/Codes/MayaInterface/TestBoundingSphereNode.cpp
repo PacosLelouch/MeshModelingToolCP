@@ -26,7 +26,7 @@ MStatus MTestBoundingSphereNode::initialize()
 
     MFnNumericAttribute nAttr;
 
-    aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 50, &status);
+    aNumIter = nAttr.create("numIteration", "nIter", MFnNumericData::kInt, 50, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0);
     status = addAttribute(aNumIter);

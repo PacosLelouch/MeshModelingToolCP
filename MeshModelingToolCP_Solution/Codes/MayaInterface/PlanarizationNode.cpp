@@ -30,7 +30,7 @@ MStatus MPlanarizationNode::initialize()
     MFnNumericAttribute nAttr;
     MFnTypedAttribute tAttr;
 
-    aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 50, &status);
+    aNumIter = nAttr.create("numIteration", "nIter", MFnNumericData::kInt, 50, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0);
     status = addAttribute(aNumIter);
@@ -42,13 +42,13 @@ MStatus MPlanarizationNode::initialize()
     status = addAttribute(aMaxDisplacementVisualization);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    aPlanarityWeight = nAttr.create("planarityWeight", "wpl", MFnNumericData::kDouble, 15000.0, &status);
+    aPlanarityWeight = nAttr.create("planarityWeight", "wpl", MFnNumericData::kDouble, 1500.0, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0.0);
     status = addAttribute(aPlanarityWeight);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    aClosenessWeight = nAttr.create("closenessWeight", "wcl", MFnNumericData::kDouble, 10.0, &status);
+    aClosenessWeight = nAttr.create("closenessWeight", "wcl", MFnNumericData::kDouble, 100.0, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0.0);
     status = addAttribute(aClosenessWeight);
