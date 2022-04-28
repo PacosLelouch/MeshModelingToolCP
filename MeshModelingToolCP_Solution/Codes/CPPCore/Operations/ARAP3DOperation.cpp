@@ -9,43 +9,48 @@ BEGIN_NAMESPACE(AAShapeUp)
 
 bool ARAP3DOperation::initializeConstraintsAndRegularizations()
 {
-    tetgenio input, output;
-    char options[10] = "pq";
-    m_mesh.toTetgenio(input);
-    tetrahedralize(options, &input, &output);
-    EigenMesh<3> tmp;
-    tmp.fromTetgenio(output);
+    if (!m_usingCache || !m_tempTetMeshIOShPtr || !m_tempTetEigenMeshShPtr)
+    {
+        m_tempTetMeshIOShPtr = std::make_shared<tetgenio>();
+        m_tempTetEigenMeshShPtr = std::make_shared<EigenMesh<3> >();
+        tetgenio input;
+        char options[10] = "pq";
+        m_mesh.toTetgenio(input);
+        tetrahedralize(options, &input, m_tempTetMeshIOShPtr.get());
+        m_tempTetEigenMeshShPtr->fromTetgenio(*m_tempTetMeshIOShPtr.get());
+    }
+    m_usingCache = false;
     
     std::unordered_set<i32> handleIndiceSet(m_handleIndices.begin(), m_handleIndices.end());
-    m_initialPositions.conservativeResize(Eigen::NoChange, glm::max(m_initialPositions.cols(), tmp.m_positions.cols()));
-    for (i64 i = 0; i < tmp.m_positions.cols(); ++i)
+    m_initialPositions.conservativeResize(Eigen::NoChange, glm::max(m_initialPositions.cols(), m_tempTetEigenMeshShPtr->m_positions.cols()));
+    for (i64 i = 0; i < m_tempTetEigenMeshShPtr->m_positions.cols(); ++i)
     {
         if (handleIndiceSet.find(i) != handleIndiceSet.end())
         {
             continue;
         }
-        m_initialPositions.col(i) = tmp.m_positions.col(i);
+        m_initialPositions.col(i) = m_tempTetEigenMeshShPtr->m_positions.col(i);
     }
 
     auto& solver = this->m_solverShPtr;
 
     //std::vector<int> temp_tetrahedronlist;
-    //for (int i = 0; i < output.numberoftetrahedra; i++) {
-    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4]);
-    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4 + 1]);
-    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4 + 2]);
-    //    temp_tetrahedronlist.push_back(output.tetrahedronlist[i * 4 + 3]);
-    //    std::cout << output.tetrahedronlist[i * 4] << ' ' << output.tetrahedronlist[i * 4 + 1] << ' ' << output.tetrahedronlist[i * 4 + 2] << ' ' << output.tetrahedronlist[i * 4 + 3] << std::endl;
+    //for (int i = 0; i < m_tempTetMeshIOShPtr->numberoftetrahedra; i++) {
+    //    temp_tetrahedronlist.push_back(m_tempTetMeshIOShPtr->tetrahedronlist[i * 4]);
+    //    temp_tetrahedronlist.push_back(m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 1]);
+    //    temp_tetrahedronlist.push_back(m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 2]);
+    //    temp_tetrahedronlist.push_back(m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 3]);
+    //    std::cout << m_tempTetMeshIOShPtr->tetrahedronlist[i * 4] << ' ' << m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 1] << ' ' << m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 2] << ' ' << m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 3] << std::endl;
     //}
 
-    for (int i = 0; i < output.numberoftetrahedra; i++) {
+    for (int i = 0; i < m_tempTetMeshIOShPtr->numberoftetrahedra; i++) {
 
-        //std::vector<i32> indices(&output.tetrahedronlist[i * 4], &output.tetrahedronlist[i * 4 + 4]);
-        std::vector<i32> indices{ output.tetrahedronlist[i * 4], output.tetrahedronlist[i * 4 + 1], output.tetrahedronlist[i * 4 + 2], output.tetrahedronlist[i * 4 + 3] };
+        //std::vector<i32> indices(&m_tempTetMeshIOShPtr->tetrahedronlist[i * 4], &m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 4]);
+        std::vector<i32> indices{ m_tempTetMeshIOShPtr->tetrahedronlist[i * 4], m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 1], m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 2], m_tempTetMeshIOShPtr->tetrahedronlist[i * 4 + 3] };
         for (auto& n : indices) {
             n -= 1;
         }
-        solver->addConstraint(std::make_shared<ARAP3DTetConstraint>(indices, m_deformationWeight, tmp.m_positions, true));
+        solver->addConstraint(std::make_shared<ARAP3DTetConstraint>(indices, m_deformationWeight, m_tempTetEigenMeshShPtr->m_positions, true));
     }
 
     return true;

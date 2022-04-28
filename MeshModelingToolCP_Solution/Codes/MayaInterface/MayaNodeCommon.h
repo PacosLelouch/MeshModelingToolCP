@@ -19,10 +19,10 @@
 enum class InputChangedFlag : AAShapeUp::ui8
 {
     None = 0,
-    Visualization,
-    Parameter,
-    InputMesh,
-    ReferenceMesh,
+    Visualization = 1,
+    Parameter = Visualization << 1,
+    InputMesh = Parameter << 1,
+    ReferenceMesh = InputMesh << 1,
 };
 
 

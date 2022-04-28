@@ -22,12 +22,13 @@ public:
 
     bool solve(Matrix3X& newPositions, i32 nIter) override;
 
-
-    //EigenMesh<3> refMesh;
-    //scalar closeness_weight = scalar(1), relative_laplacian_weight = scalar(0.1), laplacian_weight = scalar(0.1), planarity_weight = scalar(1);
+    void markUsingCache() { m_usingCache = true; }
 
     scalar m_deformationWeight = scalar(1);
 protected:
+    std::shared_ptr<tetgenio> m_tempTetMeshIOShPtr;
+    std::shared_ptr<EigenMesh<3> > m_tempTetEigenMeshShPtr;
+    bool m_usingCache = false;
 };
 
 END_NAMESPACE()

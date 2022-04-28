@@ -217,10 +217,10 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
                 MGlobal::displayError("Fail to generate eigen matrices [input]!");
                 return MStatus::kFailure;
             }
+
+            m_operationShPtr.reset(new AAShapeUp::TestBoundingSphereOperation(m_geometrySolverShPtr));
         }
         //m_meshConverterShPtr->resetOutputEigenMeshToInitial();
-
-        m_operationShPtr.reset(new AAShapeUp::TestBoundingSphereOperation(m_geometrySolverShPtr));
 
         m_operationShPtr->m_sphereProjectionWeight = sphereProjectionWeight;
         m_operationShPtr->m_LaplacianWeight = fairnessWeight;

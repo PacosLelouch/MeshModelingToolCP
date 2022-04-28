@@ -192,6 +192,8 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
                 MGlobal::displayError("Fail to generate eigen matrices [input]!");
                 return MStatus::kFailure;
             }
+
+            m_operationShPtr.reset(new AAShapeUp::PlanarizationOperation(m_geometrySolverShPtr));
         }
         if ((inputChangedFlag & InputChangedFlag::ReferenceMesh) != InputChangedFlag::None)
         {
@@ -205,8 +207,6 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
             }
         }
         //m_meshConverterShPtr->resetOutputEigenMeshToInitial();
-
-        m_operationShPtr.reset(new AAShapeUp::PlanarizationOperation(m_geometrySolverShPtr));
 
         m_operationShPtr->refMesh = m_meshConverterReferenceShPtr->getOutputEigenMesh();
         m_operationShPtr->closeness_weight = closenessWeight;

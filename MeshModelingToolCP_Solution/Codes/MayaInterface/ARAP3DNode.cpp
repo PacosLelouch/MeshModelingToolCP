@@ -196,6 +196,7 @@ MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix&
 
     if (inputChangedFlag > InputChangedFlag::Visualization)
     {
+        bool usingTetCache = true;
         if ((inputChangedFlag & InputChangedFlag::InputMesh) != InputChangedFlag::None)
         {
             m_meshConverterShPtr.reset(new AAShapeUp::MayaToEigenConverter(inputMeshObj));
@@ -205,6 +206,9 @@ MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix&
                 MGlobal::displayError("Fail to generate eigen matrices [input]!");
                 return MStatus::kFailure;
             }
+
+            m_operationShPtr.reset(new AAShapeUp::ARAP3DOperation(m_geometrySolverShPtr)); 
+            usingTetCache = false;
         }
         //m_meshConverterShPtr->resetOutputEigenMeshToInitial();
         m_meshConverterShPtr->getOutputEigenMesh().m_positions = m_meshConverterShPtr->getInitialEigenMesh().m_positions;
@@ -225,8 +229,11 @@ MStatus MARAP3DNode::deform(MDataBlock& block, MItGeometry& iter, const MMatrix&
         //}
         //// End TEST
 
-        m_operationShPtr.reset(new AAShapeUp::ARAP3DOperation(m_geometrySolverShPtr)); 
         m_operationShPtr->m_deformationWeight = deformationWeight;
+        if (usingTetCache)
+        {
+            m_operationShPtr->markUsingCache();
+        }
 
         if (!m_operationShPtr->initialize(m_meshConverterShPtr->getInitialEigenMesh(), handleIndices, &m_meshConverterShPtr->getOutputEigenMesh().m_positions))
         {
