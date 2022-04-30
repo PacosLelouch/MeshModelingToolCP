@@ -123,6 +123,9 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Constraints\ARAP3DTetConstraint.h">
       <Filter>Header Files\Constraints</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\iglARAP3DOperation.h">
+      <Filter>Header Files\Operations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Codes\CPPCore\LGSolver\Constraints\Constraint.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="..\..\Codes\CPPCore\tetgen.cxx">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\iglARAP3DOperation.cpp">
+      <Filter>Source Files\Operations</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

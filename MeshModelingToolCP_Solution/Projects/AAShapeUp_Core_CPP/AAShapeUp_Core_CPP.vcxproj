@@ -144,7 +144,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;_DEBUG;_LIB;TETLIBRARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;_SILENCE_CXX17_NEGATORS_DEPRECATION_WARNING;_DEBUG;_LIB;TETLIBRARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -163,7 +163,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;NDEBUG;_LIB;TETLIBRARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_SILENCE_CXX17_ADAPTOR_TYPEDEFS_DEPRECATION_WARNING;_SILENCE_CXX17_NEGATORS_DEPRECATION_WARNING;NDEBUG;_LIB;TETLIBRARY;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -198,6 +198,7 @@
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\GeometrySolver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\LGSolver\Solvers\Solver.h" />
     <ClInclude Include="..\..\Codes\CPPCore\Operations\ARAP3DOperation.h" />
+    <ClInclude Include="..\..\Codes\CPPCore\Operations\iglARAP3DOperation.h" />
     <ClInclude Include="..\..\Codes\CPPCore\Operations\MinimalSurfaceOperation.h" />
     <ClInclude Include="..\..\Codes\MeshAABB.h" />
     <ClInclude Include="..\..\Codes\CPPCore\Operations\OperationBase.h" />
@@ -229,6 +230,7 @@
     <ClCompile Include="..\..\Codes\CPPCore\Operations\ARAP3DOperation.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\iglARAP3DOperation.cpp" />
     <ClCompile Include="..\..\Codes\CPPCore\Operations\OperationBase.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
