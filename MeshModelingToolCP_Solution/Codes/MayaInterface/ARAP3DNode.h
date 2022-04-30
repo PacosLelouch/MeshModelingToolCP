@@ -29,7 +29,6 @@ public:
 
 public:
 
-    std::shared_ptr<AAShapeUp::MayaToEigenConverter> m_meshConverterReferenceShPtr;
     std::shared_ptr<AAShapeUp::ARAP3DOperation> m_operationShPtr; 
 
     ARAP3DCache m_cache;

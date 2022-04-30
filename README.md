@@ -15,9 +15,17 @@ A Maya mesh modeling tool with constraint projection. (CIS-660 Authoring Tool Pr
 
 
 
+### Something to Check
+
+1. In Maya, input command `about -api` in MEL. Update Maya if the result is smaller than `20200400`.
+
+
+
 ### Build
 
 1. Build project. `AAShapeUp_Maya_CPP` for CPU-only version. `AAShapeUp_Maya_CUDA` for CUDA enabled version.
+   `AAShapeUp_Viewr_CPP` for standalone OpenGL viewer.
+1. Copy all the `.mel` files to the `../scripts/` directory related to your custom Maya plugin directory (`plug-ins/`).
 
 
 

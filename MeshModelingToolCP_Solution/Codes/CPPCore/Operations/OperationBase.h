@@ -13,7 +13,7 @@ public:
 
     virtual ~OperationBase() {}
 
-    bool initialize(const EigenMesh<3>& mesh, const std::vector<i32>& handleIndices);
+    bool initialize(const EigenMesh<3>& mesh, const std::vector<i32>& handleIndices, const Matrix3X* alternateInitialPositionsPtr = nullptr);
 
     virtual bool initializeConstraintsAndRegularizations() = 0;
 

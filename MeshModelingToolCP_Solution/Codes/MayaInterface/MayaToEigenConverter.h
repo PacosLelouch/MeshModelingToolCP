@@ -13,18 +13,21 @@ public:
 
     void setMayaMeshObj(MObject inMayaMeshObj);
 
-    bool generateEigenMatrices();
+    void resetOutputEigenMeshToInitial();
+
+    bool generateEigenMesh();
 
     MStatus updateTargetMesh(MeshDirtyFlag dirtyFlag, MObject outMeshObj, bool updateSurfaceNow = false, const MString* colorSet = nullptr, const MString* uvSet = nullptr);
 
     bool updateSurface(MFnMesh& outFnMesh);
 
-    EigenMesh<3>& getEigenMesh() { return m_outMesh; }
+    const EigenMesh<3>& getInitialEigenMesh() { return m_initialMesh; }
+    EigenMesh<3>& getOutputEigenMesh() { return m_outMesh; }
 
 protected:
     MObject m_inMayaMeshObj;
 
-    EigenMesh<3> m_outMesh;
+    EigenMesh<3> m_initialMesh, m_outMesh;
 };
 
 END_NAMESPACE()

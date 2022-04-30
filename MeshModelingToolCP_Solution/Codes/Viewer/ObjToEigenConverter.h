@@ -14,18 +14,21 @@ public:
 
     void setObjModelPtr(ObjModel* objModelPtr = nullptr);
 
-    bool generateEigenMatrices();
+    void resetOutputEigenMeshToInitial();
+
+    bool generateEigenMesh();
 
     bool updateSourceMesh(MeshDirtyFlag dirtyFlag, bool updateBufferNow = false);
 
     void updateBuffer();
 
-    EigenMesh<3>& getEigenMesh() { return m_outMesh; }
+    const EigenMesh<3>& getInitialEigenMesh() { return m_initialMesh; }
+    EigenMesh<3>& getOutputEigenMesh() { return m_outMesh; }
 
 protected:
     ObjModel* m_objModelPtr = nullptr;
 
-    EigenMesh<3> m_outMesh;
+    EigenMesh<3> m_initialMesh, m_outMesh;
 };
 
 END_NAMESPACE()

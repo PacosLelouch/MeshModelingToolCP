@@ -42,6 +42,7 @@
 #endif // _COMPUTE_USING_CUDA
 
 const MString AAShapeUp_Script_MenuCommand_Name = "AAShapeUp_MenuCommand";
+const MString AAShapeUp_Script_MenuGUI_Name = "AAShapeUp_MenuGUI";
 
 const MString AAShapeUp_Menu_Name = "AAShapeUp";
 const MString AAShapeUp_Menu_Label = "AA Shape-Up";
@@ -49,10 +50,12 @@ const MString AAShapeUp_Menu_Label = "AA Shape-Up";
 const MString AAShapeUp_MenuItem_Planarization_Label = "Planarization";
 const MString AAShapeUp_MenuItem_Planarization_Command = "AAShapeUp_createPlanarizationNode";
 const MString AAShapeUp_MenuItem_Planarization_Name = "planarizationMenuItem";
+const MString AAShapeUp_MenuItem_PlanarizationWindow_Command = "AAShapeUp_createPlanarizationWindow";
 
 const MString AAShapeUp_MenuItem_ARAP3D_Label = "As-Rigid-As-Possible Deformation";
 const MString AAShapeUp_MenuItem_ARAP3D_Command = "AAShapeUp_createARAP3DNode";
 const MString AAShapeUp_MenuItem_ARAP3D_Name = "ARAP3DMenuItem";
+const MString AAShapeUp_MenuItem_ARAP3DWindow_Command = "AAShapeUp_createARAP3DWindow";
 
 const MString AAShapeUp_MenuItem_TestBoundingSphere_Label = "Test Bounding Sphere";
 const MString AAShapeUp_MenuItem_TestBoundingSphere_Command = "AAShapeUp_createTestBoundingSphereNode";
@@ -71,21 +74,38 @@ static MStatus createMenu(const MString& pluginPath)
         pluginPath.asChar(), AAShapeUp_Script_MenuCommand_Name.asChar());
     status = MGlobal::executeCommand(commandBuffer);
     CHECK_MSTATUS_AND_RETURN_IT(status);
+    sprintf_s(commandBuffer, 
+        R"(source "%s/../scripts/%s.mel";)", 
+        pluginPath.asChar(), AAShapeUp_Script_MenuGUI_Name.asChar());
+    status = MGlobal::executeCommand(commandBuffer);
+    CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MGlobal::displayInfo(commandBuffer);
 
     sprintf_s(commandBuffer,
         R"(menu -label "%s" -tearOff true -parent MayaWindow "%s";
 menuItem -divider true -dividerLabel "Operation";
+
 menuItem -label "%s" -command "%s" "%s";
+menuItem -optionBox true -command "%s";
+
 menuItem -label "%s" -command "%s" "%s";
+menuItem -optionBox true -command "%s";
+
 menuItem -label "%s" -command "%s" "%s";
+
 menuItem -divider true -dividerLabel "Additional";
 menuItem -label "%s" -command "%s" "%s";)",
 AAShapeUp_Menu_Label.asChar(), AAShapeUp_Menu_Name.asChar(),
+
 AAShapeUp_MenuItem_Planarization_Label.asChar(), AAShapeUp_MenuItem_Planarization_Command.asChar(), AAShapeUp_MenuItem_Planarization_Name.asChar(),
+AAShapeUp_MenuItem_PlanarizationWindow_Command.asChar(),
+
 AAShapeUp_MenuItem_ARAP3D_Label.asChar(), AAShapeUp_MenuItem_ARAP3D_Command.asChar(), AAShapeUp_MenuItem_ARAP3D_Name.asChar(), 
+AAShapeUp_MenuItem_ARAP3DWindow_Command.asChar(), 
+
 AAShapeUp_MenuItem_TestBoundingSphere_Label.asChar(), AAShapeUp_MenuItem_TestBoundingSphere_Command.asChar(), AAShapeUp_MenuItem_TestBoundingSphere_Name.asChar(), 
+
 AAShapeUp_MenuItem_ARAP3DHandleLocator_Label.asChar(), AAShapeUp_MenuItem_ARAP3DHandleLocator_Command.asChar(), AAShapeUp_MenuItem_ARAP3DHandleLocator_Name.asChar());
     status = MGlobal::executeCommand(commandBuffer);
     CHECK_MSTATUS_AND_RETURN_IT(status);

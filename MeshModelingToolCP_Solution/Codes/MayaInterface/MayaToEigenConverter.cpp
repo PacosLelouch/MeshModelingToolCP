@@ -18,7 +18,12 @@ void MayaToEigenConverter::setMayaMeshObj(MObject inMayaMeshObj)
     m_inMayaMeshObj = inMayaMeshObj;
 }
 
-bool MayaToEigenConverter::generateEigenMatrices()
+void MayaToEigenConverter::resetOutputEigenMeshToInitial()
+{
+    m_outMesh = m_initialMesh;
+}
+
+bool MayaToEigenConverter::generateEigenMesh()
 {
     MStatus status = MStatus::kSuccess;
     if (m_inMayaMeshObj.isNull())
@@ -113,6 +118,7 @@ bool MayaToEigenConverter::generateEigenMatrices()
 
         m_outMesh.m_section.m_numFaceVertices.push_back(vertexList.length());
     }
+    m_initialMesh = m_outMesh;
     return true;
 }
 

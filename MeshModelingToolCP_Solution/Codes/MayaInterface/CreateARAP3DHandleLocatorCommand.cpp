@@ -20,22 +20,35 @@ void* MCreateARAP3DHandleLocatorCommand::creator()
 MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
 {
     MStatus status = MStatus::kSuccess;
+
+    //MString mayaVersion = MGlobal::mayaVersion();
+    //int apiVersion = MGlobal::apiVersion();
+
     bool displayExecution = false;
     parseMayaCommandArg(displayExecution, args, "-d", "-displayExecution", true);
+
+    bool displayTip = false;
+    parseMayaCommandArg(displayTip, args, "-tip", "-displayTip", true);
 
     char commandBuffer[2048] { 0 };
     char outputBuffer[2048]{ 0 };
 
+    //if (displayExecution)
+    //{
+    //    sprintf_s(outputBuffer, "mayaVersion = \"%s\", apiVersion = \"%d\".", mayaVersion.asChar(), apiVersion);
+    //    MGlobal::displayInfo(outputBuffer);
+    //}
+
     MSelectionList selectionList;
     
     status = MGlobal::getActiveSelectionList(selectionList);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
+    CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, "");
 
     unsigned int selectionListLength = selectionList.length();
     MDagModifier dagm;
     
-    sprintf_s(commandBuffer, "MCreateARAP3DHandleLocatorCommand::doIt(), selected %d objects.", selectionListLength);
-    MGlobal::displayInfo(commandBuffer);
+    sprintf_s(outputBuffer, "MCreateARAP3DHandleLocatorCommand::doIt(), selected %d objects.", selectionListLength);
+    MGlobal::displayInfo(outputBuffer);
 
     MDagPath meshNodePath;
     MObject meshComponent;
@@ -45,6 +58,8 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
     
     MIntArray vertices;
     MPointArray worldPositions;
+
+    bool createSucceed = false;
 
     int newLocatorIndex = -1;
     for (unsigned int index = 0; index < selectionListLength; ++index)
@@ -59,7 +74,7 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
         MStringArray transformNodeNames;
         sprintf_s(commandBuffer, "listRelatives -p %s;", meshNodeName.asChar());
         status = MGlobal::executeCommand(commandBuffer, transformNodeNames, displayExecution);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to find relative nodes of [" + meshNodeName + "].");
 
         if (transformNodeNames.length() == 0)
         {
@@ -72,21 +87,30 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
 
         meshFn.setObject(meshNodePath);
         status = meshFn.getPoints(worldPositions, MSpace::kWorld);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to get vertex positions of the mesh [" + meshNodeName + "].");
 
         // End get mesh attributes.
 
         // Start get selection vertices.
 
         status = selectionList.getSelectionStrings(index, selectionStringArray);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to get selections.");
         for (MString& string : selectionStringArray)
         {
             MGlobal::displayInfo("selection:\"" + string + "\"");
         }
 
         status = findVerticesFromSelections(vertices, selectionStringArray);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to get selections.");
+
+        if (vertices.length() == 0)
+        {
+            sprintf_s(outputBuffer, "Failed to create handles with 0 vertices selected.");
+            MGlobal::displayError(outputBuffer);
+            status = MStatus::kFailure;
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, outputBuffer);
+        }
+
         for (auto vertex : vertices)
         {
             sprintf_s(outputBuffer, "vertex: %d, world pos <%.3f, %.3f, %.3f>", vertex, worldPositions[vertex].x, worldPositions[vertex].y, worldPositions[vertex].z);
@@ -111,11 +135,11 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
 
         MString deformerNodeName = deformerNodeNames[0];
         status = MGlobal::selectByName(deformerNodeName, MGlobal::kReplaceList);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to select [" + deformerNodeName + "].");
 
         MSelectionList deformerNodeList;
         status = MGlobal::getActiveSelectionList(deformerNodeList);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to get selection set.");
 
         //MStringArray deformerNodeSelectedNames;
         //deformerNodeList.getSelectionStrings(deformerNodeSelectedNames);
@@ -128,7 +152,7 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
         //}
 
         //status = MGlobal::setActiveSelectionList(selectionList);
-        //CHECK_MSTATUS_AND_RETURN_IT(status);
+        //CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status);
 
         //MDagPath deformerNodePath;
         //MObject deformerComponent;
@@ -158,26 +182,29 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
         {
             sprintf_s(outputBuffer, "plugPositions not array, error...");
             MGlobal::displayError(outputBuffer);
-            return MStatus::kFailure;
+            status = MStatus::kFailure;
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, outputBuffer);
         }
 
         if (!plugIndices.isArray())
         {
             sprintf_s(outputBuffer, "plugIndices not array, error...");
             MGlobal::displayError(outputBuffer);
-            return MStatus::kFailure;
+            status = MStatus::kFailure;
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, outputBuffer);
         }
 
         unsigned int numHandlePositions = plugPositions.evaluateNumElements(&status);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to get the number of handles of [" + deformerNodeName + "].");
         unsigned int numHandleIndices = plugIndices.evaluateNumElements(&status);
-        CHECK_MSTATUS_AND_RETURN_IT(status);
+        CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to get the number of handles of [" + deformerNodeName + "].");
 
         if (numHandlePositions != numHandleIndices)
         {
             sprintf_s(outputBuffer, "%d != %d, error...", numHandlePositions, numHandleIndices);
             MGlobal::displayError(outputBuffer);
-            return MStatus::kFailure;
+            status = MStatus::kFailure;
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, outputBuffer);
         }
 
         std::unordered_set<unsigned int> logicalIndices;
@@ -199,7 +226,7 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
             //sprintf_s(commandBuffer, "createNode %s -parent %s;", MARAP3DHandleLocatorNode::nodeName.asChar(), transformNodeName.asChar());
             sprintf_s(commandBuffer, "createNode %s;", MARAP3DHandleLocatorNode::nodeName.asChar());
             status = MGlobal::executeCommand(commandBuffer, displayExecution);
-            CHECK_MSTATUS_AND_RETURN_IT(status);
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to create node [" + MARAP3DHandleLocatorNode::nodeName + "].");
             
             MStringArray newLocatorNames;
             status = MGlobal::executeCommand("ls -selection;", newLocatorNames, displayExecution);
@@ -207,14 +234,15 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
             {
                 sprintf_s(outputBuffer, "fail to create new locator, error...");
                 MGlobal::displayError(outputBuffer);
-                return MStatus::kFailure;
+                status = MStatus::kFailure;
+                CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, outputBuffer);
             }
             MString newLocatorName = newLocatorNames[0];
 
             MStringArray locatorTransformNodeNames;
             sprintf_s(commandBuffer, "listRelatives -p %s;", newLocatorName.asChar());
             status = MGlobal::executeCommand(commandBuffer, locatorTransformNodeNames, displayExecution);
-            CHECK_MSTATUS_AND_RETURN_IT(status);
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to find relative nodes of [" + newLocatorName + "].");
 
             if (locatorTransformNodeNames.length() == 0)
             {
@@ -225,11 +253,11 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
 
             sprintf_s(commandBuffer, "setAttr %s.vertexIndex %d;", newLocatorName.asChar(), vidx);
             status = MGlobal::executeCommand(commandBuffer, displayExecution);
-            CHECK_MSTATUS_AND_RETURN_IT(status);
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to " + MString(commandBuffer) + ".");
 
             sprintf_s(commandBuffer, "setAttr %s.translate %f %f %f;", locatorTransformNodeName.asChar(), worldPositions[vidx].x, worldPositions[vidx].y, worldPositions[vidx].z);
             status = MGlobal::executeCommand(commandBuffer, displayExecution);
-            CHECK_MSTATUS_AND_RETURN_IT(status);
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to " + MString(commandBuffer) + ".");
 
             // Start make connections.
 
@@ -240,11 +268,11 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
 
             sprintf_s(commandBuffer, "connectAttr %s.worldPosition[0] %s.handlePositions[%d];", newLocatorName.asChar(), deformerNodeName.asChar(), newLocatorIndex);
             status = MGlobal::executeCommand(commandBuffer, displayExecution);
-            CHECK_MSTATUS_AND_RETURN_IT(status);
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to " + MString(commandBuffer) + ".");
 
             sprintf_s(commandBuffer, "connectAttr %s.vertexIndex %s.handleIndices[%d];", newLocatorName.asChar(), deformerNodeName.asChar(), newLocatorIndex);
             status = MGlobal::executeCommand(commandBuffer, displayExecution);
-            CHECK_MSTATUS_AND_RETURN_IT(status);
+            CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to " + MString(commandBuffer) + ".");
 
             //++newLocatorIndex;
             logicalIndices.insert(newLocatorIndex);
@@ -254,17 +282,24 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
             }
 
             // End make connections.
+            createSucceed = true;
         }
 
         // End get attributes from deformer.
 
-        // Only the first object.
-        break;
+        //// Only the first object?
+        //return status;
     }
 
+    if (!createSucceed)
+    {
+        status = MStatus::kFailure;
+    }
+    CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "Failed to create handles. Make sure to select correct vertices of the deformed object.");
     return status;
 }
 
+// MEL: findRelatedDeformer (strnig $obj) ?
 MStatus MCreateARAP3DHandleLocatorCommand::findDeformerNodeNamesFromSelectedShape(MStringArray& deformerNodeNames, const MString& shapeName, const MString& deformerType, bool displayExecution)
 {
     MStatus status = deformerNodeNames.clear();
@@ -272,18 +307,38 @@ MStatus MCreateARAP3DHandleLocatorCommand::findDeformerNodeNamesFromSelectedShap
 
     char buffer[2048]{ 0 };
 
-    MStringArray connectedObjectSetsResultArray;
-    sprintf_s(buffer, "listConnections -type objectSet %s", shapeName.asChar());
+    // Connection changes in Maya 2022.
+    bool beforeMaya2022 = MGlobal::apiVersion() < 20220000;
 
-    status = MGlobal::executeCommand(buffer, connectedObjectSetsResultArray, displayExecution);
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    CHECK_MSTATUS_AND_RETURN_IT(status);
-
-    MStringArray connectedDeformersResultArray;
-    for (const MString& connectedObjectSet : connectedObjectSetsResultArray)
+    if (beforeMaya2022)
     {
-        sprintf_s(buffer, "listConnections -type %s %s", deformerType.asChar(), connectedObjectSet.asChar());
+        MStringArray connectedObjectSetsResultArray;
+        sprintf_s(buffer, "listConnections -type objectSet %s", shapeName.asChar());
+
+        status = MGlobal::executeCommand(buffer, connectedObjectSetsResultArray, displayExecution);
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+
+        MStringArray connectedDeformersResultArray;
+        for (const MString& connectedObjectSet : connectedObjectSetsResultArray)
+        {
+            sprintf_s(buffer, "listConnections -type %s %s", deformerType.asChar(), connectedObjectSet.asChar());
+            status = MGlobal::executeCommand(buffer, connectedDeformersResultArray, displayExecution);
+            CHECK_MSTATUS_AND_RETURN_IT(status);
+
+            if (connectedDeformersResultArray.length() > 0)
+            {
+                deformerNodeNames = connectedDeformersResultArray;
+                return status;
+            }
+        }
+    }
+    else
+    {
+        MStringArray connectedDeformersResultArray;
+        sprintf_s(buffer, "listConnections -type %s %s", deformerType.asChar(), shapeName.asChar());
+
         status = MGlobal::executeCommand(buffer, connectedDeformersResultArray, displayExecution);
         CHECK_MSTATUS_AND_RETURN_IT(status);
 

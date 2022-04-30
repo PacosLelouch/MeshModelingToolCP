@@ -30,7 +30,7 @@ MStatus MPlanarizationNode::initialize()
     MFnNumericAttribute nAttr;
     MFnTypedAttribute tAttr;
 
-    aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 50, &status);
+    aNumIter = nAttr.create("numIteration", "nIter", MFnNumericData::kInt, 50, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0);
     status = addAttribute(aNumIter);
@@ -42,13 +42,13 @@ MStatus MPlanarizationNode::initialize()
     status = addAttribute(aMaxDisplacementVisualization);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    aPlanarityWeight = nAttr.create("planarityWeight", "wpl", MFnNumericData::kDouble, 150.0, &status);
+    aPlanarityWeight = nAttr.create("planarityWeight", "wpl", MFnNumericData::kDouble, 1500.0, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0.0);
     status = addAttribute(aPlanarityWeight);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    aClosenessWeight = nAttr.create("closenessWeight", "wcl", MFnNumericData::kDouble, 10.0, &status);
+    aClosenessWeight = nAttr.create("closenessWeight", "wcl", MFnNumericData::kDouble, 100.0, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0.0);
     status = addAttribute(aClosenessWeight);
@@ -130,7 +130,8 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     MDataHandle hReferenceMeshData = block.inputValue(aReferenceMesh, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
-    MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
+    //MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
+    MObject inputMeshObj = getMeshObjectFromInput(block, multiIndex, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     MObject referenceMeshObj = hReferenceMeshData.asMesh();
@@ -160,7 +161,7 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
         inputChangedFlag |= InputChangedFlag::Parameter;
         MGlobal::displayInfo("[" + nodeName + "] Change [parameter].");
     }
-    if (isMeshNotAssigned(m_cache.inputMeshObj, inputMeshObj))
+    if (isMeshVertexDirty(m_cache.inputMeshObj, inputMeshObj))
     {
         inputChangedFlag |= InputChangedFlag::InputMesh;
         MGlobal::displayInfo("[" + nodeName + "] Change [input mesh].");
@@ -186,39 +187,40 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
         {
             m_meshConverterShPtr.reset(new AAShapeUp::MayaToEigenConverter(inputMeshObj));
 
-            if (!m_meshConverterShPtr->generateEigenMatrices())
+            if (!m_meshConverterShPtr->generateEigenMesh())
             {
                 MGlobal::displayError("Fail to generate eigen matrices [input]!");
                 return MStatus::kFailure;
             }
+
+            m_operationShPtr.reset(new AAShapeUp::PlanarizationOperation(m_geometrySolverShPtr));
         }
         if ((inputChangedFlag & InputChangedFlag::ReferenceMesh) != InputChangedFlag::None)
         {
             m_meshConverterReferenceShPtr.reset(new AAShapeUp::MayaToEigenConverter(referenceMeshObj));
 
             //if (!referenceSameAsInput && !m_meshConverterReferenceShPtr->generateEigenMatrices())
-            if (!m_meshConverterReferenceShPtr->generateEigenMatrices())
+            if (!m_meshConverterReferenceShPtr->generateEigenMesh())
             {
                 MGlobal::displayError("Fail to generate eigen matrices [reference]!");
                 return MStatus::kFailure;
             }
         }
+        //m_meshConverterShPtr->resetOutputEigenMeshToInitial();
 
-        m_operationShPtr.reset(new AAShapeUp::PlanarizationOperation(m_geometrySolverShPtr));
-
-        m_operationShPtr->refMesh = m_meshConverterReferenceShPtr->getEigenMesh();
+        m_operationShPtr->refMesh = m_meshConverterReferenceShPtr->getOutputEigenMesh();
         m_operationShPtr->closeness_weight = closenessWeight;
         m_operationShPtr->planarity_weight = planarityWeight;
         m_operationShPtr->laplacian_weight = fairnessWeight;
         m_operationShPtr->relative_laplacian_weight = relativeFairnessWeight;
 
-        if (!m_operationShPtr->initialize(m_meshConverterShPtr->getEigenMesh(), {}))
+        if (!m_operationShPtr->initialize(m_meshConverterShPtr->getInitialEigenMesh(), {}))
         {
             MGlobal::displayError("Fail to initialize!");
             return MStatus::kFailure;
         }
 
-        if (!m_operationShPtr->solve(m_meshConverterShPtr->getEigenMesh().m_positions, numIter))
+        if (!m_operationShPtr->solve(m_meshConverterShPtr->getOutputEigenMesh().m_positions, numIter))
         {
             MGlobal::displayError("Fail to solve!");
             return MStatus::kFailure;
@@ -229,7 +231,7 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     {
         if (maxDisplacementVisualization != 0.0)
         {
-            AAShapeUp::MeshDirtyFlag colorDirtyFlag = m_operationShPtr->visualizeDisplacements(m_meshConverterShPtr->getEigenMesh().m_colors, true);
+            AAShapeUp::MeshDirtyFlag colorDirtyFlag = m_operationShPtr->visualizeDisplacements(m_meshConverterShPtr->getOutputEigenMesh().m_colors, true);
 
             MObject outputMeshObj = getMeshObjectFromOutput(block, multiIndex, &status);
             status = m_meshConverterShPtr->updateTargetMesh(colorDirtyFlag, outputMeshObj, false);
@@ -239,7 +241,7 @@ MStatus MPlanarizationNode::deform(MDataBlock& block, MItGeometry& iter, const M
     
     // Start write output.
     MPointArray startPositionsMaya, finalPositionsMaya;
-    auto& finalPositions = m_meshConverterShPtr->getEigenMesh().m_positions;
+    auto& finalPositions = m_meshConverterShPtr->getOutputEigenMesh().m_positions;
     status = iter.allPositions(startPositionsMaya);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 

@@ -15,8 +15,8 @@ public:
 
     static MStatus jumpToElement(MArrayDataHandle& hArray, unsigned int index);
 
-    static bool isMeshNotAssigned(const MObject& meshToAssign, const MObject& meshInput);
-    static bool isMeshDirty(const MObject& meshToCompare, const MObject& meshInput);
+    static bool isMeshVertexDirty(const MObject& meshToAssign, const MObject& meshInput, AAShapeUp::MeshDirtyFlag checkFlag = AAShapeUp::MeshDirtyFlag::PositionDirty, bool quiet = true);
+    static bool isMeshNotEqualNaive(const MObject& meshToCompare, const MObject& meshInput);
 
 public:
     virtual void postConstructor() override;

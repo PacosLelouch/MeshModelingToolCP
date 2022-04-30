@@ -1,0 +1,126 @@
+//// Begin Planarization
+
+global proc AAShapeUp_createPlanarizationNodeWithUI(
+    string $fIter,
+    string $fPlanarityWeight,
+    string $fClosenessWeight,
+    string $fFairnessWeight,
+    string $fRelativeFairnessWeight)
+{
+    int $nIter = `floatSliderGrp -q -value $fIter`;
+    float $planarityWeight = `floatSliderGrp -q -value $fPlanarityWeight`;
+    float $closenessWeight = `floatSliderGrp -q -value $fClosenessWeight`;
+    float $fairnessWeight = `floatSliderGrp -q -value $fFairnessWeight`;
+    float $relativeFairnessWeight = `floatSliderGrp -q -value $fRelativeFairnessWeight`;
+    
+    if(`exists AAShapeUp_createPlanarizationNode`)
+    {
+        string $nodeNames[] = AAShapeUp_createPlanarizationNode();
+        for($i = 0; $i < size($nodeNames); ++$i)
+        {
+            string $nodeName = $nodeNames[$i];
+            setAttr ($nodeName + ".numIteration") $nIter;
+            setAttr ($nodeName + ".planarityWeight") $planarityWeight;
+            setAttr ($nodeName + ".closenessWeight") $closenessWeight;
+            setAttr ($nodeName + ".fairnessWeight") $fairnessWeight;
+            setAttr ($nodeName + ".relativeFairnessWeight") $relativeFairnessWeight;
+        }
+    }
+    else
+    {
+        AAShapeUp_displayTips("No valid commands for node creation!");
+    }
+}
+
+global proc AAShapeUp_createPlanarizationWindow()
+{
+    string $sIter = "Num Iteration";
+    string $sPlanarityWeight = "Planarity Weight";
+    string $sClosenessWeight = "Closeness Weight";
+    string $sFairnessWeight = "Fairness Weight";
+    string $sRelativeFairnessWeight = "Relative Fairness Weight";
+    
+    string $wd = `window -title "Create Planarization Node" -menuBar false -width 600`;
+    string $colLayout = `columnLayout -columnWidth 590 -columnOffset "both" 5 -rowSpacing 10`;
+
+        string $fIter = `floatSliderGrp -label $sIter -f true -fmx 100 -fmn 0 -value 50 -fs 1 -width 595 -pre 0`;
+        
+        string $fPlanarityWeight = `floatSliderGrp -label $sPlanarityWeight -f true -fmx 2000 -fmn 0 -value 1500.0 -fs 0.1 -width 595 -pre 1`;
+        
+        string $fClosenessWeight = `floatSliderGrp -label $sClosenessWeight -f true -fmx 2000 -fmn 0 -value 100.0 -fs 0.1 -width 595 -pre 1`;
+        
+        string $fFairnessWeight = `floatSliderGrp -label $sFairnessWeight -f true -fmx 1000 -fmn 0 -value 0.1 -fs 0.1 -width 595 -pre 1`;
+        
+        string $fRelativeFairnessWeight = `floatSliderGrp -label $sRelativeFairnessWeight -f true -fmx 1000 -fmn 0 -value 1.0 -fs 0.1 -width 595 -pre 1`;
+        
+        rowLayout -numberOfColumns 2 -adjustableColumn 2
+             //-columnWidth2 1 1 
+             //-columnAttach2 "left" "right"
+             -columnWidth2 535 55;
+            string $bCreate = `button -label "Create"`;
+            button -label "Cancel" -command ("deleteUI -window " + $wd);
+        setParent $colLayout;
+    
+    button -e -command ("AAShapeUp_createPlanarizationNodeWithUI "
+                        + $fIter + " "
+                        + $fPlanarityWeight + " "
+                        + $fClosenessWeight + " " 
+                        + $fFairnessWeight + " " 
+                        + $fRelativeFairnessWeight) $bCreate;
+    
+    showWindow $wd;
+}
+
+//// End Planarization
+
+//// Begin ARAP3D
+
+global proc AAShapeUp_createARAP3DNodeWithUI(
+    string $fIter,
+    string $fDeformationWeight)
+{
+    int $nIter = `floatSliderGrp -q -value $fIter`;
+    float $deformationWeight = `floatSliderGrp -q -value $fDeformationWeight`;
+    
+    if(`exists AAShapeUp_createARAP3DNode`)
+    {
+        string $nodeNames[] = AAShapeUp_createARAP3DNode();
+        for($i = 0; $i < size($nodeNames); ++$i)
+        {
+            string $nodeName = $nodeNames[$i];
+            setAttr ($nodeName + ".numIteration") $nIter;
+            setAttr ($nodeName + ".deformationWeight") $deformationWeight;
+        }
+    }
+    else
+    {
+        AAShapeUp_displayTips("No valid commands for node creation!");
+    }
+}
+
+global proc AAShapeUp_createARAP3DWindow()
+{
+    string $sIter = "Num Iteration";
+    string $sDeformationWeight = "Deformation Weight";
+    
+    string $wd = `window -title "Create Planarization Node" -menuBar false -width 600`;
+    string $colLayout = `columnLayout -columnWidth 590 -columnOffset "both" 5 -rowSpacing 10`;
+
+        string $fIter = `floatSliderGrp -label $sIter -f true -fmx 100 -fmn 0 -value 20 -fs 1 -width 595 -pre 0`;
+        
+        string $fDeformationWeight = `floatSliderGrp -label $sDeformationWeight -f true -fmx 2000 -fmn 0 -value 1000.0 -fs 0.1 -width 595 -pre 1`;
+        
+        rowLayout -numberOfColumns 2 -adjustableColumn 2
+             //-columnWidth2 1 1 
+             //-columnAttach2 "left" "right"
+             -columnWidth2 535 55;
+            string $bCreate = `button -label "Create"`;
+            button -label "Cancel" -command ("deleteUI -window " + $wd);
+        setParent $colLayout;
+    
+    button -e -command ("AAShapeUp_createARAP3DNodeWithUI "
+                        + $fIter + " "
+                        + $fDeformationWeight) $bCreate;
+    
+    showWindow $wd;
+}

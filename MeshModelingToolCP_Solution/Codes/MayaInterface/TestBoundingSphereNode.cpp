@@ -26,7 +26,7 @@ MStatus MTestBoundingSphereNode::initialize()
 
     MFnNumericAttribute nAttr;
 
-    aNumIter = nAttr.create("numIteration", "niter", MFnNumericData::kInt, 50, &status);
+    aNumIter = nAttr.create("numIteration", "nIter", MFnNumericData::kInt, 50, &status);
     MAYA_ATTR_INPUT(nAttr);
     nAttr.setMin(0);
     status = addAttribute(aNumIter);
@@ -176,7 +176,8 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
     CHECK_MSTATUS_AND_RETURN_IT(status);
     double fairnessWeight = hFairnessWeight.asDouble();
 
-    MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
+    //MObject inputMeshObj = getMeshObjectFromInputWithoutEval(block, multiIndex, &status);
+    MObject inputMeshObj = getMeshObjectFromInput(block, multiIndex, &status);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
     // Start check cache.
@@ -193,7 +194,7 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
         inputChangedFlag |= InputChangedFlag::Parameter;
         MGlobal::displayInfo("[" + nodeName + "] Change [parameter].");
     }
-    if (isMeshNotAssigned(m_cache.inputMeshObj, inputMeshObj))
+    if (isMeshVertexDirty(m_cache.inputMeshObj, inputMeshObj))
     {
         inputChangedFlag |= InputChangedFlag::InputMesh;
         MGlobal::displayInfo("[" + nodeName + "] Change [input mesh].");
@@ -211,25 +212,26 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
         {
             m_meshConverterShPtr.reset(new AAShapeUp::MayaToEigenConverter(inputMeshObj));
 
-            if (!m_meshConverterShPtr->generateEigenMatrices())
+            if (!m_meshConverterShPtr->generateEigenMesh())
             {
                 MGlobal::displayError("Fail to generate eigen matrices [input]!");
                 return MStatus::kFailure;
             }
-        }
 
-        m_operationShPtr.reset(new AAShapeUp::TestBoundingSphereOperation(m_geometrySolverShPtr));
+            m_operationShPtr.reset(new AAShapeUp::TestBoundingSphereOperation(m_geometrySolverShPtr));
+        }
+        //m_meshConverterShPtr->resetOutputEigenMeshToInitial();
 
         m_operationShPtr->m_sphereProjectionWeight = sphereProjectionWeight;
         m_operationShPtr->m_LaplacianWeight = fairnessWeight;
 
-        if (!m_operationShPtr->initialize(m_meshConverterShPtr->getEigenMesh(), {}))
+        if (!m_operationShPtr->initialize(m_meshConverterShPtr->getInitialEigenMesh(), {}))
         {
             MGlobal::displayError("Fail to initialize!");
             return MStatus::kFailure;
         }
 
-        if (!m_operationShPtr->solve(m_meshConverterShPtr->getEigenMesh().m_positions, numIter))
+        if (!m_operationShPtr->solve(m_meshConverterShPtr->getOutputEigenMesh().m_positions, numIter))
         {
             MGlobal::displayError("Fail to solve!");
             return MStatus::kFailure;
@@ -240,7 +242,7 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
     {
         if (maxDisplacementVisualization != 0.0)
         {
-            AAShapeUp::MeshDirtyFlag colorDirtyFlag = m_operationShPtr->visualizeDisplacements(m_meshConverterShPtr->getEigenMesh().m_colors, true);
+            AAShapeUp::MeshDirtyFlag colorDirtyFlag = m_operationShPtr->visualizeDisplacements(m_meshConverterShPtr->getOutputEigenMesh().m_colors, true);
 
             MObject outputMeshObj = getMeshObjectFromOutput(block, multiIndex, &status);
             status = m_meshConverterShPtr->updateTargetMesh(colorDirtyFlag, outputMeshObj, false);
@@ -250,7 +252,7 @@ MStatus MTestBoundingSphereNode::deform(MDataBlock& block, MItGeometry& iter, co
 
     // Start write output.
     MPointArray startPositionsMaya, finalPositionsMaya;
-    auto& finalPositions = m_meshConverterShPtr->getEigenMesh().m_positions;
+    auto& finalPositions = m_meshConverterShPtr->getOutputEigenMesh().m_positions;
     status = iter.allPositions(startPositionsMaya);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
