@@ -243,6 +243,7 @@
     <ClCompile Include="..\..\Codes\MayaInterface\ARAP3DNode.cpp" />
     <ClCompile Include="..\..\Codes\MayaInterface\CreateARAP3DHandleLocatorCommand.cpp" />
     <ClCompile Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.cpp" />
+    <ClCompile Include="..\..\Codes\MayaInterface\iglARAP3DNode.cpp" />
     <ClCompile Include="..\..\Codes\MayaInterface\MayaToEigenConverter.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Use</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Use</PrecompiledHeader>
@@ -266,6 +267,7 @@
     <ClInclude Include="..\..\Codes\MayaInterface\ARAP3DNode.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\CreateARAP3DHandleLocatorCommand.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\GeometryOptimizerNode.h" />
+    <ClInclude Include="..\..\Codes\MayaInterface\iglARAP3DNode.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\MayaNodeCommon.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\MayaToEigenConverter.h" />
     <ClInclude Include="..\..\Codes\MayaInterface\PlanarizationNode.h" />

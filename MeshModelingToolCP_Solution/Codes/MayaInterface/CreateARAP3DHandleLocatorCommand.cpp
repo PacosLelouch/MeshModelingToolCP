@@ -30,6 +30,9 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
     bool displayTip = false;
     parseMayaCommandArg(displayTip, args, "-tip", "-displayTip", true);
 
+    MString targetDeformerNodeTypeName = MARAP3DNode::nodeName;
+    parseMayaCommandArg(targetDeformerNodeTypeName, args, "-dtype", "-deformerType", true);
+
     char commandBuffer[2048] { 0 };
     char outputBuffer[2048]{ 0 };
 
@@ -42,7 +45,7 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
     MSelectionList selectionList;
     
     status = MGlobal::getActiveSelectionList(selectionList);
-    CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, "");
+    CHECK_MSTATUS_WITH_TIP_AND_RETURN_IT(status, displayTip, "");
 
     unsigned int selectionListLength = selectionList.length();
     MDagModifier dagm;
@@ -122,7 +125,7 @@ MStatus MCreateARAP3DHandleLocatorCommand::doIt(const MArgList& args)
         // Start get deformer node.
 
         MStringArray deformerNodeNames;
-        status = findDeformerNodeNamesFromSelectedShape(deformerNodeNames, meshNodeName, MARAP3DNode::nodeName, false);
+        status = findDeformerNodeNamesFromSelectedShape(deformerNodeNames, meshNodeName, targetDeformerNodeTypeName, false);
         for (MString& string : deformerNodeNames)
         {
             MGlobal::displayInfo("deformer:\"" + string + "\"");

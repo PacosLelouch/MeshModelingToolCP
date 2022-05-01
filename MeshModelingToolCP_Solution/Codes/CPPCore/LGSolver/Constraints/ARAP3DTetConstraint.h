@@ -85,7 +85,7 @@ inline scalar ARAP3DTetProjectionOperator::project(ConstraintAbstract<3>& constr
     Eigen::Map<MatrixNX> projectionBlock(&projections(0, constraint.getIdConstraint()), 3, transformedPoints.cols());
 
     //if (use_fast_svd_) {
-        Eigen::Matrix<float, 3, 3> U, V, A, R;
+        Eigen::Matrix<scalar, 3, 3> U, V, A, R;
 
         for (int j = 0; j < 3; ++j) {
             for (int i = 0; i < 3; ++i) {
@@ -93,7 +93,7 @@ inline scalar ARAP3DTetProjectionOperator::project(ConstraintAbstract<3>& constr
             }
         }
 
-        Eigen::Matrix<float, 3, 1> S;
+        Eigen::Matrix<scalar, 3, 1> S;
         igl::svd3x3(A, U, S, V);
         R = U * V.transpose();
 
@@ -103,15 +103,15 @@ inline scalar ARAP3DTetProjectionOperator::project(ConstraintAbstract<3>& constr
             }
         }
     //}
-    /*else {
-        Eigen::JacobiSVD<Matrix33> jSVD(
-            M, Eigen::ComputeFullU | Eigen::ComputeFullV);
-        Matrix33 I = Matrix33::Identity();
-        if ((jSVD.matrixU() * jSVD.matrixV().transpose()).determinant() < 0) {
-            I(2, 2) = -1;
-        }
-        P = jSVD.matrixU() * I * jSVD.matrixV().transpose();
-    }*/
+    //else {
+    //    Eigen::JacobiSVD<Matrix33> jSVD(
+    //        transformedPoints, Eigen::ComputeFullU | Eigen::ComputeFullV);
+    //    Matrix33 I = Matrix33::Identity();
+    //    if ((jSVD.matrixU() * jSVD.matrixV().transpose()).determinant() < 0) {
+    //        I(2, 2) = -1;
+    //    }
+    //    projectionBlock = jSVD.matrixU() * I * jSVD.matrixV().transpose();
+    //}
 
     //general code for projection and error
     scalar sqrDist = (transformedPoints - projectionBlock).squaredNorm();
@@ -133,8 +133,8 @@ inline void ARAP3DTetTripletGenerator::generateTriplets(ConstraintAbstract<3>& c
 }
 
 inline void ARAP3DTetTransformer::generateTransformPoints(ConstraintAbstract<3>& constraint, const typename ConstraintAbstract<3>::MatrixNX& points) {
-    Matrix3X tmp;
-    tmp.resize(3, 4);
+    Matrix34 tmp;
+    //tmp.resize(3, 4);
     for (i64 i = 0; i < constraint.getIdIncidentPoints().size(); ++i) //NOTICE: = 4
     {
         tmp.col(i) = points.col(constraint.getIdIncidentPoints()[i]);

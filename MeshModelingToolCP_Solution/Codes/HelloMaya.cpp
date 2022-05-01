@@ -24,6 +24,7 @@
 #include "MayaInterface/TestBoundingSphereNode.h"
 #include "MayaInterface/ARAP3DHandleLocator.h"
 #include "MayaInterface/CreateARAP3DHandleLocatorCommand.h"
+#include "MayaInterface/iglARAP3DNode.h"
 #include <maya/MFnPlugin.h>
 #include <string>
 // Viewport 2.0 includes
@@ -65,6 +66,13 @@ const MString AAShapeUp_MenuItem_ARAP3DHandleLocator_Label = "Deformation Handle
 const MString AAShapeUp_MenuItem_ARAP3DHandleLocator_Command = "AAShapeUp_createARAP3DHandleLocator";
 const MString AAShapeUp_MenuItem_ARAP3DHandleLocator_Name = "ARAP3DHandleLocatorMenuItem";
 
+const MString AAShapeUp_MenuItem_iglARAP3D_Label = "igl As-Rigid-As-Possible Deformation";
+const MString AAShapeUp_MenuItem_iglARAP3D_Command = "AAShapeUp_createiglARAP3DNode";
+const MString AAShapeUp_MenuItem_iglARAP3D_Name = "iglARAP3DMenuItem";
+
+const MString AAShapeUp_MenuItem_iglARAP3DHandleLocator_Label = "igl Deformation Handle Locator";
+const MString AAShapeUp_MenuItem_iglARAP3DHandleLocator_Name = "iglARAP3DHandleLocatorMenuItem";
+
 static MStatus createMenu(const MString& pluginPath)
 {
     MStatus status = MStatus::kSuccess;
@@ -95,7 +103,11 @@ menuItem -optionBox true -command "%s";
 menuItem -label "%s" -command "%s" "%s";
 
 menuItem -divider true -dividerLabel "Additional";
-menuItem -label "%s" -command "%s" "%s";)",
+menuItem -label "%s" -command "%s %s" "%s";
+
+menuItem -divider true -dividerLabel "Test & Evaluation";
+menuItem -label "%s" -command "%s" "%s";
+menuItem -label "%s" -command "%s %s" "%s";)",
 AAShapeUp_Menu_Label.asChar(), AAShapeUp_Menu_Name.asChar(),
 
 AAShapeUp_MenuItem_Planarization_Label.asChar(), AAShapeUp_MenuItem_Planarization_Command.asChar(), AAShapeUp_MenuItem_Planarization_Name.asChar(),
@@ -106,7 +118,10 @@ AAShapeUp_MenuItem_ARAP3DWindow_Command.asChar(),
 
 AAShapeUp_MenuItem_TestBoundingSphere_Label.asChar(), AAShapeUp_MenuItem_TestBoundingSphere_Command.asChar(), AAShapeUp_MenuItem_TestBoundingSphere_Name.asChar(), 
 
-AAShapeUp_MenuItem_ARAP3DHandleLocator_Label.asChar(), AAShapeUp_MenuItem_ARAP3DHandleLocator_Command.asChar(), AAShapeUp_MenuItem_ARAP3DHandleLocator_Name.asChar());
+AAShapeUp_MenuItem_ARAP3DHandleLocator_Label.asChar(), AAShapeUp_MenuItem_ARAP3DHandleLocator_Command.asChar(), MARAP3DNode::nodeName.asChar(), AAShapeUp_MenuItem_ARAP3DHandleLocator_Name.asChar(),
+
+AAShapeUp_MenuItem_iglARAP3D_Label.asChar(), AAShapeUp_MenuItem_iglARAP3D_Command.asChar(), AAShapeUp_MenuItem_iglARAP3D_Name.asChar(),
+AAShapeUp_MenuItem_iglARAP3DHandleLocator_Label.asChar(), AAShapeUp_MenuItem_ARAP3DHandleLocator_Command.asChar(), MiglARAP3DNode::nodeName.asChar(), AAShapeUp_MenuItem_iglARAP3DHandleLocator_Name.asChar());
     status = MGlobal::executeCommand(commandBuffer);
     CHECK_MSTATUS_AND_RETURN_IT(status);
 
@@ -212,6 +227,15 @@ MLL_EXPORT MStatus initializePlugin(MObject obj)
         CHECK_MSTATUS_AND_RETURN_IT(status);
     }
 
+    status = plugin.registerNode(
+        MiglARAP3DNode::nodeName, MiglARAP3DNode::id,
+        MiglARAP3DNode::creator, MiglARAP3DNode::initialize, MPxNode::kDeformerNode);
+    if (!status)
+    {
+        status.perror( "registerNode " + MiglARAP3DNode::nodeName + " failed" );
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+    }
+
     //status = MHWRender::MDrawRegistry::registerDrawOverrideCreator(
     //    MARAP3DHandleLocatorNode::drawDbClassification,
     //    MARAP3DHandleLocatorNode::drawRegistrantId,
@@ -260,6 +284,13 @@ MLL_EXPORT MStatus uninitializePlugin(MObject obj)
         MARAP3DHandleLocatorNode::drawRegistrantId);
     if (!status) {
         status.perror("deregisterGeometryOverrideCreator failed");
+        CHECK_MSTATUS_AND_RETURN_IT(status);
+    }
+
+    status = plugin.deregisterNode(MiglARAP3DNode::id);
+    if(!status)
+    {
+        status.perror( "deregisterNode " + MiglARAP3DNode::nodeName + " failed" );
         CHECK_MSTATUS_AND_RETURN_IT(status);
     }
 

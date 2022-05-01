@@ -57,6 +57,9 @@
     <ClCompile Include="..\..\Codes\MayaInterface\CreateARAP3DHandleLocatorCommand.cpp">
       <Filter>Source Files\Commands</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Codes\MayaInterface\iglARAP3DNode.cpp">
+      <Filter>Source Files\OptimizerNodes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Codes\MayaExport.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="..\..\Codes\MayaInterface\CreateARAP3DHandleLocatorCommand.h">
       <Filter>Header Files\Commands</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\Codes\MayaInterface\iglARAP3DNode.h">
+      <Filter>Header Files\OptimizerNodes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

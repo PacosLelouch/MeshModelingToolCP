@@ -1,7 +1,12 @@
 #pragma once
 
 #include "OperationBase.h"
-#include <igl/arap.h>
+
+BEGIN_NAMESPACE(igl)
+struct ARAPData;
+END_NAMESPACE()
+
+#define TET_GEN_FOR_IGL_ARAP3D 1
 
 BEGIN_NAMESPACE(AAShapeUp)
 
@@ -23,13 +28,25 @@ public:
 
     bool solve(Matrix3X& newPositions, i32 nIter) override;
 
+    void markUsingCache() { m_usingCache = true; }
+
+    //bool useTetGen = true;
+
     scalar m_deformationWeight = scalar(1);
 
-    igl::ARAPData arapData;
-    VectorXi lastHandleIndices;
-    Matrix3X originVerts;
-    Matrix3Xi faceIndices;
 protected:
+    bool m_usingCache = false;
+    std::shared_ptr<tetgenio> m_tempTetMeshIOShPtr;
+    std::shared_ptr<EigenMesh<3> > m_tempTetEigenMeshShPtr;
+
+    std::shared_ptr<struct igl::ARAPData> arapDataShPtr;
+    std::vector<i32> lastHandleIndices;
+    Matrix3X originVerts;
+#if !TET_GEN_FOR_IGL_ARAP3D
+    Matrix3Xi faceIndices; // Without TetGen
+#else // TET_GEN_FOR_IGL_ARAP3D
+    Matrix4Xi tetIndices; // With TetGen
+#endif // TET_GEN_FOR_IGL_ARAP3D
 };
 
 END_NAMESPACE()

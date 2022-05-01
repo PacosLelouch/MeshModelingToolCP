@@ -246,9 +246,26 @@ global proc string[] AAShapeUp_createTestBoundingSphereNode()
     return $nodeNames;
 }
 
-global proc AAShapeUp_createARAP3DHandleLocator()
+global proc AAShapeUp_createARAP3DHandleLocator(string $deformerType)
 {
-    createARAP3DHandleLocatorInternal -tip true -d true;
-    
+    createARAP3DHandleLocatorInternal -tip true -d true -dtype $deformerType;
 }
 
+//// Test & Evaluation
+global proc string[] AAShapeUp_createiglARAP3DNode()
+{
+    string $results[];
+    
+    string $selectedObjNames[] = `ls -selection -type transform`;
+    int $sizeSelectedObjNames = size($selectedObjNames);
+    if($sizeSelectedObjNames < 1)
+    {
+        string $output = ("Failed to create deformer with selected objects " + (string)$sizeSelectedObjNames + " < 1\n");
+        print $output;
+        AAShapeUp_displayTips($output);
+        return $results;
+    }
+    
+    string $nodeNames[] = `deformer -type iglARAP3DNode`;
+    return $nodeNames;
+}

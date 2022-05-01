@@ -230,7 +230,9 @@
     <ClCompile Include="..\..\Codes\CPPCore\Operations\ARAP3DOperation.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="..\..\Codes\CPPCore\Operations\iglARAP3DOperation.cpp" />
+    <ClCompile Include="..\..\Codes\CPPCore\Operations\iglARAP3DOperation.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\..\Codes\CPPCore\Operations\OperationBase.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Use</PrecompiledHeader>
     </ClCompile>
