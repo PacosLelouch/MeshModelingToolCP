@@ -103,7 +103,7 @@ global proc AAShapeUp_createARAP3DWindow()
     string $sIter = "Num Iteration";
     string $sDeformationWeight = "Deformation Weight";
     
-    string $wd = `window -title "Create Planarization Node" -menuBar false -width 600`;
+    string $wd = `window -title "Create As-Rigid-As-Possible Deformation Node" -menuBar false -width 600`;
     string $colLayout = `columnLayout -columnWidth 590 -columnOffset "both" 5 -rowSpacing 10`;
 
         string $fIter = `floatSliderGrp -label $sIter -f true -fmx 100 -fmn 0 -value 20 -fs 1 -width 595 -pre 0`;
